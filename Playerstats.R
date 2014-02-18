@@ -45,7 +45,8 @@ ggplot(playerstats, aes(x = playOneMinute,
   ggtitle("Deaths vs. Online time") +
   theme(legend.position="right")+
   theme(legend.key.size = unit(.25, "cm")) +
-  theme(legend.text = element_text(size = rel(.5)))
+  theme(legend.text = element_text(size = rel(.5))) +
+  scale_colour_discrete(name = "Name")
   ggsave("Plots/Deaths_OnlineTime.png")
 
 cor(playerstats$deaths,playerstats$playOneMinute)^2
