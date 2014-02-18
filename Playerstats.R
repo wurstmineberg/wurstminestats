@@ -24,15 +24,16 @@ playerstats$player <- players
 
 ## plots
 ggplot(data=playerstats, aes(x=player, y=deaths)) + 
-  geom_bar(colour="black", fill="#DD8888", width=.7, stat="identity") + 
+  geom_bar(colour="black", width=.7, stat="identity") + 
   xlab("Player") + ylab("Deathcount") +
   ggtitle("Deaths on Wurstmineberg") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  ggsave("Plots/Deaths.png")
 
 ggplot(data=playerstats, aes(x=player, y=(walkOneCm/1000000))) + 
   geom_bar(colour="black", width=.7, stat="identity") + 
   xlab("Player") + ylab("Distance (km)") +
   ggtitle("Distance walked on Wurstmineberg") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
+  ggsave("Plots/Distance.png")
   
