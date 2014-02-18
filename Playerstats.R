@@ -20,7 +20,7 @@ for(i in (1:23)){
 
 playerstats <- as.data.frame(mapply(as.numeric,playerstats))
 playerstats$player <- players
-
+playerstats$player <- factor(playerstats$player)
 
 ## plots
 ggplot(data=playerstats, aes(x=player, y=deaths)) + 
