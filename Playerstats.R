@@ -37,3 +37,11 @@ ggplot(data=playerstats, aes(x=player, y=(walkOneCm/1000000))) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
   ggsave("Plots/Distance.png")
   
+ggplot(playerstats, aes(x = playOneMinute, 
+                       y = deaths)) + 
+  geom_point(shape = 1) + 
+  geom_smooth(method = lm) + 
+  ylab("Deaths") + xlab("Online time")
+  ggsave("Plots/Deaths_OnlineTime.png")
+
+cor(playerstats$deaths,playerstats$playOneMinute)^2
