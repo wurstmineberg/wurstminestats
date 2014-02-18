@@ -39,9 +39,13 @@ ggplot(data=playerstats, aes(x=player, y=(walkOneCm/1000000))) +
   
 ggplot(playerstats, aes(x = playOneMinute, 
                        y = deaths)) + 
-  geom_point(shape = 1) + 
+  geom_point(shape = 1, aes(colour=as.factor(player), group=1)) + 
   geom_smooth(method = lm) + 
-  ylab("Deaths") + xlab("Online time")
+  ylab("Deaths") + xlab("Online time") +
+  ggtitle("Deaths vs. Online time") +
+  theme(legend.position="right")+
+  theme(legend.key.size = unit(.25, "cm")) +
+  theme(legend.text = element_text(size = rel(.5)))
   ggsave("Plots/Deaths_OnlineTime.png")
 
 cor(playerstats$deaths,playerstats$playOneMinute)^2
