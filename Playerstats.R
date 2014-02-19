@@ -3,24 +3,39 @@ library(RCurl)
 library(jsonlite)
 library(ggplot2)
 
-API="http://api.wurstmineberg.de/server/playerstats/general.json"
-rawPlayerstats <- getURL(API)
-playerstats <- fromJSON(rawPlayerstats)
+# Getting some data for furthe use
+people <- fromJSON("http://wurstmineberg.de/assets/serverstatus/people.json")
+playerstats <- fromJSON("http://api.wurstmineberg.de/server/playerstats/general.json")
 
+# A little cleanup
 names(playerstats) <- sub("stat.","",names(playerstats))
 playerstats[playerstats == "NULL"] <- "0"
-players <- names(playerstats[,1])
-
+playerTemp <- names(playerstats[,1])
 ## Getting rid of the nested list stuff
 ## This took me so long, please don't even ask me about it.
-
 for(i in (1:23)){
   playerstats[i] <- unlist(playerstats[i], use.names=F)
-}
-
+} 
+rm(i)
+playerstats[playerstats == NA] <- 0
 playerstats <- as.data.frame(mapply(as.numeric,playerstats))
-playerstats$player <- players
+## Sorting according to people.json
+playerstats$player <- playerTemp
+playerstats <- playerstats[match(people$minecraft, playerstats$player),]
+#sortList <- match(people$minecraft,playerstats$player)[!is.na(match(people$minecraft,playerstats$player))]
+#playerstats <- playerstats[sortList,]
+playerstats$joinDate <- people$join_date
+
+rownames(playerstats) <- NULL
+#playerstats <- playerstats[playerstats == NA] <- "0"
+
+playerstats <- playerstats[c(ncol(playerstats)-1,
+                 ncol(playerstats),
+                 1:(ncol(playerstats)-2))]
+
+playerstats$player <- people$id
 playerstats$player <- factor(playerstats$player)
+
 
 ## plots
 ggplot(data=playerstats, aes(x=player, y=deaths)) + 
@@ -44,8 +59,8 @@ ggplot(playerstats, aes(x = playOneMinute,
   ylab("Deaths") + xlab("Online time") +
   ggtitle("Deaths vs. Online time") +
   theme(legend.position="right")+
-  theme(legend.key.size = unit(.25, "cm")) +
-  theme(legend.text = element_text(size = rel(.5))) +
+  theme(legend.key.size = unit(.4, "cm")) +
+  theme(legend.text = element_text(size = rel(.7))) +
   scale_colour_discrete(name = "Name")
   ggsave("Plots/Deaths_OnlineTime.png")
 
