@@ -2,6 +2,7 @@
 library(RCurl)
 library(jsonlite)
 library(ggplot2)
+library(scales)
 
 # Getting some data for furthe use
 people <- fromJSON("http://wurstmineberg.de/assets/serverstatus/people.json")
@@ -44,7 +45,18 @@ playerstats$player <- factor(playerstats$player,
 
 ## Getting rid of NAs and assuming 0 (again. Don't ask.)
 playerstats[is.na(playerstats)] <- 0
+
 ## plots
+
+# Define general legend/guide for all players
+playerTheme <- theme(legend.position="right",
+                legend.key.size = unit(.4, "cm"),
+                legend.text = element_text(size = rel(.7)))
+
+# Convert play time to real time hours
+playTimeDay <- (playerstats$playOneMinute/20/60/60)
+
+
 ggplot(data=playerstats, aes(x=player, y=deaths)) + 
   geom_bar(colour="black", width=.7, stat="identity") + 
   xlab("Player") + ylab("Deathcount") +
@@ -59,17 +71,36 @@ ggplot(data=playerstats, aes(x=player, y=(walkOneCm/1000000))) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
   ggsave("Plots/Distance.png")
   
-ggplot(playerstats, aes(x = playOneMinute, 
+ggplot(playerstats, aes(x = playTimeDay, 
                        y = deaths)) + 
   geom_point(shape = 1, aes(colour=as.factor(player), group=1)) + 
   geom_smooth(method = lm) + 
-  ylab("Deaths") + xlab("Online time") +
+  ylab("Deaths") + xlab("Online time (hours (real time)))") +
   ggtitle("Deaths vs. Online time") +
-  theme(legend.position="right")+
-  theme(legend.key.size = unit(.4, "cm")) +
-  theme(legend.text = element_text(size = rel(.7))) +
-  scale_colour_discrete(name = "Name")
+  playerTheme +
+  scale_colour_discrete(name = "Name") 
   ggsave("Plots/Deaths_OnlineTime.png")
 
-cor(playerstats$deaths,playerstats$playOneMinute)^2
+# cor(playerstats$deaths,playerstats$playOneMinute)^2
 
+# Mob kills vs play time
+ggplot(playerstats, aes(x = playTimeDay, 
+                        y = mobKills)) + 
+  geom_point(shape = 1, aes(colour=as.factor(player), group=1)) + 
+  geom_smooth(method = lm) + 
+  ylab("Mob kills (absolute)") + xlab("Online time (hours (real time)))") +
+  ggtitle("Mob kills vs. Online time") +
+  playerTheme +
+  scale_colour_discrete(name = "Name")
+ggsave("Plots/MobKills_OnlineTime.png")
+
+# Distance walked per online time
+ggplot(playerstats, aes(x = playTimeDay, 
+                        y = (walkOneCm/1000))) + 
+  geom_point(shape = 1, aes(colour=as.factor(player), group=1)) + 
+  geom_smooth(method = lm) + 
+  ylab("Distance walked (km)") + xlab("Online time (hours (real time)))") +
+  ggtitle("Distance walked vs. Online time") +
+  playerTheme +
+  scale_colour_discrete(name = "Name")
+ggsave("Plots/DistanceWalked_OnlineTime.png")
