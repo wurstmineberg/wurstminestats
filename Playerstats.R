@@ -38,7 +38,8 @@ playerstats <- playerstats[c(ncol(playerstats)-1,
 
 playerstats$player <- people$id[people$status != "former"]
 
-playerstats$player <- factor(playerstats$player)
+playerstats$player <- factor(playerstats$player, 
+                             levels=playerstats$player)
 
 ## Getting rid of NAs and assuming 0 (again. Don't ask.)
 playerstats[playerstats == NA] <- 0
