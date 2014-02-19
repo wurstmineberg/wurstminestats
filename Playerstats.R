@@ -46,6 +46,14 @@ playerstats$player <- factor(playerstats$player,
 ## Getting rid of NAs and assuming 0 (again. Don't ask.)
 playerstats[is.na(playerstats)] <- 0
 
+playerstats$number <- (1:(nrow(playerstats))) # Just to get a numeric ID
+
+# Convert joinDate to POSIX-time
+playerstats$joinDate[playerstats$joinDate == 0] <- NA
+playerstats$joinDate <- as.POSIXct(playerstats$joinDate, origin="1970-01-01")
+
+##
+
 ## plots
 
 # Define general legend/guide for all players
@@ -104,3 +112,18 @@ ggplot(playerstats, aes(x = playTimeDay,
   playerTheme +
   scale_colour_discrete(name = "Name")
 ggsave("Plots/DistanceWalked_OnlineTime.png")
+
+# Server growth
+ggplot(playerstats, aes(x = joinDate, 
+                        y = number)) + 
+  geom_point(shape = 1, aes(colour=player, group=1)) + 
+  geom_smooth(method = lm) + 
+  ylab("Whitelist count") + xlab("Date") +
+  ggtitle("Whitelist count growth") +
+  playerTheme +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  ylim(0,30) +
+  scale_colour_discrete(name = "Name") +
+  scale_x_datetime(labels = date_format("%y-%m-%d"),
+                   breaks = date_breaks("month"))
+ggsave("Plots/WhitelistGrowth.png")
