@@ -3,8 +3,8 @@ source("dataPrep.R")
 
 # Define general legend/guide for all players
 playerTheme <- theme(legend.position="right",
-                legend.key.size = unit(.4, "cm"),
-                legend.text = element_text(size = rel(.7)))
+                legend.key.size = unit(.35, "cm"),
+                legend.text = element_text(size = rel(.7)));
 
 # Convert play time to real time hours
 playTimeHours <- (playerstats$playOneMinute/20/60/60)
@@ -40,7 +40,7 @@ ggplot(playerstats, aes(x = playTimeHours,
 # Mob kills vs play time
 ggplot(playerstats, aes(x = playTimeHours, 
                         y = mobKills)) + 
-  geom_point(shape = 1, aes(colour=as.factor(player), group=1)) + 
+  geom_point(shape = 1, aes(colour=player, group=1)) + 
   geom_smooth(method = lm) + 
   ylab("Mob kills (absolute)") + xlab("Online time (hours (real time)))") +
   ggtitle("Mob kills vs. Online time") +
@@ -51,7 +51,7 @@ ggsave("Plots/MobKills_OnlineTime.png")
 # Distance walked per online time
 ggplot(playerstats, aes(x = playTimeHours, 
                         y = (walkOneCm/1000))) + 
-  geom_point(shape = 1, aes(colour=as.factor(player), group=1)) + 
+  geom_point(shape = 1, aes(colour=player, group=1)) + 
   geom_smooth(method = lm) + 
   ylab("Distance walked (km)") + xlab("Online time (hours (real time)))") +
   ggtitle("Distance walked vs. Online time") +
@@ -60,16 +60,15 @@ ggplot(playerstats, aes(x = playTimeHours,
 ggsave("Plots/DistanceWalked_OnlineTime.png")
 
 # Server growth
-ggplot(playerstats, aes(x = joinDate, 
-                        y = number)) + 
-  geom_point(shape = 1, aes(colour=player, group=1)) + 
+ggplot(playerstats, aes(x = joinDate, y = number)) + 
+  geom_point(shape = player, aes(colour=player, group=1)) + 
   geom_smooth(method = lm, se=F) + 
   ylab("Whitelist count") + xlab("Date") +
   ggtitle("Wurstmineberg Server Growth") +
   playerTheme +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  ylim(0,30) +
+  #ylim(-1,30) +
   scale_colour_discrete(name = "Name") +
   scale_x_datetime(labels = date_format("%y-%m-%d"),
-                   breaks = date_breaks("month"))
+                   breaks = date_breaks("month"));
 ggsave("Plots/WhitelistGrowth.png")
