@@ -42,8 +42,7 @@ playerstats$player <- factor(playerstats$player,
                              levels=playerstats$player)
 
 ## Getting rid of NAs and assuming 0 (again. Don't ask.)
-playerstats[playerstats == NA] <- 0
-
+playerstats[is.na(playerstats)] <- 0
 ## plots
 ggplot(data=playerstats, aes(x=player, y=deaths)) + 
   geom_bar(colour="black", width=.7, stat="identity") + 
