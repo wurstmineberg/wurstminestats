@@ -2,7 +2,8 @@
 library(RCurl)
 library(jsonlite)
 library(ggplot2)
-library(scales)
+library(scales)     # For datetime scales on plots
+library(gridExtra)  # For annotations outside of plot
 
 # Getting some data for furthe use
 people <- fromJSON("http://wurstmineberg.de/assets/serverstatus/people.json")
@@ -114,10 +115,10 @@ ggplot(playerstats, aes(x = playTimeDay,
 ggsave("Plots/DistanceWalked_OnlineTime.png")
 
 # Server growth
-ggplot(playerstats, aes(x = joinDate, 
+plot <- ggplot(playerstats, aes(x = joinDate, 
                         y = number)) + 
   geom_point(shape = 1, aes(colour=player, group=1)) + 
-  geom_smooth(method = lm) + 
+  geom_smooth(method = lm, se=F) + 
   ylab("Whitelist count") + xlab("Date") +
   ggtitle("Whitelist count growth") +
   playerTheme +
@@ -126,4 +127,7 @@ ggplot(playerstats, aes(x = joinDate,
   scale_colour_discrete(name = "Name") +
   scale_x_datetime(labels = date_format("%y-%m-%d"),
                    breaks = date_breaks("month"))
+  print(arrangeGrob(plot, legend = 
+                      textGrob(format(Sys.time(), "%y-%m-%d"), 
+                               rot = -90, vjust = 1)))
 ggsave("Plots/WhitelistGrowth.png")
