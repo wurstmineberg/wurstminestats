@@ -55,4 +55,9 @@ playerstats$number <- (1:(nrow(playerstats))) # Just to get a numeric ID
 
 # Convert joinDate to POSIX-time
 playerstats$joinDate[playerstats$joinDate == 0] <- NA
+
+playerstats$age <- round(as.numeric(difftime(playerstats$joinDate[playerstats$number],
+                    playerstats$joinDate[1], 
+                    units ="days")))
+
 playerstats$joinDate <- as.POSIXct(playerstats$joinDate, origin="1970-01-01")
