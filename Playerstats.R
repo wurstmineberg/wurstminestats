@@ -30,6 +30,7 @@ playerstats <- playerstats[match(people$minecraft[people$status != "former"], pl
 playerstats$joinDate <- people$join_date[people$status != "former"]
 
 rownames(playerstats) <- NULL
+
 #playerstats <- playerstats[playerstats == NA] <- "0"
 
 playerstats <- playerstats[c(ncol(playerstats)-1,
