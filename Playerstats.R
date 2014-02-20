@@ -38,10 +38,10 @@ ggplot(playerstats, aes(x = playTimeHours,
 # cor(playerstats$deaths,playerstats$playOneMinute)^2
 
 # Mob kills vs play time
-ggplot(playerstats, aes(x = playTimeHours, 
-                        y = mobKills)) + 
-  geom_point(shape = 1, aes(colour=player, group=1)) + 
+ggplot(playerstats, aes(x=playTimeHours, y=mobKills, label=player)) + 
   geom_smooth(method = lm) + 
+  geom_point(aes(colour=player, group=1)) + 
+  geom_text(size=2, hjust=-.2, vjust=.4) +
   ylab("Mob kills (absolute)") + xlab("Online time (hours (real time)))") +
   ggtitle("Mob kills vs. Online time") +
   playerTheme +
@@ -50,9 +50,10 @@ ggsave("Plots/MobKills_OnlineTime.png")
 
 # Distance walked per online time
 ggplot(playerstats, aes(x = playTimeHours, 
-                        y = (walkOneCm/1000))) + 
-  geom_point(shape = 1, aes(colour=player, group=1)) + 
-  geom_smooth(method = lm) + 
+                        y = (walkOneCm/1000),
+                        label=player)) + 
+  geom_point(aes(colour=player, group=1)) + 
+ # geom_smooth(method = lm) + 
   ylab("Distance walked (km)") + xlab("Online time (hours (real time)))") +
   ggtitle("Distance walked vs. Online time") +
   playerTheme +
@@ -60,9 +61,10 @@ ggplot(playerstats, aes(x = playTimeHours,
 ggsave("Plots/DistanceWalked_OnlineTime.png")
 
 # Server growth
-ggplot(playerstats, aes(x = joinDate, y = number)) + 
+ggplot(playerstats, aes(x = joinDate, y = number, label = player)) + 
+  geom_smooth(method = loess, se=T) + 
+  geom_text(size=2, hjust=-.2, vjust=.4) +
   geom_point(aes(colour=player, group=1)) + 
-  geom_smooth(method = lm, se=F) + 
   ylab("Whitelist count") + xlab("Date") +
   ggtitle("Wurstmineberg Server Growth") +
   playerTheme +
@@ -75,14 +77,11 @@ ggsave("Plots/WhitelistGrowth.png")
 
 
 # Play time vs server age
-ggplot(playerstats, aes(x = serverAge, y = playTimeHours)) + 
-  geom_point(aes(colour=player, shape=as.factor(people$status[people$status != "former"]), group=1)) + 
-  geom_smooth(method = lm, se=F) + 
+ggplot(playerstats, aes(x = serverAge, y = playTimeHours, label=number)) +
+  geom_text(size=2, hjust=.5, vjust=-1) +
+  geom_point(aes(colour=joinStatus, group=1)) + 
   ylab("Time spent on server (hours)") + xlab("Age on server (days)") +
   ggtitle("Time spent on server vs. relative age on server") +
   playerTheme +
-  #theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  #ylim(-1,30) +
-  scale_colour_discrete(name = "Name") +
-  scale_shape_discrete(name = "Status")
+  scale_colour_discrete(name = "Join Category")
 ggsave("Plots/ServerAge_PlayTime.png")
