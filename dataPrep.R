@@ -52,6 +52,9 @@ playerstats[is.na(playerstats)] <- 0
 ## Just to get a numeric ID to have an easy index and player number
 playerstats$number <- (1:(nrow(playerstats)))
 
+## Give people status values because lol
+playerstats$joinStatus <- as.factor(people$status[people$status != "former"])
+
 ## In case of missing join date, apply NA
 playerstats$joinDate[playerstats$joinDate == 0] <- NA
 
