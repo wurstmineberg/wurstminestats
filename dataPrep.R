@@ -18,7 +18,7 @@ names(playerstats) <- sub("stat.","",names(playerstats))
 playerstats[playerstats == "NULL"] <- "0"
 playerTemp <- names(playerstats[,1])
 ## Add "organic" category to people$status for easier matching
-people$status[is.na(people$status)] <- "organic"
+people$status[is.na(people$status)] <- "later"
 ## Getting rid of the nested list stuff
 ## This took me so long, please don't even ask me about it.
 for(i in (1:23)){
