@@ -62,9 +62,9 @@ ggsave("Plots/DistanceWalked_OnlineTime.png")
 
 # Server growth
 ggplot(playerstats, aes(x = joinDate, y = number, label = player)) + 
-  geom_smooth(method = loess, se=T) + 
+  #geom_smooth(method = loess, se=F) + 
   geom_text(size=2, hjust=-.2, vjust=.4) +
-  geom_point(aes(colour=player, group=1)) + 
+  geom_point(aes(group=1)) + 
   ylab("Whitelist count") + xlab("Date") +
   ggtitle("Wurstmineberg Server Growth") +
   playerTheme +
