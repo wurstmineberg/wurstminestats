@@ -3,8 +3,8 @@ source("dataPrep.R")
 
 # Define general legend/guide for all players
 playerTheme <- theme(legend.position="right",
-                legend.key.size = unit(.35, "cm"),
-                legend.text = element_text(size = rel(.7)));
+                legend.key.size = unit(.4, "cm"),
+                legend.text = element_text(size = rel(.8)));
 
 # Convert play time to real time hours
 playTimeHours <- (playerstats$playOneMinute/20/60/60)
@@ -61,7 +61,7 @@ ggsave("Plots/DistanceWalked_OnlineTime.png")
 
 # Server growth
 ggplot(playerstats, aes(x = joinDate, y = number)) + 
-  geom_point(shape = player, aes(colour=player, group=1)) + 
+  geom_point(aes(colour=player, group=1)) + 
   geom_smooth(method = lm, se=F) + 
   ylab("Whitelist count") + xlab("Date") +
   ggtitle("Wurstmineberg Server Growth") +
@@ -72,3 +72,17 @@ ggplot(playerstats, aes(x = joinDate, y = number)) +
   scale_x_datetime(labels = date_format("%y-%m-%d"),
                    breaks = date_breaks("month"));
 ggsave("Plots/WhitelistGrowth.png")
+
+
+# Play time vs server age
+ggplot(playerstats, aes(x = serverAge, y = playTimeHours)) + 
+  geom_point(aes(colour=player, shape=as.factor(people$status[people$status != "former"]), group=1)) + 
+  geom_smooth(method = lm, se=F) + 
+  ylab("Time spent on server (hours)") + xlab("Age on server (days)") +
+  ggtitle("Time spent on server vs. relative age on server") +
+  playerTheme +
+  #theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  #ylim(-1,30) +
+  scale_colour_discrete(name = "Name") +
+  scale_shape_discrete(name = "Status")
+ggsave("Plots/ServerAge_PlayTime.png")
