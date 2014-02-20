@@ -18,7 +18,7 @@ ggplot(data=playerstats, aes(x=player, y=deaths)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
   ggsave("Plots/Deaths.png")
 
-ggplot(data=playerstats, aes(x=player, y=playOneMinute)) + 
+ggplot(data=playerstats, aes(x=player, y=playTimeHours)) + 
   geom_bar(colour="black", width=.7, stat="identity") + 
   xlab("Player") + ylab("Online time (hours (real time))") +
   ggtitle("Online time of players on Wurstmineberg") +
