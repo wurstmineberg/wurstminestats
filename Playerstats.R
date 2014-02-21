@@ -19,7 +19,7 @@ ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,deaths), y=deaths
 #  theme(axis.text.x = element_text(angle = 45, hjust = 1))
   ggsave("Plots/Deaths.png")
 
-ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,playTimeHours), y=playTimeHours/serverAge)) + 
+ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,playTimeHours/serverAge), y=playTimeHours/serverAge)) + 
   geom_bar(colour="black", width=.7, stat="identity") + 
   xlab("Player") + ylab("Online Time (h) by Server Age (d)") +
   ggtitle("Online Time by Server Age") + coord_flip() +
