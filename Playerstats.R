@@ -11,25 +11,26 @@ playTimeHours <- (playerstats$playOneMinute/20/60/60)
 
 ## Actual plot stuff below
 
-ggplot(data=playerstats, aes(x=player, y=deaths)) + 
+ggplot(data=playerstats, aes(x=reorder(player,deaths), y=deaths)) + 
   geom_bar(colour="black", width=.7, stat="identity") + 
   xlab("Player") + ylab("Deathcount") +
-  ggtitle("Deaths on Wurstmineberg") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  ggtitle("Deaths on Wurstmineberg") + coord_flip()
+#  theme(axis.text.x = element_text(angle = 45, hjust = 1))
   ggsave("Plots/Deaths.png")
 
-ggplot(data=playerstats, aes(x=player, y=playTimeHours)) + 
+ggplot(data=playerstats, aes(x=reorder(player,playTimeHours), y=playTimeHours)) + 
   geom_bar(colour="black", width=.7, stat="identity") + 
   xlab("Player") + ylab("Online time (hours (real time))") +
   ggtitle("Online time of players on Wurstmineberg") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  coord_flip()
+ # theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ggsave("Plots/PlayTime.png")
 
-ggplot(data=playerstats, aes(x=player, y=(walkOneCm/1000000))) + 
+ggplot(data=playerstats, aes(x=reorder(player,walkOneCm), y=(walkOneCm/1000000))) + 
   geom_bar(width=.7, stat="identity") + 
   xlab("Player") + ylab("Distance (km)") +
-  ggtitle("Distance walked on Wurstmineberg") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  ggtitle("Distance walked on Wurstmineberg") + coord_flip()
+ # theme(axis.text.x = element_text(angle = 45, hjust = 1))
   ggsave("Plots/Distance.png")
   
 ggplot(playerstats, aes(x = playTimeHours, y = deaths)) + 
