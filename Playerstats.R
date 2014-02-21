@@ -6,46 +6,16 @@ playerTheme <- theme(legend.position="right",
                 legend.key.size = unit(.4, "cm"),
                 legend.text = element_text(size = rel(.8)));
 
-# Convert play time to real time hours
-playTimeHours <- (playerstats$playOneMinute/20/60/60)
-
 ## Actual plot stuff below
 
-ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,deaths), y=deaths)) + 
-  geom_bar(colour="black", width=.7, stat="identity") + 
-  xlab("Player") + ylab("Deathcount") +
-  ggtitle("Deaths on Wurstmineberg") + coord_flip() +
-  scale_fill_discrete(name = "Join Status")
-#  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-  ggsave("Plots/Deaths.png")
-
-ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,playTimeHours/serverAge), y=playTimeHours/serverAge)) + 
+ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,playOneHour/serverAge), y=playOneHour/serverAge)) + 
   geom_bar(colour="black", width=.7, stat="identity") + 
   xlab("Player") + ylab("Online Time (h) by Server Age (d)") +
   ggtitle("Online Time by Server Age") + coord_flip() +
   scale_fill_discrete(name = "Join Status")
 ggsave("Plots/OnlineTimebyServerAge.png")
-
-
-
-ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,playTimeHours), y=playTimeHours)) + 
-  geom_bar(colour="black", width=.7, stat="identity") + 
-  xlab("Player") + ylab("Online time (hours (real time))") +
-  ggtitle("Online time of players on Wurstmineberg") +
-  coord_flip() +
-  scale_fill_discrete(name = "Join Status")
- # theme(axis.text.x = element_text(angle = 45, hjust = 1))
-ggsave("Plots/PlayTime.png")
-
-ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,walkOneCm), y=(walkOneCm/1000000))) + 
-  geom_bar(colour="black", width=.7, stat="identity") + 
-  xlab("Player") + ylab("Distance (km)") +
-  ggtitle("Distance walked on Wurstmineberg") + coord_flip() +
-  scale_fill_discrete(name = "Join Status")
- # theme(axis.text.x = element_text(angle = 45, hjust = 1))
-  ggsave("Plots/Distance.png")
   
-ggplot(playerstats, aes(x = playTimeHours, y = deaths)) + 
+ggplot(playerstats, aes(x = playOneHour, y = deaths)) + 
   geom_point(aes(colour=player), group=1) + 
  # geom_smooth(method = lm) + 
   ylab("Deaths") + xlab("Online time (hours (real time))") +
@@ -57,7 +27,7 @@ ggsave("Plots/Deaths_OnlineTime.png")
 #cor(playerstats$deaths,playerstats$playOneMinute)^2
 
 # Mob kills vs play time
-ggplot(playerstats, aes(x=playTimeHours, y=mobKills, label=player)) + 
+ggplot(playerstats, aes(x=playOneHour, y=mobKills, label=player)) + 
   geom_smooth(method = lm, se=F) + 
   geom_point(aes(colour=joinStatus, group=1)) + 
   geom_text(size=2, hjust=-.2, vjust=.4) +
@@ -68,7 +38,7 @@ ggplot(playerstats, aes(x=playTimeHours, y=mobKills, label=player)) +
 ggsave("Plots/MobKills_OnlineTime.png")
 
 # Distance walked per online time
-ggplot(playerstats, aes(x = playTimeHours,  y = (walkOneCm/1000000), label=player)) + 
+ggplot(playerstats, aes(x = playOneHour,  y = (walkOneCm/1000000), label=player)) + 
   geom_point(aes(colour=player, group=1)) + 
  # geom_smooth(method = lm) + 
   ylab("Distance walked (km)") + xlab("Online time (hours (real time)))") +
@@ -95,7 +65,7 @@ ggsave("Plots/WhitelistGrowth.png")
 
 
 # Play time vs server age
-ggplot(playerstats, aes(x = serverAge, y = playTimeHours, label=player)) +
+ggplot(playerstats, aes(x = serverAge, y = playOneHour, label=player)) +
   geom_text(size=2, hjust=.5, vjust=-1) +
   geom_point(aes(colour=joinStatus, group=1)) + 
   ylab("Time spent on server (hours)") + xlab("Age on server (days)") +
