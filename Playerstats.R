@@ -19,6 +19,15 @@ ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,deaths), y=deaths
 #  theme(axis.text.x = element_text(angle = 45, hjust = 1))
   ggsave("Plots/Deaths.png")
 
+ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,playTimeHours), y=playTimeHours/serverAge)) + 
+  geom_bar(colour="black", width=.7, stat="identity") + 
+  xlab("Player") + ylab("Online Time (h) by Server Age (d)") +
+  ggtitle("Online Time by Server Age") + coord_flip() +
+  scale_fill_discrete(name = "Join Status")
+ggsave("Plots/OnlineTimebyServerAge.png")
+
+
+
 ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,playTimeHours), y=playTimeHours)) + 
   geom_bar(colour="black", width=.7, stat="identity") + 
   xlab("Player") + ylab("Online time (hours (real time))") +
@@ -49,13 +58,13 @@ ggsave("Plots/Deaths_OnlineTime.png")
 
 # Mob kills vs play time
 ggplot(playerstats, aes(x=playTimeHours, y=mobKills, label=player)) + 
-  geom_smooth(method = lm) + 
-  geom_point(aes(colour=player, group=1)) + 
+  geom_smooth(method = lm, se=F) + 
+  geom_point(aes(colour=joinStatus, group=1)) + 
   geom_text(size=2, hjust=-.2, vjust=.4) +
   ylab("Mob kills (absolute)") + xlab("Online time (hours (real time)))") +
   ggtitle("Mob kills vs. Online time") +
   playerTheme +
-  scale_colour_discrete(name = "Name")
+  scale_colour_discrete(name = "Join Status")
 ggsave("Plots/MobKills_OnlineTime.png")
 
 # Distance walked per online time
@@ -81,7 +90,7 @@ ggplot(playerstats, aes(x = joinDate, y = number, label = player)) +
   scale_x_datetime(labels = date_format("%y-%m-%d"),
                    breaks = date_breaks("month"));
 ggsave("Plots/WhitelistGrowth.png")
-cor(playerstats$serverAge,playerstats$number, method="spearman")
+#cor(playerstats$serverAge,playerstats$number, method="spearman")
 
 
 
@@ -94,3 +103,4 @@ ggplot(playerstats, aes(x = serverAge, y = playTimeHours, label=player)) +
   playerTheme +
   scale_colour_discrete(name = "Join Status")
 ggsave("Plots/ServerAge_PlayTime.png")
+
