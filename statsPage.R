@@ -73,7 +73,7 @@ ggsave("Plots/statspage/PlayerKills.png")
 ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,playOneHour), y=playOneHour)) + 
   geom_bar(colour="black", width=.7, stat="identity") + 
   xlab("Player") + ylab("Online time (hours (real time))") +
-  ggtitle("Time played / ildet") +
+  ggtitle("Time Played / Idlet") +
   coord_flip() +
   scale_fill_discrete(name = "Join Status")
 ggsave("Plots/statspage/TimePlayedIdlet.png")
