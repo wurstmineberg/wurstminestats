@@ -14,7 +14,8 @@ playTimeHours <- (playerstats$playOneMinute/20/60/60)
 ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,deaths), y=deaths)) + 
   geom_bar(colour="black", width=.7, stat="identity") + 
   xlab("Player") + ylab("Deathcount") +
-  ggtitle("Deaths on Wurstmineberg") + coord_flip()
+  ggtitle("Deaths on Wurstmineberg") + coord_flip() +
+  scale_fill_discrete(name = "Join Status")
 #  theme(axis.text.x = element_text(angle = 45, hjust = 1))
   ggsave("Plots/Deaths.png")
 
@@ -22,14 +23,16 @@ ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,playTimeHours), y
   geom_bar(colour="black", width=.7, stat="identity") + 
   xlab("Player") + ylab("Online time (hours (real time))") +
   ggtitle("Online time of players on Wurstmineberg") +
-  coord_flip()
+  coord_flip() +
+  scale_fill_discrete(name = "Join Status")
  # theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ggsave("Plots/PlayTime.png")
 
 ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,walkOneCm), y=(walkOneCm/1000000))) + 
   geom_bar(colour="black", width=.7, stat="identity") + 
   xlab("Player") + ylab("Distance (km)") +
-  ggtitle("Distance walked on Wurstmineberg") + coord_flip()
+  ggtitle("Distance walked on Wurstmineberg") + coord_flip() +
+  scale_fill_discrete(name = "Join Status")
  # theme(axis.text.x = element_text(angle = 45, hjust = 1))
   ggsave("Plots/Distance.png")
   
@@ -89,5 +92,5 @@ ggplot(playerstats, aes(x = serverAge, y = playTimeHours, label=player)) +
   ylab("Time spent on server (hours)") + xlab("Age on server (days)") +
   ggtitle("Time spent on server vs. relative age on server") +
   playerTheme +
-  scale_colour_discrete(name = "Join Category")
+  scale_colour_discrete(name = "Join Status")
 ggsave("Plots/ServerAge_PlayTime.png")
