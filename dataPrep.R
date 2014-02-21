@@ -64,6 +64,9 @@ playerstats$joinDate[playerstats$joinDate == 0] <- NA
 playerstats$joinDate <- as.POSIXct(playerstats$joinDate, 
                                    origin="1970-01-01")
 
+# Convert play time to real time hours
+playerstats$playOneHour <- (playerstats$playOneMinute/20/60/60)
+
 
 ## Define server birth and server age times
 
