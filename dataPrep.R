@@ -98,7 +98,7 @@ for(i in 1:nrow(playerstats)){
 }; rm(i);
 
 ## Get a vector of the age gaps starting from player[1]
-inviteGaps <- c(0,playerstats$serverAge[1:25] - playerstats$serverAge[2:26])
+inviteGaps <- c(0,round(as.numeric(difftime(playerstats$joinDate[2:26], playerstats$joinDate[1:25], units="days"))))
 mean(inviteGaps)
 
 ## Write dataset to file for ze easy access
