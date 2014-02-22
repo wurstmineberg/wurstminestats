@@ -9,6 +9,11 @@ legendTitle <- scale_fill_discrete(name = "Join Status")
 xLable <- xlab("Player")
 
 # Animals Bred
+ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,animalsBred), y=animalsBred)) + 
+  barChart + legendTitle + coord_flip() +
+  xLable + labs(y="Number of Animals", title="Animals Bred")
+ggsave(file="Plots/statspage/AnimalsBred.png", height=plotHeight, width=plotWidth)
+
 # Damage Dealt
 ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,damageDealt), y=damageDealt)) + 
   barChart + legendTitle + coord_flip() +
@@ -40,11 +45,30 @@ ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,minecartOneCm), y
 ggsave(file="Plots/statspage/DistanceByMinecart.png", height=plotHeight, width=plotWidth)
 
 # Distance by Pig
+ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,pigOneCm), y=(pigOneCm/1000))) + 
+  barChart + legendTitle + coord_flip() +
+  xLable + labs(y="Distance (m)", title="Distance by Pig")
+ggsave(file="Plots/statspage/DistanceByPig.png", height=plotHeight, width=plotWidth)
+
 # Distance Climbed
 # Distance Dove
 # Distance Fallen
+ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,fallOneCm), y=(fallOneCm/1000000))) + 
+  barChart + legendTitle + coord_flip() +
+  xLable + labs(y="Distance (km)", title="Distance Fallen")
+ggsave(file="Plots/statspage/DistanceFallen.png", height=plotHeight, width=plotWidth)
+
 # Distance Flown
+ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,flyOneCm), y=(flyOneCm/1000000))) + 
+  barChart + legendTitle + coord_flip() +
+  xLable + labs(y="Distance (km)", title="Distance Flown")
+ggsave(file="Plots/statspage/DistanceFlown.png", height=plotHeight, width=plotWidth)
+
 # Distance Swum
+ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,swimOneCm), y=(swimOneCm/1000000))) + 
+  barChart + legendTitle + coord_flip() +
+  xLable + labs(y="Distance (km)", title="Distance Swum")
+ggsave(file="Plots/statspage/DistanceSwum.png", height=plotHeight, width=plotWidth)
 
 # Distance Walked
 ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,walkOneCm), y=(walkOneCm/1000000))) + 
