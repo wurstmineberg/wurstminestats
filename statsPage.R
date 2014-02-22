@@ -2,8 +2,19 @@
 # Pull recent data
 source("dataPrep.R")
 
+# Define some variables for plot layout and labels
+plotWidth <- 6; plotHeight <- 4;
+barChart <- geom_bar(colour="black", width=.7, stat="identity")
+legendTitle <- scale_fill_discrete(name = "Join Status")
+xLable <- xlab("Player")
+
 # Animals Bred
 # Damage Dealt
+ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,damageDealt), y=damageDealt)) + 
+  barChart + legendTitle + coord_flip() +
+  xLable + labs(y="Damage Dealt", title="Damage Dealt")
+ggsave(file="Plots/statspage/DamageDealt.png", height=plotHeight, width=plotWidth)
+
 # Damage Taken
 # Distance by Boat
 # Distance by Horse
@@ -17,29 +28,23 @@ source("dataPrep.R")
 
 # Distance Walked
 ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,walkOneCm), y=(walkOneCm/1000000))) + 
-  geom_bar(colour="black", width=.7, stat="identity") + 
-  xlab("Player") + ylab("Distance (km)") +
-  ggtitle("Distance walked") + coord_flip() +
-  scale_fill_discrete(name = "Join Status")
-ggsave("Plots/statspage/DistanceWalked.png")
+  barChart + legendTitle + coord_flip() +
+  xLable + labs(y="Distance (km)", title="Distance walked")
+ggsave(file="Plots/statspage/DistanceWalked.png", height=plotHeight, width=plotWidth)
 
 # Fish Caught
 
 # Games quit
-ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,leaveGame), y=leaveGame)) + 
-  geom_bar(colour="black", width=.7, stat="identity") + 
-  xlab("Player") + ylab("Games quit") +
-  ggtitle("Games Quit") + coord_flip() +
-  scale_fill_discrete(name = "Join Status")
-ggsave("Plots/statspage/GamesQuit.png")
+ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,leaveGame), y=leaveGame)) +
+  barChart + legendTitle + coord_flip() +
+  xLable + labs(y="Games quit", title="Games Quit")
+ggsave(file="Plots/statspage/GamesQuit.png", height=plotHeight, width=plotWidth)
 
 # Items Dropped
 ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,drop), y=drop)) + 
-  geom_bar(colour="black", width=.7, stat="identity") + 
-  xlab("Player") + ylab("Drops") +
-  ggtitle("Items Dropped") + coord_flip() +
-  scale_fill_discrete(name = "Join Status")
-ggsave("Plots/statspage/NumberOfDeaths.png")
+  barChart + legendTitle + coord_flip() +
+  xLable+ labs("Drops", title="Items Dropped")
+ggsave(file="Plots/statspage/NumberOfDeaths.png", height=plotHeight, width=plotWidth)
 
 # Jumps
 
@@ -47,35 +52,26 @@ ggsave("Plots/statspage/NumberOfDeaths.png")
 
 # Mob Kills
 ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,mobKills), y=mobKills)) + 
-  geom_bar(colour="black", width=.7, stat="identity") + 
-  xlab("Player") + ylab("Mobs killed") +
-  ggtitle("Mob Kills") + coord_flip() +
-  scale_fill_discrete(name = "Join Status")
-ggsave("Plots/statspage/MobKills.png")
+  barChart + legendTitle + coord_flip() +
+  xLable + labs(y="Mobs killed", title="Mob Kills")
+ggsave(file="Plots/statspage/MobKills.png", height=plotHeight, width=plotWidth)
 
 # Number of Deaths
 ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,deaths), y=deaths)) + 
-  geom_bar(colour="black", width=.7, stat="identity") + 
-  xlab("Player") + ylab("Deathcount") +
-  ggtitle("Number of Deaths") + coord_flip() +
-  scale_fill_discrete(name = "Join Status")
-ggsave("Plots/statspage/NumberOfDeaths.png")
+  barChart + legendTitle + coord_flip() +
+  xLable + labs(y="Deathcount", title="Number of Deaths") +
+ggsave(file="Plots/statspage/NumberOfDeaths.png", height=plotHeight, width=plotWidth)
 
 # Player Kills
 ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,playerKills), y=playerKills)) + 
-  geom_bar(colour="black", width=.7, stat="identity") + 
-  xlab("Player") + ylab("Deathcount") +
-  ggtitle("Player Kills") + coord_flip() +
-  scale_fill_discrete(name = "Join Status")
-ggsave("Plots/statspage/PlayerKills.png")
+  barChart + legendTitle + coord_flip() +
+  xLable + labs("Player Kills", title="Player Kills")
+ggsave(file="Plots/statspage/PlayerKills.png", height=plotHeight, width=plotWidth)
 
 # Time Played / Idled
 ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,playOneHour), y=playOneHour)) + 
-  geom_bar(colour="black", width=.7, stat="identity") + 
-  xlab("Player") + ylab("Online time (hours (real time))") +
-  ggtitle("Time Played / Idlet") +
-  coord_flip() +
-  scale_fill_discrete(name = "Join Status")
-ggsave("Plots/statspage/TimePlayedIdlet.png")
+  barChart + legendTitle + coord_flip() +
+  xLable + labs("Online time (hours (real time))", title="Time Played / Idlet") 
+ggsave(file="Plots/statspage/TimePlayedIdlet.png", height=plotHeight, width=plotWidth)
 
 # Treasure Fished
