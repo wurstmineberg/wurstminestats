@@ -85,13 +85,13 @@ ggsave(file="Plots/statspage/NumberOfDeaths.png", height=plotHeight, width=plotW
 # Player Kills
 ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,playerKills), y=playerKills)) + 
   barChart + legendTitle + coord_flip() +
-  xLable + labs("Player Kills", title="Player Kills")
+  xLable + labs(y="Player Kills", title="Player Kills")
 ggsave(file="Plots/statspage/PlayerKills.png", height=plotHeight, width=plotWidth)
 
 # Time Played / Idled
 ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,playOneHour), y=playOneHour)) + 
   barChart + legendTitle + coord_flip() +
-  xLable + labs("Online time (hours (real time))", title="Time Played / Idlet") 
+  xLable + labs(y="Online time (hours (real time))", title="Time Played / Idlet") 
 ggsave(file="Plots/statspage/TimePlayedIdlet.png", height=plotHeight, width=plotWidth)
 
 # Treasure Fished
