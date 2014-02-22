@@ -16,9 +16,29 @@ ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,damageDealt), y=d
 ggsave(file="Plots/statspage/DamageDealt.png", height=plotHeight, width=plotWidth)
 
 # Damage Taken
+ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,abs(damageTaken)), y=abs(damageTaken))) + 
+  barChart + legendTitle + coord_flip() +
+  xLable + labs(y="Damage Dealt", title="Damage Taken (broken as of now)")
+ggsave(file="Plots/statspage/DamageTaken.png", height=plotHeight, width=plotWidth)
+
 # Distance by Boat
+ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,boatOneCm), y=(boatOneCm/1000000))) + 
+  barChart + legendTitle + coord_flip() +
+  xLable + labs(y="Distance (km)", title="Distance by Boat")
+ggsave(file="Plots/statspage/DistanceByBoat.png", height=plotHeight, width=plotWidth)
+
 # Distance by Horse
+ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,horseOneCm), y=(horseOneCm/1000000))) + 
+  barChart + legendTitle + coord_flip() +
+  xLable + labs(y="Distance (km)", title="Distance by Horse")
+ggsave(file="Plots/statspage/DistanceByHorse.png", height=plotHeight, width=plotWidth)
+
 # Distance by Minecart
+ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,minecartOneCm), y=(minecartOneCm/1000000))) + 
+  barChart + legendTitle + coord_flip() +
+  xLable + labs(y="Distance (km)", title="Distance by Minecart")
+ggsave(file="Plots/statspage/DistanceByMinecart.png", height=plotHeight, width=plotWidth)
+
 # Distance by Pig
 # Distance Climbed
 # Distance Dove
