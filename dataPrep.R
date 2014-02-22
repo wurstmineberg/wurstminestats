@@ -45,11 +45,6 @@ playerstats$joinDate <- people$join_date[people$status != "former"]
 # Get rid of unnecessary rownames column (we'll get an index later)
 rownames(playerstats) <- NULL
 
-## Resort columns to get name and joinDate first. Optional!
-playerstats <- playerstats[c(ncol(playerstats)-1,
-                             ncol(playerstats),
-                             1:(ncol(playerstats)-2))]
-
 ## Convert player names to people.json-IDs
 playerstats$player <- people$id[people$status != "former"]
 
@@ -97,6 +92,15 @@ for(i in 1:nrow(playerstats)){
   playerstats$distanceTraveled[i] <- sum(playerstats[i,grep("OneCm", colnames(playerstats))])
 }; rm(i);
 
+## Resort columns to get name and joinDate first. Manually, like a fucking animal.
+generalColumns <- c("player", "number", "joinDate", "joinStatus", "serverAge", "serverBirth", "leaveGame",
+                    "deaths", "playerKills","damageDealt","damageTaken", "playOneMinute", 
+                    "playOneHour", "jump", "animalsBred", "mobKills")
+itemColumns <- c("drop", "fishCaught", "treasureFished", "junkFished")
+distanceColumns <- c("distanceTraveled","walkOneCm", "climbOneCm", "minecartOneCm", "horseOneCm", 
+                     "boatOneCm", "pigOneCm", "fallOneCm", "swimOneCm", "diveOneCm", "flyOneCm")
+
+playerstats <- playerstats[c(generalColumns,itemColumns,distanceColumns)]
 ## Get a vector of the age gaps starting from player[1]
 inviteGaps <- c(0,round(as.numeric(difftime(playerstats$joinDate[2:26], playerstats$joinDate[1:25], units="days"))))
 mean(inviteGaps)
