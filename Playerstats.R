@@ -8,13 +8,15 @@ playerTheme <- theme(legend.position="right",
 
 ## Actual plot stuff below
 
+# Online hours relative to age on server
 ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,playOneHour/serverAge), y=playOneHour/serverAge)) + 
   geom_bar(colour="black", width=.7, stat="identity") + 
   xlab("Player") + ylab("Online Time (h) by Server Age (d)") +
   ggtitle("Online Time by Server Age") + coord_flip() +
   scale_fill_discrete(name = "Join Status")
 ggsave("Plots/OnlineTimebyServerAge.png")
-  
+
+# Deaths per online hour 
 ggplot(playerstats, aes(x = playOneHour, y = deaths)) + 
   geom_point(aes(colour=player), group=1) + 
  # geom_smooth(method = lm) + 
