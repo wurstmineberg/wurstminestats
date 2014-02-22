@@ -51,7 +51,17 @@ ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,pigOneCm), y=(pig
 ggsave(file="Plots/statspage/DistanceByPig.png", height=plotHeight, width=plotWidth)
 
 # Distance Climbed
+ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,climbOneCm), y=(climbOneCm/1000000))) + 
+  barChart + legendTitle + coord_flip() +
+  xLable + labs(y="Distance (km)", title="Distance Climbed")
+ggsave(file="Plots/statspage/DistanceClimbed.png", height=plotHeight, width=plotWidth)
+
 # Distance Dove
+ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,diveOneCm), y=(diveOneCm/1000000))) + 
+  barChart + legendTitle + coord_flip() +
+  xLable + labs(y="Distance (km)", title="Distance Dove")
+ggsave(file="Plots/statspage/DistanceDove.png", height=plotHeight, width=plotWidth)
+
 # Distance Fallen
 ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,fallOneCm), y=(fallOneCm/1000000))) + 
   barChart + legendTitle + coord_flip() +
@@ -77,6 +87,10 @@ ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,walkOneCm), y=(wa
 ggsave(file="Plots/statspage/DistanceWalked.png", height=plotHeight, width=plotWidth)
 
 # Fish Caught
+ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,fishCaught), y=fishCaught)) +
+  barChart + legendTitle + coord_flip() +
+  xLable + labs(y="Amount of Fish", title="Fish Caught")
+ggsave(file="Plots/statspage/FishCaught.png", height=plotHeight, width=plotWidth)
 
 # Games quit
 ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,leaveGame), y=leaveGame)) +
@@ -87,12 +101,20 @@ ggsave(file="Plots/statspage/GamesQuit.png", height=plotHeight, width=plotWidth)
 # Items Dropped
 ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,drop), y=drop)) + 
   barChart + legendTitle + coord_flip() +
-  xLable+ labs("Drops", title="Items Dropped")
-ggsave(file="Plots/statspage/NumberOfDeaths.png", height=plotHeight, width=plotWidth)
+  xLable+ labs(y="Items", title="Items Dropped")
+ggsave(file="Plots/statspage/ItemsDropped.png", height=plotHeight, width=plotWidth)
 
 # Jumps
+ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,jump), y=jump/1000)) + 
+  barChart + legendTitle + coord_flip() +
+  xLable+ labs(y="Jumps (thousands)", title="Jumps")
+ggsave(file="Plots/statspage/Jumps.png", height=plotHeight, width=plotWidth)
 
 # Junk Fished
+ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,junkFished), y=junkFished)) +
+  barChart + legendTitle + coord_flip() +
+  xLable + labs(y="Amount of Junk", title="Junk Fished")
+ggsave(file="Plots/statspage/JunkFished.png", height=plotHeight, width=plotWidth)
 
 # Mob Kills
 ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,mobKills), y=mobKills)) + 
@@ -119,3 +141,7 @@ ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,playOneHour), y=p
 ggsave(file="Plots/statspage/TimePlayedIdlet.png", height=plotHeight, width=plotWidth)
 
 # Treasure Fished
+ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,treasureFished), y=treasureFished)) +
+  barChart + legendTitle + coord_flip() +
+  xLable + labs(y="Amount of Treasure", title="Treasure Fished")
+ggsave(file="Plots/statspage/TreasureFished.png", height=plotHeight, width=plotWidth)
