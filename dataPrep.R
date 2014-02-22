@@ -61,7 +61,7 @@ playerstats$number <- (1:(nrow(playerstats)))
 ## Give people status values because lol
 playerstats$joinStatus <- as.factor(people$status[people$status != "former"])
 
-# In case of missing join date, apply NA
+# In case of missing join date, apply NA / Technically not necessary anymore
 playerstats$joinDate[playerstats$joinDate == 0] <- NA
 
 # Convert joinDate to POSIXct because time
@@ -89,7 +89,7 @@ wurstminebergAge <- round(as.numeric(difftime(Sys.time(),
 # Get total distance column
 playerstats$distanceTraveled <- 0
 for(i in 1:nrow(playerstats)){
-  playerstats$distanceTraveled[i] <- sum(playerstats[i,grep("OneCm", colnames(playerstats))])
+  playerstats$distanceTraveled[i] <- sum(playerstats[i, grep("OneCm", colnames(playerstats))])
 }; rm(i);
 
 ## Resort columns to get name and joinDate first. Manually, like a fucking animal.
@@ -101,8 +101,9 @@ distanceColumns <- c("distanceTraveled","walkOneCm", "climbOneCm", "minecartOneC
                      "boatOneCm", "pigOneCm", "fallOneCm", "swimOneCm", "diveOneCm", "flyOneCm")
 
 playerstats <- playerstats[c(generalColumns,itemColumns,distanceColumns)]
+
 ## Get a vector of the age gaps starting from player[1]
-inviteGaps <- c(0,round(as.numeric(difftime(playerstats$joinDate[2:26], playerstats$joinDate[1:25], units="days"))))
+inviteGaps <- c(0,round(as.numeric(difftime(playerstats$joinDate[2:nrow(playerstats)], playerstats$joinDate[1:(nrow(playerstats)-1)], units="days"))))
 mean(inviteGaps)
 
 ## Write dataset to file for ze easy access
