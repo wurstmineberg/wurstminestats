@@ -23,7 +23,7 @@ ggsave(file="Plots/statspage/DamageDealt.png", height=plotHeight, width=plotWidt
 # Damage Taken
 ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,abs(damageTaken)), y=abs(damageTaken))) + 
   barChart + legendTitle + coord_flip() +
-  xLable + labs(y="Damage Dealt", title="Damage Taken (broken as of now)")
+  xLable + labs(y="Damage Taken", title="Damage Taken (broken as of now)")
 ggsave(file="Plots/statspage/DamageTaken.png", height=plotHeight, width=plotWidth)
 
 # Distance by Boat
