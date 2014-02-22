@@ -21,9 +21,12 @@ ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,damageDealt), y=d
 ggsave(file="Plots/statspage/DamageDealt.png", height=plotHeight, width=plotWidth)
 
 # Damage Taken
-ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,abs(damageTaken)), y=abs(damageTaken))) + 
+# Remove jemus42's value as long as it's glitched
+playerstats$damageTaken[playerstats$player == "jemus42"] <- NA
+
+ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,damageTaken), y=damageTaken)) + 
   barChart + legendTitle + coord_flip() +
-  xLable + labs(y="Damage Taken", title="Damage Taken (broken as of now)")
+  xLable + labs(y="Damage Taken", title="Damage Taken")
 ggsave(file="Plots/statspage/DamageTaken.png", height=plotHeight, width=plotWidth)
 
 # Distance by Boat
