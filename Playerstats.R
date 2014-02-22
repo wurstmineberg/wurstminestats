@@ -62,8 +62,6 @@ ggplot(playerstats, aes(x = joinDate, y = number, label = player)) +
 ggsave("Plots/WhitelistGrowth.png")
 #cor(playerstats$serverAge,playerstats$number, method="spearman")
 
-
-
 # Play time vs server age
 ggplot(playerstats, aes(x = serverAge, y = playOneHour, label=player)) +
   geom_text(size=2, hjust=.5, vjust=-1) +
@@ -74,3 +72,8 @@ ggplot(playerstats, aes(x = serverAge, y = playOneHour, label=player)) +
   scale_colour_discrete(name = "Join Status")
 ggsave("Plots/ServerAge_PlayTime.png")
 
+# Distance Traveled Total
+ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,distanceTraveled), y=(distanceTraveled/1000000))) + 
+  barChart + legendTitle + coord_flip() +
+  xLable + labs(y="Distance (km)", title="Distance Traveled in Total")
+ggsave(file="Plots/DistanceTraveled.png", height=plotHeight, width=plotWidth)

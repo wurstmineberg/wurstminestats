@@ -83,6 +83,12 @@ wurstminebergAge <- round(as.numeric(difftime(Sys.time(),
         playerstats$joinDate[1], 
         units ="auto")))
 
+# Get total distance column
+playerstats$distanceTraveled <- 0
+for(i in 1:nrow(playerstats)){
+  playerstats$distanceTraveled[i] <- sum(playerstats[i,grep("OneCm", colnames(playerstats))])
+}; rm(i);
+
 ## Get a vector of the age gaps starting from player[1]
 #c(0,playerstats$serverAge[1:25] - playerstats$serverAge[2:26])
 
