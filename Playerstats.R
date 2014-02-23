@@ -14,7 +14,7 @@ ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,playOneHour/serve
   xlab("Player") + ylab("Online Time (h) by Server Age (d)") +
   ggtitle("Online Time by Server Age") + coord_flip() +
   scale_fill_discrete(name = "Join Status")
-ggsave("Plots/OnlineTimebyServerAge.png")
+ggsave(file="Plots/OnlineTimebyServerAge.png", height=plotHeight, width=plotWidth)
 
 # Deaths per online hour 
 ggplot(playerstats, aes(x = playOneHour, y = deaths)) + 
@@ -24,7 +24,7 @@ ggplot(playerstats, aes(x = playOneHour, y = deaths)) +
   ggtitle("Deaths vs. Online time") +
   playerTheme +
   scale_colour_discrete(name = "Name") 
-ggsave("Plots/Deaths_OnlineTime.png")
+ggsave(file="Plots/Deaths_OnlineTime.png", height=6, width=8)
 
 # Damage taken vs deaths
 ggplot(playerstats, aes(y=deaths, x=(damageTaken/2000), label=player)) + 
@@ -35,7 +35,7 @@ ggplot(playerstats, aes(y=deaths, x=(damageTaken/2000), label=player)) +
   ggtitle("Damage Taken vs. Deaths") +
   playerTheme +
   scale_colour_discrete(name = "Join Status")
-ggsave("Plots/Deaths_DamageTaken.png")
+ggsave(file="Plots/Deaths_DamageTaken.png", height=6, width=8)
 
 # Throw linear modeling at stuff
 summary(lm(playerstats$deaths ~ playerstats$damageTaken))
@@ -50,7 +50,7 @@ ggplot(playerstats, aes(x=playOneHour, y=mobKills, label=player)) +
   ggtitle("Mob kills vs. Online time") +
   playerTheme +
   scale_colour_discrete(name = "Join Status")
-ggsave("Plots/MobKills_OnlineTime.png")
+ggsave(file="Plots/MobKills_OnlineTime.png", height=plotHeight, width=plotWidth)
 
 # Distance walked per online time
 ggplot(playerstats, aes(x = playOneHour,  y = (walkOneCm/1000000), label=player)) + 
@@ -60,7 +60,7 @@ ggplot(playerstats, aes(x = playOneHour,  y = (walkOneCm/1000000), label=player)
   ggtitle("Distance walked vs. Online time") +
   playerTheme +
   scale_colour_discrete(name = "Name")
-ggsave("Plots/DistanceWalked_OnlineTime.png")
+ggsave(file="Plots/DistanceWalked_OnlineTime.png", height=6, width=8)
 
 # Server growth
 ggplot(playerstats, aes(x = joinDate, y = number, label = player)) + 
@@ -73,7 +73,7 @@ ggplot(playerstats, aes(x = joinDate, y = number, label = player)) +
   scale_colour_discrete(name = "Join Status") +
   scale_x_datetime(labels = date_format("%y-%m-%d"),
                    breaks = date_breaks("month"));
-ggsave("Plots/WhitelistGrowth.png")
+ggsave(file="Plots/WhitelistGrowth.png", height=6, width=8)
 #cor(playerstats$serverAge,playerstats$number, method="spearman")
 
 # Play time vs server age
@@ -84,7 +84,7 @@ ggplot(playerstats, aes(x = serverAge, y = playOneHour, label=player)) +
   ggtitle("Time spent on server vs. relative age on server") +
   playerTheme +
   scale_colour_discrete(name = "Join Status")
-ggsave("Plots/ServerAge_PlayTime.png")
+ggsave(file="Plots/ServerAge_PlayTime.png", height=plotHeight, width=plotWidth)
 
 # Distance Traveled Total
 ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,distanceTraveled), y=(distanceTraveled/1000000))) + 
@@ -103,3 +103,10 @@ ggplot(data=achievements, aes(fill=playerstats$joinStatus, x=reorder(player,kill
   barChart + legendTitle + coord_flip() +
   xLable + labs(y="Cows", title="Cows killed per player")
 ggsave(file="Plots/CowsKilled.png", height=plotHeight, width=plotWidth)
+
+# Cow kill to cow breed ratio
+cowRatio <- as.numeric(sub("NaN", "0", achievements$breedCow/(achievements$killCow)))
+ggplot(data=achievements, aes(fill=playerstats$joinStatus, x=reorder(player,cowRatio), y=cowRatio)) + 
+  barChart + legendTitle + coord_flip() +
+  xLable + labs(y="Breeds per kills", title="Cow Breed to Cow Kill Ratio")
+ggsave(file="Plots/CowsRatio.png", height=plotHeight, width=plotWidth)

@@ -22,11 +22,6 @@ ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,damageDealt), y=d
 ggsave(file="Plots/statspage/DamageDealt.png", height=plotHeight, width=plotWidth)
 
 # Damage Taken
-# Remove jemus42's value as long as it's glitched
-if(playerstats$damageTaken[playerstats$player == "jemus42"] < 0) {
-  playerstats$damageTaken[playerstats$player == "jemus42"] <- 0;
-}
-
 ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,damageTaken), y=damageTaken/2000)) + 
   barChart + legendTitle + coord_flip() +
   xLable + labs(y="Hearts (thousands)", title="Damage Taken")

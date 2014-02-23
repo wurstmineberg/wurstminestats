@@ -123,6 +123,11 @@ playerstats <- playerstats[c(generalColumns,itemColumns,distanceColumns)]
 inviteGaps <- c(0,round(as.numeric(difftime(playerstats$joinDate[2:nrow(playerstats)], playerstats$joinDate[1:(nrow(playerstats)-1)], units="days"))))
 mean(inviteGaps)
 
+# Remove jemus42's damageTaken value as long as it's glitched
+if(playerstats$damageTaken[playerstats$player == "jemus42"] < 0) {
+  playerstats$damageTaken[playerstats$player == "jemus42"] <- 0;
+}
+
 ## Write dataset to file for ze easy access
 write.csv(playerstats, "playerstats.csv")
 write.csv(achievements, "achievements.csv")
