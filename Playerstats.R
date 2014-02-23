@@ -110,3 +110,16 @@ ggplot(data=achievements, aes(fill=playerstats$joinStatus, x=reorder(player,cowR
   barChart + legendTitle + coord_flip() +
   xLable + labs(y="Breeds per kills", title="Cow Breed to Cow Kill Ratio")
 ggsave(file="Plots/CowsRatio.png", height=plotHeight, width=plotWidth)
+
+# Hoes made
+ggplot(data=achievements, aes(fill=playerstats$joinStatus, x=reorder(player,buildHoe), y=buildHoe)) + 
+  barChart + legendTitle + coord_flip() +
+  xLable + labs(y="Hoes", title="Hoes made per player")
+ggsave(file="Plots/HoesBuilt.png", height=plotHeight, width=plotWidth)
+
+# Withers killed
+ggplot(data=achievements, aes(fill=playerstats$joinStatus, x=reorder(player,killWither), y=killWither)) + 
+  barChart + legendTitle + coord_flip() +
+  xLable + labs(y="Withers", title="Withers killed per player")
+ggsave(file="Plots/WithersKilled.png", height=plotHeight, width=plotWidth)
+
