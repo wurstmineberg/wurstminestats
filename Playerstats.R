@@ -91,3 +91,15 @@ ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,distanceTraveled)
   barChart + legendTitle + coord_flip() +
   xLable + labs(y="Distance (km)", title="Distance Traveled in Total")
 ggsave(file="Plots/DistanceTraveled.png", height=plotHeight, width=plotWidth)
+
+# Cakes baked
+ggplot(data=achievements, aes(fill=playerstats$joinStatus, x=reorder(player,bakeCake), y=bakeCake)) + 
+  barChart + legendTitle + coord_flip() +
+  xLable + labs(y="Cakes", title="Cakes baked per player")
+ggsave(file="Plots/CakesBaked.png", height=plotHeight, width=plotWidth)
+
+# Cows killed
+ggplot(data=achievements, aes(fill=playerstats$joinStatus, x=reorder(player,killCow), y=killCow)) + 
+  barChart + legendTitle + coord_flip() +
+  xLable + labs(y="Cows", title="Cows killed per player")
+ggsave(file="Plots/CowsKilled.png", height=plotHeight, width=plotWidth)

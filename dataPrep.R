@@ -6,14 +6,20 @@ library(ggplot2)
 library(scales)     # For datetime scales on plots
 library(gridExtra)  # For annotations outside of plot ## TODO
 
-# Get people.json for player id and join dates
+## Get people.json for player id and join dates
 people <- fromJSON("http://wurstmineberg.de/assets/serverstatus/people.json")
 ## Get player stats from wurstmineberg API
 playerstats <- fromJSON("http://api.wurstmineberg.de/server/playerstats/general.json")
+## Get achievements
+achievements <- fromJSON("http://api.wurstmineberg.de/server/playerstats/achievement.json")
 
 # A little cleanup
 names(playerstats) <- sub("stat.","",names(playerstats))
 playerstats[playerstats == "NULL"] <- "0"
+
+names(achievements) <- sub("achievement.","",names(achievements))
+achievements <- achievements[names(achievements) != "exploreAllBiomes"]
+achievements[achievements == "NULL"] <- "0"
 
 # Extract player names to separate variable
 playerTemp <- names(playerstats[,1])
@@ -27,17 +33,26 @@ for(i in (1:(ncol(playerstats)))) {
   playerstats[i] <- unlist(playerstats[i], use.names=F)
 }; rm(i);
 
+# Do the same for the achievement dataset
+for(i in (1:(ncol(achievements)))) {
+  achievements[i] <- unlist(achievements[[i]], use.names=F)
+}; rm(i);
+
 # Getting rid of NAs and assuming 0
 playerstats[playerstats == NA] <- 0
 
 # Numericizzle
 playerstats <- as.data.frame(mapply(as.numeric,playerstats))
+achievements <- as.data.frame(mapply(as.numeric,achievements))
 
 ## Sorting according to people.json
-playerstats$player <- playerTemp; rm(playerTemp);
+playerstats$player <- playerTemp
+achievements$player <- playerTemp
+rm(playerTemp)
 
 # Crucial part where we enhance the original list by matching with people.json
 playerstats <- playerstats[match(people$minecraft[people$status != "former"], playerstats$player),]
+achievements <- achievements[match(people$minecraft[people$status != "former"], achievements$player),]
 
 ## Get joinDate from people.json, excluding former members
 playerstats$joinDate <- people$join_date[people$status != "former"]
@@ -47,10 +62,11 @@ rownames(playerstats) <- playerstats$player
 
 ## Convert player names to people.json-IDs
 playerstats$player <- people$id[people$status != "former"]
+achievements$player <- people$id[people$status != "former"]
 
 # Convert to factors with appropriate levels
-playerstats$player <- factor(playerstats$player, 
-                             levels=playerstats$player)
+playerstats$player <- factor(playerstats$player, levels=playerstats$player)
+achievements$player <- factor(playerstats$player, levels=playerstats$player)
 
 ## Getting rid of NAs and assuming 0 (again. Don't ask.)
 playerstats[is.na(playerstats)] <- 0
@@ -109,3 +125,4 @@ mean(inviteGaps)
 
 ## Write dataset to file for ze easy access
 write.csv(playerstats, "playerstats.csv")
+write.csv(achievements, "achievements.csv")
