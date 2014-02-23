@@ -42,8 +42,8 @@ playerstats <- playerstats[match(people$minecraft[people$status != "former"], pl
 ## Get joinDate from people.json, excluding former members
 playerstats$joinDate <- people$join_date[people$status != "former"]
 
-# Get rid of unnecessary rownames column (we'll get an index later)
-rownames(playerstats) <- NULL
+# Reorganizzle rownames just in case ¯\_(ツ)_/¯
+rownames(playerstats) <- playerstats$player
 
 ## Convert player names to people.json-IDs
 playerstats$player <- people$id[people$status != "former"]
@@ -55,7 +55,7 @@ playerstats$player <- factor(playerstats$player,
 ## Getting rid of NAs and assuming 0 (again. Don't ask.)
 playerstats[is.na(playerstats)] <- 0
 
-# Just to get a numeric ID to have an easy index and player number
+# Just to get a numeric ID to have an easy index and player number. Yes, rownames, I know.
 playerstats$number <- (1:(nrow(playerstats)))
 
 ## Give people status values because lol
@@ -68,16 +68,17 @@ playerstats$joinDate[playerstats$joinDate == 0] <- NA
 playerstats$joinDate <- as.POSIXct(playerstats$joinDate, 
                                    origin="1970-01-01")
 
-## Convert play time to real time hours
+## Convert play time to real time hours as separate column
 playerstats$playOneHour <- (playerstats$playOneMinute/20/60/60)
 
 ## Define server birth and server age times
 
-# player specific server age
+# player specific server age (days since their whitelisting)
 playerstats$serverAge <- round(as.numeric(difftime(Sys.time(),
                           playerstats$joinDate[playerstats$number], 
                           units ="days")))
-# player specific server birth
+
+# player specific server birth (days they've been whitelisted after server creation)
 playerstats$serverBirth <-round(as.numeric(difftime(playerstats$joinDate[playerstats$number],
                           playerstats$joinDate[1], 
                           units ="days")))
@@ -86,7 +87,7 @@ wurstminebergAge <- round(as.numeric(difftime(Sys.time(),
         playerstats$joinDate[1], 
         units ="auto")))
 
-# Get total distance column
+# Get total distance column by summin up all *OneCm rows per player
 playerstats$distanceTraveled <- 0
 for(i in 1:nrow(playerstats)){
   playerstats$distanceTraveled[i] <- sum(playerstats[i, grep("OneCm", colnames(playerstats))])
