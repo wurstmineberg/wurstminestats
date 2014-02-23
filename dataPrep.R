@@ -129,5 +129,5 @@ if(playerstats$damageTaken[playerstats$player == "jemus42"] < 0) {
 }
 
 ## Write dataset to file for ze easy access
-write.csv(playerstats, "playerstats.csv")
-write.csv(achievements, "achievements.csv")
+write.csv(playerstats, "data/playerstats.csv")
+write.csv(achievements, "data/achievements.csv")
