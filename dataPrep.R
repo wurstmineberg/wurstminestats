@@ -36,7 +36,7 @@ for(i in (1:(ncol(playerstats)))) {
 
 # Do the same for the achievement dataset
 for(i in (1:(ncol(achievements)))) {
-  achievements[i] <- unlist(achievements[[i]], use.names=F)
+  achievements[i] <- unlist(achievements[i], use.names=F)
 }; rm(i);
 
 # Getting rid of NAs and assuming 0
