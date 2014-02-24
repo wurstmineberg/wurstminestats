@@ -138,7 +138,7 @@ ggsave(file="Plots/statspage/PlayerKills.png", height=plotHeight, width=plotWidt
 ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,playOneHour), y=playOneHour)) + 
   barChart + legendTitle + coord_flip() +
   xLable + labs(y="Online time (hours (real time))", title="Time Played / Idled") 
-ggsave(file="Plots/statspage/TimePlayedIdlet.png", height=plotHeight, width=plotWidth)
+ggsave(file="Plots/statspage/TimePlayedIdled.png", height=plotHeight, width=plotWidth)
 
 # Treasure Fished
 ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,treasureFished), y=treasureFished)) +

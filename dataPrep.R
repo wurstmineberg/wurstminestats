@@ -139,11 +139,6 @@ rm(generalColumns,itemColumns,distanceColumns)
 inviteGaps <- c(0,round(as.numeric(difftime(playerstats$joinDate[2:nrow(playerstats)], playerstats$joinDate[1:(nrow(playerstats)-1)], units="days"))))
 mean(inviteGaps)
 
-# Remove jemus42's damageTaken value as long as it's glitched
-if(playerstats$damageTaken[playerstats$player == "jemus42"] < 0) {
-  playerstats$damageTaken[playerstats$player == "jemus42"] <- 0;
-}
-
 ## Join playerstats and achievements data. This feels very epic.
 playerstats <- join(playerstats,achievements)
 
