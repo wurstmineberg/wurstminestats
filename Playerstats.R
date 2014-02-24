@@ -125,5 +125,5 @@ ggsave(file="Plots/WithersKilled.png", height=plotHeight, width=plotWidth)
 # Number of opened inventories
 ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,openInventory), y=openInventory)) + 
   barChart + legendTitle + coord_flip() +
-  xLable + labs(y="Inventories Opened", title="How often players opened their inventories")
+  xLable + labs(y="Inventories Opened", title="How Often Players Opened Their Inventories")
 ggsave(file="Plots/OpenInventory.png", height=plotHeight, width=plotWidth)
