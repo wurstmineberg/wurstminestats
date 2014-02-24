@@ -13,6 +13,9 @@ people <- fromJSON("http://wurstmineberg.de/assets/serverstatus/people.json")
 playerstats <- fromJSON("http://api.wurstmineberg.de/server/playerstats/general.json")
 ## Get achievements
 achievements <- fromJSON("http://api.wurstmineberg.de/server/playerstats/achievement.json")
+## Get item stats
+items <- fromJSON("http://api.wurstmineberg.de/server/playerstats/item.json")
+
 
 # A little cleanup
 names(playerstats) <- sub("stat.","",names(playerstats))
@@ -21,6 +24,9 @@ playerstats[playerstats == "NULL"] <- "0"
 names(achievements) <- sub("achievement.","",names(achievements))
 achievements <- achievements[names(achievements) != "exploreAllBiomes"]
 achievements[achievements == "NULL"] <- "0"
+
+names(items) <- sub("stat.","",names(items))
+items[items == "NULL"] <- "0"
 
 # Extract player names to separate variable
 playerTemp <- names(playerstats[,1])
@@ -39,21 +45,30 @@ for(i in (1:(ncol(achievements)))) {
   achievements[i] <- unlist(achievements[i], use.names=F)
 }; rm(i);
 
+# Do the same for the achievement dataset
+for(i in (1:(ncol(items)))) {
+  items[i] <- unlist(items[i], use.names=F)
+}; rm(i);
+
+
 # Getting rid of NAs and assuming 0
 playerstats[playerstats == NA] <- 0
 
 # Numericizzle
 playerstats <- as.data.frame(mapply(as.numeric,playerstats))
 achievements <- as.data.frame(mapply(as.numeric,achievements))
+items <- as.data.frame(mapply(as.numeric,items))
 
 ## Sorting according to people.json
 playerstats$player <- playerTemp
 achievements$player <- playerTemp
+items$player <- playerTemp
 rm(playerTemp)
 
 # Crucial part where we enhance the original list by matching with people.json
 playerstats <- playerstats[match(people$minecraft[people$status != "former"], playerstats$player),]
 achievements <- achievements[match(people$minecraft[people$status != "former"], achievements$player),]
+items <- items[match(people$minecraft[people$status != "former"], items$player),]
 
 ## Get joinDate from people.json, excluding former members
 playerstats$joinDate <- people$join_date[people$status != "former"]
@@ -61,10 +76,12 @@ playerstats$joinDate <- people$join_date[people$status != "former"]
 ## Convert player names to people.json-IDs
 playerstats$player <- people$id[people$status != "former"]
 achievements$player <- people$id[people$status != "former"]
+items$player <- people$id[people$status != "former"]
 
 # Convert to factors with appropriate levels
 playerstats$player <- factor(playerstats$player, levels=playerstats$player)
 achievements$player <- factor(playerstats$player, levels=playerstats$player)
+items$player <- factor(playerstats$player, levels=playerstats$player)
 
 ## Getting rid of NAs and assuming 0 (again. Don't ask.)
 playerstats[is.na(playerstats)] <- 0
