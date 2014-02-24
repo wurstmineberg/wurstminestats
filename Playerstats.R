@@ -122,3 +122,8 @@ ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,killWither), y=ki
   xLable + labs(y="Withers", title="Withers killed per player")
 ggsave(file="Plots/WithersKilled.png", height=plotHeight, width=plotWidth)
 
+# Number of opened inventories
+ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,openInventory), y=openInventory)) + 
+  barChart + legendTitle + coord_flip() +
+  xLable + labs(y="Inventories Opened", title="How often players opened their inventories")
+ggsave(file="Plots/OpenInventory.png", height=plotHeight, width=plotWidth)
