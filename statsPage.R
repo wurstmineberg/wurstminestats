@@ -13,7 +13,6 @@ ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,animalsBred), y=a
   barChart + legendTitle + coord_flip() +
   xLable + labs(y="Number of Animals", title="Animals Bred")
 ggsave(file="Plots/statspage/AnimalsBred.png", height=plotHeight, width=plotWidth)
-summary(playerstats$animalsBred)
 
 # Damage Dealt
 ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,damageDealt), y=damageDealt/2000)) + 

@@ -65,8 +65,8 @@ ggsave(file="Plots/DistanceWalked_OnlineTime.png", height=6, width=8)
 # Server growth
 ggplot(playerstats, aes(x = joinDate, y = numID, label = player)) + 
   #geom_smooth(method = loess, se=F) + 
-  geom_text(size=2, vjust=-.7, hjust=.8) +
   geom_point(aes(colour=joinStatus)) + 
+  geom_text(size=2, vjust=-.7, hjust=.8) +
   ylab("Whitelist count") + xlab("Date") +
   ggtitle("Wurstmineberg Server Growth") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
@@ -77,8 +77,8 @@ ggsave(file="Plots/WhitelistGrowth.png", height=6, width=8)
 
 # Play time vs server age
 ggplot(playerstats, aes(x = serverAge, y = playOneHour, label=player)) +
-  geom_text(size=2, hjust=.5, vjust=-1) +
   geom_point(aes(colour=joinStatus, group=1)) + 
+  geom_text(size=2, hjust=.5, vjust=-1) +
   ylab("Time spent on server (hours)") + xlab("Age on server (days)") +
   ggtitle("Time spent on server vs. relative age on server") +
   playerTheme +
