@@ -92,32 +92,32 @@ ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,distanceTraveled)
 ggsave(file="Plots/DistanceTraveled.png", height=plotHeight, width=plotWidth)
 
 # Cakes baked
-ggplot(data=achievements, aes(fill=playerstats$joinStatus, x=reorder(player,bakeCake), y=bakeCake)) + 
+ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,bakeCake), y=bakeCake)) + 
   barChart + legendTitle + coord_flip() +
   xLable + labs(y="Cakes", title="Cakes baked per player")
 ggsave(file="Plots/CakesBaked.png", height=plotHeight, width=plotWidth)
 
 # Cows killed
-ggplot(data=achievements, aes(fill=playerstats$joinStatus, x=reorder(player,killCow), y=killCow)) + 
+ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,killCow), y=killCow)) + 
   barChart + legendTitle + coord_flip() +
   xLable + labs(y="Cows", title="Cows killed per player")
 ggsave(file="Plots/CowsKilled.png", height=plotHeight, width=plotWidth)
 
 # Cow kill to cow breed ratio
-cowRatio <- as.numeric(sub("NaN", "0", achievements$breedCow/(achievements$killCow)))
-ggplot(data=achievements, aes(fill=playerstats$joinStatus, x=reorder(player,cowRatio), y=cowRatio)) + 
+cowRatio <- as.numeric(sub("NaN", "0", playerstats$breedCow/(playerstats$killCow)))
+ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,cowRatio), y=cowRatio)) + 
   barChart + legendTitle + coord_flip() +
   xLable + labs(y="Breeds per kills", title="Cow Breed to Cow Kill Ratio")
 ggsave(file="Plots/CowsRatio.png", height=plotHeight, width=plotWidth)
 
 # Hoes made
-ggplot(data=achievements, aes(fill=playerstats$joinStatus, x=reorder(player,buildHoe), y=buildHoe)) + 
+ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,buildHoe), y=buildHoe)) + 
   barChart + legendTitle + coord_flip() +
   xLable + labs(y="Hoes", title="Hoes made per player")
 ggsave(file="Plots/HoesBuilt.png", height=plotHeight, width=plotWidth)
 
 # Withers killed
-ggplot(data=achievements, aes(fill=playerstats$joinStatus, x=reorder(player,killWither), y=killWither)) + 
+ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,killWither), y=killWither)) + 
   barChart + legendTitle + coord_flip() +
   xLable + labs(y="Withers", title="Withers killed per player")
 ggsave(file="Plots/WithersKilled.png", height=plotHeight, width=plotWidth)
