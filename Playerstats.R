@@ -63,7 +63,7 @@ ggplot(playerstats, aes(x = playOneHour,  y = (walkOneCm/1000000), label=player)
 ggsave(file="Plots/DistanceWalked_OnlineTime.png", height=6, width=8)
 
 # Server growth
-ggplot(playerstats, aes(x = joinDate, y = number, label = player)) + 
+ggplot(playerstats, aes(x = joinDate, y = numID, label = player)) + 
   #geom_smooth(method = loess, se=F) + 
   geom_text(size=2, vjust=-.7, hjust=.8) +
   geom_point(aes(colour=joinStatus)) + 
@@ -74,7 +74,6 @@ ggplot(playerstats, aes(x = joinDate, y = number, label = player)) +
   scale_x_datetime(labels = date_format("%y-%m-%d"),
                    breaks = date_breaks("month"));
 ggsave(file="Plots/WhitelistGrowth.png", height=6, width=8)
-#cor(playerstats$serverAge,playerstats$number, method="spearman")
 
 # Play time vs server age
 ggplot(playerstats, aes(x = serverAge, y = playOneHour, label=player)) +

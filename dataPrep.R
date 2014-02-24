@@ -5,6 +5,7 @@ library(jsonlite)
 library(ggplot2)
 library(scales)     # For datetime scales on plots
 library(gridExtra)  # For annotations outside of plot ## TODO
+library(plyr)       # Hopefully makes dataset handling easier
 
 ## Get people.json for player id and join dates
 people <- fromJSON("http://wurstmineberg.de/assets/serverstatus/people.json")
@@ -57,9 +58,6 @@ achievements <- achievements[match(people$minecraft[people$status != "former"], 
 ## Get joinDate from people.json, excluding former members
 playerstats$joinDate <- people$join_date[people$status != "former"]
 
-# Reorganizzle rownames just in case ¯\_(ツ)_/¯
-rownames(playerstats) <- playerstats$player
-
 ## Convert player names to people.json-IDs
 playerstats$player <- people$id[people$status != "former"]
 achievements$player <- people$id[people$status != "former"]
@@ -71,8 +69,8 @@ achievements$player <- factor(playerstats$player, levels=playerstats$player)
 ## Getting rid of NAs and assuming 0 (again. Don't ask.)
 playerstats[is.na(playerstats)] <- 0
 
-# Just to get a numeric ID to have an easy index and player number. Yes, rownames, I know.
-playerstats$number <- (1:(nrow(playerstats)))
+# Just to get a numeric ID to have an easy index and player numID. Yes, rownames, I know.
+playerstats$numID <- (1:(nrow(playerstats)))
 
 ## Give people status values because lol
 playerstats$joinStatus <- as.factor(people$status[people$status != "former"])
@@ -91,11 +89,11 @@ playerstats$playOneHour <- (playerstats$playOneMinute/20/60/60)
 
 # player specific server age (days since their whitelisting)
 playerstats$serverAge <- round(as.numeric(difftime(Sys.time(),
-                          playerstats$joinDate[playerstats$number], 
+                          playerstats$joinDate[playerstats$numID], 
                           units ="days")))
 
 # player specific server birth (days they've been whitelisted after server creation)
-playerstats$serverBirth <-round(as.numeric(difftime(playerstats$joinDate[playerstats$number],
+playerstats$serverBirth <-round(as.numeric(difftime(playerstats$joinDate[playerstats$numID],
                           playerstats$joinDate[1], 
                           units ="days")))
 # current server age total
@@ -110,7 +108,7 @@ for(i in 1:nrow(playerstats)){
 }; rm(i);
 
 ## Resort columns to get name and joinDate first. Manually, like a fucking animal.
-generalColumns <- c("player", "number", "joinDate", "joinStatus", "serverAge", "serverBirth", "leaveGame",
+generalColumns <- c("player", "numID", "joinDate", "joinStatus", "serverAge", "serverBirth", "leaveGame",
                     "deaths", "playerKills","damageDealt","damageTaken", "playOneMinute", 
                     "playOneHour", "jump", "animalsBred", "mobKills")
 itemColumns <- c("drop", "fishCaught", "treasureFished", "junkFished")
@@ -118,6 +116,7 @@ distanceColumns <- c("distanceTraveled","walkOneCm", "climbOneCm", "minecartOneC
                      "boatOneCm", "pigOneCm", "fallOneCm", "swimOneCm", "diveOneCm", "flyOneCm")
 
 playerstats <- playerstats[c(generalColumns,itemColumns,distanceColumns)]
+rm(generalColumns,itemColumns,distanceColumns)
 
 ## Get a vector of the age gaps starting from player[1]
 inviteGaps <- c(0,round(as.numeric(difftime(playerstats$joinDate[2:nrow(playerstats)], playerstats$joinDate[1:(nrow(playerstats)-1)], units="days"))))
@@ -128,6 +127,14 @@ if(playerstats$damageTaken[playerstats$player == "jemus42"] < 0) {
   playerstats$damageTaken[playerstats$player == "jemus42"] <- 0;
 }
 
+## Join playerstats and achievements data. This feels very epic.
+playerstats <- join(playerstats,achievements)
+
+# Delete achievements dataset
+rm(achievements)
+
+# Reorganizzle rownames just in case ¯\_(ツ)_/¯
+rownames(playerstats) <- playerstats$player
+
 ## Write dataset to file for ze easy access
 write.csv(playerstats, "data/playerstats.csv")
-write.csv(achievements, "data/achievements.csv")
