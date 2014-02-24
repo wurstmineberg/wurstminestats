@@ -5,7 +5,7 @@ library(jsonlite)
 library(ggplot2)
 library(scales)     # For datetime scales on plots
 library(gridExtra)  # For annotations outside of plot ## TODO
-library(plyr)       # Hopefully makes dataset handling easier
+library(plyr)       # To join() dataframes
 
 ## Get people.json for player id and join dates
 people <- fromJSON("http://wurstmineberg.de/assets/serverstatus/people.json")
@@ -45,7 +45,7 @@ for(i in (1:(ncol(achievements)))) {
   achievements[i] <- unlist(achievements[i], use.names=F)
 }; rm(i);
 
-# Do the same for the achievement dataset
+# Do the same for the items dataset
 for(i in (1:(ncol(items)))) {
   items[i] <- unlist(items[i], use.names=F)
 }; rm(i);
@@ -118,13 +118,13 @@ wurstminebergAge <- round(as.numeric(difftime(Sys.time(),
         playerstats$joinDate[1], 
         units ="auto")))
 
-# Get total distance column by summin up all *OneCm rows per player
+# Get total distance column by summing up all *OneCm rows per player
 playerstats$distanceTraveled <- 0
 for(i in 1:nrow(playerstats)){
   playerstats$distanceTraveled[i] <- sum(playerstats[i, grep("OneCm", colnames(playerstats))])
 }; rm(i);
 
-## Resort columns to get name and joinDate first. Manually, like a fucking animal.
+## Resort columns to get interesting stuff first. Manually, like a fucking animal.
 generalColumns <- c("player", "numID", "joinDate", "joinStatus", "serverAge", "serverBirth", "leaveGame",
                     "deaths", "playerKills","damageDealt","damageTaken", "playOneMinute", 
                     "playOneHour", "jump", "animalsBred", "mobKills")

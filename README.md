@@ -3,6 +3,8 @@ wurstminestats
 
 Plotting the Wurstmineberg Minecraft Server
 
+![Whitelist growth](https://raw2.github.com/jemus42/wurstminestats/master/Plots/WhitelistGrowth.png)  
+
 ## What this is
 Primarily it's me playing around with [R](http://www.r-project.org).  
 Besides that, this will be an addition to the [wurstmineberg](http://wurstminebger.de) player statistics page at our [stats page](http://wurstminebger.de/stats). 
