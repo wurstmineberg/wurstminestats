@@ -126,7 +126,7 @@ ggsave(plot=p, file="Plots/statspage/MobKills.png", height=plotHeight, width=plo
 # Number of Deaths
 p <- ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,deaths), y=deaths)) + 
   barChart + legendTitle + coord_flip() +
-  xLable + labs(y="Deathcount", title="Number of Deaths") +
+  xLable + labs(y="Deathcount", title="Number of Deaths")
 ggsave(plot=p, file="Plots/statspage/NumberOfDeaths.png", height=plotHeight, width=plotWidth)
 
 # Player Kills
