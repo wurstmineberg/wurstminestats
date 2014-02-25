@@ -6,6 +6,7 @@ library(ggplot2)
 library(scales)     # For datetime scales on plots
 library(gridExtra)  # For annotations outside of plot ## TODO
 library(plyr)       # To join() dataframes
+library(RColorBrewer)   # Because colours
 
 # Get a close enough timestamp for the data age
 # Reimport via as.POSIXct(x,origin="1970-01-01") should be sufficient
@@ -155,7 +156,8 @@ rownames(playerstats) <- playerstats$player
 # Sooner or later, I want a giant logfile.
 playerstats$timestamp <- now
 playerstatsOld <- read.csv(file="data/playerstats.csv", row.names=1)
-#playerstatsOld$timestamp <- playerstatsOld$timestamp)
+
+#if(as.numeric(difftime(as.POSIXct(as.numeric(playerstats$timestamp[1]), origin="1970-01-01"), as.POSIXct(max(as.numeric(playerstatsOld$timestamp)), origin="1970-01-01"), units ="days")) > 0.5)
 
 playerstatsFull <- join(playerstats,playerstatsOld, type="full", match="all")
 playerstatsFull <- arrange(playerstatsFull, as.Date(joinDate), player)
