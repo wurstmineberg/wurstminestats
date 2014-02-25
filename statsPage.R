@@ -151,6 +151,36 @@ rm(p)
 
 ### Weighted by hours played
 
+# Games quit
+p <- ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,leaveGame/playOneHour), y=leaveGame/playOneHour)) +
+  barChart + legendTitle + coord_flip() +
+  xLable + labs(y="Games Quit per Hour (real time)", title="Games Quit per Online Time")
+ggsave(plot=p, file="Plots/statspage/leaveGame_weighted.png", height=plotHeight, width=plotWidth)
+
+# Items Dropped
+p <- ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,drop/playOneHour), y=drop/playOneHour)) + 
+  barChart + legendTitle + coord_flip() +
+  xLable+ labs(y="Items per Hour (real time)", title="Items Dropped per Online Time")
+ggsave(plot=p, file="Plots/statspage/drop_weighted.png", height=plotHeight, width=plotWidth)
+
+# Jumps
+p <- ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,jump/playOneHour), y=jump/playOneHour)) + 
+  barChart + legendTitle + coord_flip() +
+  xLable+ labs(y="Jumps per Hour (real time)", title="Jumps per Online Time")
+ggsave(plot=p, file="Plots/statspage/jump_weighted.png", height=plotHeight, width=plotWidth)
+
+# Junk Fished
+p <- ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,junkFished/playOneHour), y=junkFished/playOneHour)) +
+  barChart + legendTitle + coord_flip() +
+  xLable + labs(y="Junk per Hour (real time)", title="Junk Fished per Online Time")
+ggsave(plot=p, file="Plots/statspage/junkFished_weighted.png", height=plotHeight, width=plotWidth)
+
+# Mob Kills
+p <- ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,mobKills/playOneHour), y=mobKills/playOneHour)) + 
+  barChart + legendTitle + coord_flip() +
+  xLable + labs(y="Mobs killed per Hour (real time)", title="Mob Kills per Online Time")
+ggsave(plot=p, file="Plots/statspage/mobKills_weighted.png", height=plotHeight, width=plotWidth)
+
 # Number of Deaths
 p <- ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,deaths/playOneHour), y=deaths/playOneHour)) + 
   barChart + legendTitle + coord_flip() +
