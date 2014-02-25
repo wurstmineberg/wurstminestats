@@ -148,3 +148,23 @@ p <- ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,treasureFish
 ggsave(plot=p, file="Plots/statspage/treasureFished.png", height=plotHeight, width=plotWidth)
 
 rm(p)
+
+### Weighted by hours played
+
+# Number of Deaths
+p <- ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,deaths/playOneHour), y=deaths/playOneHour)) + 
+  barChart + legendTitle + coord_flip() +
+  xLable + labs(y="Deaths per Hour (real time)", title="Deaths per Online Time")
+ggsave(plot=p, file="Plots/statspage/deaths_weighted.png", height=plotHeight, width=plotWidth)
+
+# Player Kills
+p <- ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,playerKills/playOneHour), y=playerKills/playOneHour)) + 
+  barChart + legendTitle + coord_flip() +
+  xLable + labs(y="Player Kills per Hour (real time)", title="Player Kills per Online Time")
+ggsave(plot=p, file="Plots/statspage/playerKills_weighted.png", height=plotHeight, width=plotWidth)
+
+# Treasure Fished
+p <- ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,treasureFished/playOneHour), y=treasureFished/playOneHour)) +
+  barChart + legendTitle + coord_flip() +
+  xLable + labs(y="Treasure per Hour (real time)", title="Treasure Fished per Online Time")
+ggsave(plot=p, file="Plots/statspage/treasureFished_weighted.png", height=plotHeight, width=plotWidth)
