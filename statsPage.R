@@ -1,4 +1,4 @@
-#! /usr/bin/rscript
+#! /usr/bin/Rscript
 ## Graphs for the wurstmineberg stats page
 # Pull recent data
 source("dataPrep.R")
