@@ -12,7 +12,7 @@ xLable <- xlab("Player")
 # Animals Bred
 p <- ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,animalsBred), y=animalsBred)) + 
   barChart + legendTitle + coord_flip() +
-  xLable + labs(y="Number of Animals", title="Animals Bred")
+  xLable + labs(y="Animals", title="Animals Bred")
 ggsave(plot=p,file="Plots/statspage/animalsBred.png", height=plotHeight, width=plotWidth)
 
 # Damage Dealt
@@ -149,12 +149,12 @@ ggsave(plot=p, file="Plots/statspage/treasureFished.png", height=plotHeight, wid
 
 rm(p)
 
-###################### Weighted by hours played
+###################### Weighted by hours played ###################### 
 
 # Animals Bred
 p <- ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,animalsBred/playOneHour), y=animalsBred/playOneHour)) + 
   barChart + legendTitle + coord_flip() +
-  xLable + labs(y="Number of Animals per Hour (real time)", title="Animals Bred")
+  xLable + labs(y="Animals per Hour (real time)", title="Animals Bred")
 ggsave(plot=p,file="Plots/statspage/animalsBred_weighted.png", height=plotHeight, width=plotWidth)
 
 # Damage Dealt
