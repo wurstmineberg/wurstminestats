@@ -7,6 +7,10 @@ library(scales)     # For datetime scales on plots
 library(gridExtra)  # For annotations outside of plot ## TODO
 library(plyr)       # To join() dataframes
 
+# Get a close enough timestamp for the data age
+# Reimport via as.POSIXct(x,origin="1970-01-01") should be sufficient
+now <- format(Sys.time(), "%s")
+
 ## Get people.json for player id and join dates
 people <- fromJSON("http://wurstmineberg.de/assets/serverstatus/people.json")
 ## Get player stats from wurstmineberg API
@@ -148,5 +152,13 @@ rm(achievements)
 # Reorganizzle rownames just in case ¯\_(ツ)_/¯
 rownames(playerstats) <- playerstats$player
 
+# Sooner or later, I want a giant logfile.
+playerstats$timestamp <- now
+playerstatsOld <- read.csv(file="data/playerstats.csv", row.names=1)
+#playerstatsOld$timestamp <- playerstatsOld$timestamp)
+
+playerstatsFull <- join(playerstats,playerstatsOld, type="full", match="all")
+playerstatsFull <- arrange(playerstatsFull, as.Date(joinDate), player)
+
 ## Write dataset to file for ze easy access
-write.csv(playerstats, "data/playerstats.csv")
+write.csv(playerstatsFull, "data/playerstats.csv")
