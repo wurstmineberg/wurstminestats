@@ -22,7 +22,7 @@ achievements <- fromJSON("http://api.wurstmineberg.de/server/playerstats/achieve
 items <- fromJSON("http://api.wurstmineberg.de/server/playerstats/item.json")
 
 
-# A little cleanup
+# A little cleanup: Removing "stat." and "achievement." prefixes from columns
 names(playerstats) <- sub("stat.","",names(playerstats))
 playerstats[playerstats == "NULL"] <- "0"
 
@@ -33,7 +33,12 @@ achievements[achievements == "NULL"] <- "0"
 names(items) <- sub("stat.","",names(items))
 items[items == "NULL"] <- "0"
 
+# (Temp?) fix for new people.json format
+people <- as.data.frame(people[1])
+names(people) <- sub("people.","",names(people))
+
 # Extract player names to separate variable
+# Note: These are the minecraft usernames
 playerTemp <- names(playerstats[,1])
 
 ## Add category to people$status for easier matching
@@ -97,7 +102,8 @@ playerstats$numID <- (1:(nrow(playerstats)))
 ## Give people status values because lol
 playerstats$joinStatus <- as.factor(people$status[people$status != "former"])
 
-# In case of missing join date, apply NA / Technically not necessary anymore
+# In case of missing join date, apply NA
+# For invited but not yet joined players
 playerstats$joinDate[playerstats$joinDate == 0] <- NA
 
 # Convert joinDate to POSIXct because time
@@ -142,7 +148,6 @@ rm(generalColumns,itemColumns,distanceColumns)
 
 ## Get a vector of the age gaps starting from player[1]
 inviteGaps <- c(0,round(as.numeric(difftime(playerstats$joinDate[2:nrow(playerstats)], playerstats$joinDate[1:(nrow(playerstats)-1)], units="days"))))
-mean(inviteGaps)
 
 ## Join playerstats and achievements data. This feels very epic.
 playerstats <- join(playerstats,achievements)
@@ -157,7 +162,9 @@ rownames(playerstats) <- playerstats$player
 playerstats$timestamp <- now
 playerstatsOld <- read.csv(file="data/playerstats.csv", row.names=1)
 
-if(as.numeric(difftime(as.POSIXct(as.numeric(playerstats$timestamp[1]), origin="1970-01-01"), as.POSIXct(max(as.numeric(playerstatsOld$timestamp)), origin="1970-01-01"), units ="days")) > 0.5){
+# Only append saved date if the new data is at least half a day newer then the last saved data
+if(as.numeric(difftime(as.POSIXct(as.numeric(playerstats$timestamp[1]), origin="1970-01-01"), 
+  as.POSIXct(max(as.numeric(playerstatsOld$timestamp)), origin="1970-01-01"), units ="days")) > 0.5){
 
   playerstatsFull <- join(playerstats,playerstatsOld, type="full", match="all")
   playerstatsFull <- arrange(playerstatsFull, as.Date(joinDate), player)

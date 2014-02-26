@@ -9,7 +9,7 @@ plotWidth <- 6; plotHeight <- 4;
 barChart <- geom_bar(colour="black", width=.7, stat="identity")
 xLable <- xlab("Player")
 
-# TODO: Define colour scale to keep status colours static, dunno y no work
+# Define colour scale to keep status colours static
 statusColours <- brewer.pal(9,"Set1")
 names(statusColours) <- levels(playerstats$joinStatus)
 statusColours <- statusColours[c("founding","later","postfreeze","invited")]
