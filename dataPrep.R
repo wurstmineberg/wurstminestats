@@ -162,13 +162,16 @@ rownames(playerstats) <- playerstats$player
 playerstats$timestamp <- now
 playerstatsOld <- read.csv(file="data/playerstats.csv", row.names=1)
 
-# Only append saved date if the new data is at least half a day newer then the last saved data
-if(as.numeric(difftime(as.POSIXct(as.numeric(playerstats$timestamp[1]), origin="1970-01-01"), 
-  as.POSIXct(max(as.numeric(playerstatsOld$timestamp)), origin="1970-01-01"), units ="days")) > 0.5){
+# Only append saved date if the new data is at least 12h newer then the last saved data
+nowDate <- as.POSIXct(as.numeric(now), origin="1970-01-01")
+lastSavedDate <- as.POSIXct(max(as.numeric(playerstatsOld$timestamp)), origin="1970-01-01")
 
+if(as.numeric(difftime(nowDate, lastSavedDate, units ="hours")) > 12){
+
+  # Join new data with saved data and order by joinDate, player, then timestamp
   playerstatsFull <- join(playerstats,playerstatsOld, type="full", match="all")
-  playerstatsFull <- arrange(playerstatsFull, as.Date(joinDate), player)
+  playerstatsFull <- arrange(playerstatsFull, as.Date(joinDate), player, timestamp)
 
-  ## Write dataset to file for ze easy access
+  # Write dataset to file for ze easy access
   write.csv(playerstatsFull, "data/playerstats.csv")
-}
+};
