@@ -2,18 +2,18 @@
 ## Graphs for the wurstmineberg stats page
 
 # Pull recent data
-source("dataPrep.R")
+#source("dataPrep.R")
 
 # Define some variables for plot layout and labels
 plotWidth <- 6; plotHeight <- 4;
 barChart <- geom_bar(colour="black", width=.7, stat="identity")
-#legendTitle <- scale_fill_discrete(name = "Join Status")
 xLable <- xlab("Player")
 
 # TODO: Define colour scale to keep status colours static, dunno y no work
 statusColours <- brewer.pal(9,"Set1")
 names(statusColours) <- levels(playerstats$joinStatus)
-legentTitle <- scale_fill_manual(name = "Join Status", 
+statusColours <- statusColours[c("founding","later","postfreeze","invited")]
+legendTitle <- scale_fill_manual(name = "Join Status", 
                                  values = statusColours,
                                  na.value="black")
 
