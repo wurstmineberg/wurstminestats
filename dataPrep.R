@@ -23,8 +23,9 @@ items <- fromJSON("http://api.wurstmineberg.de/server/playerstats/item.json")
 ## Get entity stats # TODO: Incorporate in playerstats
 entities <- fromJSON("http://api.wurstmineberg.de/server/playerstats/entity.json")
 
-
-# A little cleanup: Removing "stat." and "achievement." prefixes from columns
+#### This is where imported datasets get cleaned up so we can actually use them ####
+##
+## Removing "stat." and "achievement." prefixes from columns
 names(playerstats) <- sub("stat.","",names(playerstats))
 playerstats[playerstats == "NULL"] <- "0"
 
@@ -42,7 +43,7 @@ entities[entities == "NULL"] <- "0"
 people <- as.data.frame(people[1])
 names(people) <- sub("people.","",names(people))
 
-# Extract player names to separate variable
+## Extract player names to separate variable
 # Note: These are the minecraft usernames
 playerTemp <- names(playerstats[,1])
 
@@ -70,10 +71,10 @@ for(i in (1:(ncol(entities)))) {
   entities[i] <- unlist(entities[i], use.names=F)
 }; rm(i);
 
-# Getting rid of NAs and assuming 0
+## Getting rid of NAs and assuming 0
 playerstats[playerstats == NA] <- 0
 
-# Numericizzle
+## Numericizzle
 playerstats <- as.data.frame(mapply(as.numeric,playerstats))
 achievements <- as.data.frame(mapply(as.numeric,achievements))
 items <- as.data.frame(mapply(as.numeric,items))
@@ -86,22 +87,24 @@ items$player <- playerTemp
 entities$player <- playerTemp
 rm(playerTemp)
 
-# Crucial part where we enhance the original list by matching with people.json
-playerstats <- playerstats[match(people$minecraft[people$status != "former"], playerstats$player),]
-achievements <- achievements[match(people$minecraft[people$status != "former"], achievements$player),]
-items <- items[match(people$minecraft[people$status != "former"], items$player),]
-entities <- entities[match(people$minecraft[people$status != "former"], entities$player),]
+# Crucial part where we resort the original dataframes by matching with the order in people.json
+activePeopleMC <- people$minecraft[people$status != "former"]
 
+playerstats <- playerstats[match(activePeopleMC, playerstats$player),]
+achievements <- achievements[match(activePeopleMC, achievements$player),]
+items <- items[match(activePeopleMC, items$player),]
+entities <- entities[match(activePeopleMC, entities$player),]
 
 ## Get joinDate from people.json, excluding former members
 playerstats$joinDate <- people$join_date[people$status != "former"]
 
 ## Convert player names to people.json-IDs
-activePeople <- people$id[people$status != "former"]
-playerstats$player <- activePeople
-achievements$player <- activePeople
-items$player <- activePeople
-entities$player <- activePeople
+activePeopleID <- people$id[people$status != "former"]
+
+playerstats$player <- activePeopleID
+achievements$player <- activePeopleID
+items$player <- activePeopleID
+entities$player <- activePeopleID
 
 # Convert to factors with appropriate levels
 playerstats$player <- factor(playerstats$player, levels=playerstats$player)
@@ -165,15 +168,15 @@ rm(generalColumns,itemColumns,distanceColumns)
 ## Get a vector of the age gaps starting from player[1]
 inviteGaps <- c(0,round(as.numeric(difftime(playerstats$joinDate[2:nrow(playerstats)], playerstats$joinDate[1:(nrow(playerstats)-1)], units="days"))))
 
-## Join playerstats and achievements data. This feels very epic.
-playerstats <- join(playerstats,achievements)
+## Join playerstats with achievements and entities dataframes. This feels very epic.
+playerstats <- join(playerstats, achievements)
+playerstats <- join(playerstats, entities)
 
-# Delete achievements dataset
-rm(achievements)
+# Delete dataframes we don't need separate anymore dataset
+rm(achievements); rm(entities);
 
 # Reorganizzle rownames just in case ¯\_(ツ)_/¯
 rownames(playerstats) <- playerstats$player
-rownames(entities) <- entities$player
 
 ## At this point, playerstats is in a usable state, data is comfortably accessible and it contains
 ## both the general player stats and the achievement data. 
@@ -188,7 +191,7 @@ playerstatsOld <- read.csv(file="data/playerstats.csv", row.names=1)
 nowDate <- as.POSIXct(as.numeric(now), origin="1970-01-01")
 lastSavedDate <- as.POSIXct(max(as.numeric(playerstatsOld$timestamp)), origin="1970-01-01")
 
-if(as.numeric(difftime(nowDate, lastSavedDate, units ="hours")) > 12){
+if(as.numeric(difftime(nowDate, lastSavedDate, units ="hours")) > 6){
 
   # Join new data with saved data and order by joinDate, player, then timestamp
   playerstatsFull <- join(playerstats,playerstatsOld, type="full", match="all")
