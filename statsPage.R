@@ -2,7 +2,7 @@
 ## Graphs for the wurstmineberg stats page
 
 # Pull recent data
-#source("dataPrep.R")
+source("dataPrep.R")
 
 # Define some variables for plot layout and labels
 plotWidth <- 6; plotHeight <- 4;

@@ -158,6 +158,11 @@ rm(achievements)
 # Reorganizzle rownames just in case ¯\_(ツ)_/¯
 rownames(playerstats) <- playerstats$player
 
+## At this point, playerstats is in a usable state, data is comfortably accessible and it contains
+## both the general player stats and the achievement data. 
+## What happens now is my attempt to create a log file of playerstats in playerstat.csv, which in the future 
+## might be interesting as a basis for playeractivity over time.
+
 # Sooner or later, I want a giant logfile.
 playerstats$timestamp <- now
 playerstatsOld <- read.csv(file="data/playerstats.csv", row.names=1)

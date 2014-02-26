@@ -19,7 +19,7 @@ ggsave(file="Plots/OnlineTimebyServerAge.png", height=plotHeight, width=plotWidt
 # Deaths per online hour 
 ggplot(playerstats, aes(x = playOneHour, y = deaths)) + 
   geom_point(aes(colour=player), group=1) + 
- # geom_smooth(method = lm) + 
+# geom_smooth(method = lm) + 
   ylab("Deaths") + xlab("Online time (hours (real time))") +
   ggtitle("Deaths vs. Online time") +
   playerTheme +
@@ -28,7 +28,7 @@ ggsave(file="Plots/Deaths_OnlineTime.png", height=6, width=8)
 
 # Damage taken vs deaths
 ggplot(playerstats, aes(y=deaths, x=(damageTaken/2000), label=player)) + 
-  geom_smooth(method = lm, se=F) + 
+#  geom_smooth(method = lm, se=F) + 
   geom_point(aes(colour=joinStatus, group=1)) + 
   geom_text(size=2, hjust=-.2, vjust=.4) +
   xlab("Damage Taken (Hearts in thousands)") + ylab("Deaths") +
@@ -43,7 +43,7 @@ cor(playerstats$deaths, playerstats$damageTaken)^2
 
 # Mob kills vs play time
 ggplot(playerstats, aes(x=playOneHour, y=mobKills, label=player)) + 
-  geom_smooth(method = lm, se=F) + 
+#  geom_smooth(method = lm, se=F) + 
   geom_point(aes(colour=joinStatus, group=1)) + 
   geom_text(size=2, hjust=-.2, vjust=.4) +
   ylab("Mob kills (absolute)") + xlab("Online time (hours (real time)))") +
@@ -55,7 +55,7 @@ ggsave(file="Plots/MobKills_OnlineTime.png", height=plotHeight, width=plotWidth)
 # Distance walked per online time
 ggplot(playerstats, aes(x = playOneHour,  y = (walkOneCm/1000000), label=player)) + 
   geom_point(aes(colour=player, group=1)) + 
- # geom_smooth(method = lm) + 
+# geom_smooth(method = lm) + 
   ylab("Distance walked (km)") + xlab("Online time (hours (real time)))") +
   ggtitle("Distance walked vs. Online time") +
   playerTheme +
@@ -64,7 +64,7 @@ ggsave(file="Plots/DistanceWalked_OnlineTime.png", height=6, width=8)
 
 # Server growth
 ggplot(playerstats, aes(x = joinDate, y = numID, label = player)) + 
-  #geom_smooth(method = loess, se=F) + 
+# geom_smooth(method = loess, se=F) + 
   geom_point(aes(colour=joinStatus), stat="identity") + 
   geom_text(size=2, vjust=-.2, hjust=-.2) +
   ylab("Whitelist Count") + xlab("Date") +
