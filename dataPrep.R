@@ -20,6 +20,8 @@ playerstats <- fromJSON("http://api.wurstmineberg.de/server/playerstats/general.
 achievements <- fromJSON("http://api.wurstmineberg.de/server/playerstats/achievement.json")
 ## Get item stats
 items <- fromJSON("http://api.wurstmineberg.de/server/playerstats/item.json")
+## Get entity stats # TODO: Incorporate in playerstats
+entities <- fromJSON("http://api.wurstmineberg.de/server/playerstats/entity.json")
 
 
 # A little cleanup: Removing "stat." and "achievement." prefixes from columns
@@ -32,6 +34,9 @@ achievements[achievements == "NULL"] <- "0"
 
 names(items) <- sub("stat.","",names(items))
 items[items == "NULL"] <- "0"
+
+names(entities) <- sub("stat.","",names(entities))
+entities[entities == "NULL"] <- "0"
 
 # (Temp?) fix for new people.json format
 people <- as.data.frame(people[1])
@@ -60,6 +65,10 @@ for(i in (1:(ncol(items)))) {
   items[i] <- unlist(items[i], use.names=F)
 }; rm(i);
 
+# Do the same for the entities dataset (you guessed it, right?)
+for(i in (1:(ncol(entities)))) {
+  entities[i] <- unlist(entities[i], use.names=F)
+}; rm(i);
 
 # Getting rid of NAs and assuming 0
 playerstats[playerstats == NA] <- 0
@@ -68,30 +77,37 @@ playerstats[playerstats == NA] <- 0
 playerstats <- as.data.frame(mapply(as.numeric,playerstats))
 achievements <- as.data.frame(mapply(as.numeric,achievements))
 items <- as.data.frame(mapply(as.numeric,items))
+entities <- as.data.frame(mapply(as.numeric,entities))
 
 ## Sorting according to people.json
 playerstats$player <- playerTemp
 achievements$player <- playerTemp
 items$player <- playerTemp
+entities$player <- playerTemp
 rm(playerTemp)
 
 # Crucial part where we enhance the original list by matching with people.json
 playerstats <- playerstats[match(people$minecraft[people$status != "former"], playerstats$player),]
 achievements <- achievements[match(people$minecraft[people$status != "former"], achievements$player),]
 items <- items[match(people$minecraft[people$status != "former"], items$player),]
+entities <- entities[match(people$minecraft[people$status != "former"], entities$player),]
+
 
 ## Get joinDate from people.json, excluding former members
 playerstats$joinDate <- people$join_date[people$status != "former"]
 
 ## Convert player names to people.json-IDs
-playerstats$player <- people$id[people$status != "former"]
-achievements$player <- people$id[people$status != "former"]
-items$player <- people$id[people$status != "former"]
+activePeople <- people$id[people$status != "former"]
+playerstats$player <- activePeople
+achievements$player <- activePeople
+items$player <- activePeople
+entities$player <- activePeople
 
 # Convert to factors with appropriate levels
 playerstats$player <- factor(playerstats$player, levels=playerstats$player)
 achievements$player <- factor(playerstats$player, levels=playerstats$player)
 items$player <- factor(playerstats$player, levels=playerstats$player)
+entities$player <- factor(playerstats$player, levels=playerstats$player)
 
 ## Getting rid of NAs and assuming 0 (again. Don't ask.)
 playerstats[is.na(playerstats)] <- 0
@@ -157,6 +173,7 @@ rm(achievements)
 
 # Reorganizzle rownames just in case ¯\_(ツ)_/¯
 rownames(playerstats) <- playerstats$player
+rownames(entities) <- entities$player
 
 ## At this point, playerstats is in a usable state, data is comfortably accessible and it contains
 ## both the general player stats and the achievement data. 
