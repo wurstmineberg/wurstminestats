@@ -157,10 +157,11 @@ rownames(playerstats) <- playerstats$player
 playerstats$timestamp <- now
 playerstatsOld <- read.csv(file="data/playerstats.csv", row.names=1)
 
-#if(as.numeric(difftime(as.POSIXct(as.numeric(playerstats$timestamp[1]), origin="1970-01-01"), as.POSIXct(max(as.numeric(playerstatsOld$timestamp)), origin="1970-01-01"), units ="days")) > 0.5)
+if(as.numeric(difftime(as.POSIXct(as.numeric(playerstats$timestamp[1]), origin="1970-01-01"), as.POSIXct(max(as.numeric(playerstatsOld$timestamp)), origin="1970-01-01"), units ="days")) > 0.5){
 
-playerstatsFull <- join(playerstats,playerstatsOld, type="full", match="all")
-playerstatsFull <- arrange(playerstatsFull, as.Date(joinDate), player)
+  playerstatsFull <- join(playerstats,playerstatsOld, type="full", match="all")
+  playerstatsFull <- arrange(playerstatsFull, as.Date(joinDate), player)
 
-## Write dataset to file for ze easy access
-write.csv(playerstatsFull, "data/playerstats.csv")
+  ## Write dataset to file for ze easy access
+  write.csv(playerstatsFull, "data/playerstats.csv")
+}
