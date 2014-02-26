@@ -13,7 +13,8 @@ ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,playOneHour/serve
   geom_bar(colour="black", width=.7, stat="identity") + 
   xlab("Player") + ylab("Online Time (h) by Server Age (d)") +
   ggtitle("Online Time by Server Age") + coord_flip() +
-  scale_fill_discrete(name = "Join Status")
+  scale_fill_manual(name = "Join Status", 
+                    values = statusColours)
 ggsave(file="Plots/OnlineTimebyServerAge.png", height=plotHeight, width=plotWidth)
 
 # Deaths per online hour 
@@ -70,7 +71,8 @@ ggplot(playerstats, aes(x = joinDate, y = numID, label = player)) +
   ylab("Whitelist Count") + xlab("Date") +
   ggtitle("Wurstmineberg Server Growth") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  scale_colour_discrete(name = "Join Status") +
+  scale_colour_manual(name = "Join Status", 
+                    values = statusColours) +
   scale_x_datetime(labels = date_format("%y-%m-%d"),
                    breaks = date_breaks("month"),
                    expand=c(.2,1));

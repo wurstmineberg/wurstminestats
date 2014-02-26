@@ -12,10 +12,7 @@ xLable <- xlab("Player")
 # Define colour scale to keep status colours static
 statusColours <- brewer.pal(9,"Set1")
 names(statusColours) <- levels(playerstats$joinStatus)
-statusColours <- statusColours[c("founding","later","postfreeze","invited")]
-legendTitle <- scale_fill_manual(name = "Join Status", 
-                                 values = statusColours,
-                                 na.value="black")
+legendTitle <- scale_fill_manual(name = "Join Status", values = statusColours)
 
 # Animals Bred
 p <- ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player, animalsBred), y=animalsBred)) + 
