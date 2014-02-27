@@ -33,7 +33,7 @@ for(countDeath in 1:length(killedByEntity)){
   
   p <- ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player, playerstats[,killedByEntity[countDeath]]), y=playerstats[,killedByEntity[countDeath]])) + 
     barChart + legendTitle + coord_flip() +
-    xLable + labs(y="Kills", title=paste("Kills of:",killedByEntityMobs[countDeath]))
+    xLable + labs(y="Deaths", title=paste("Killed by:",killedByEntityMobs[countDeath]))
   ggsave(plot=p, file=killedByEntityFilename, height=plotHeight, width=plotWidth)
   
 }
