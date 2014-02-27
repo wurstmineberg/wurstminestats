@@ -5,6 +5,9 @@ if((as.numeric(format(Sys.time(), "%s")) - as.numeric(now))/60/60 > 2){
   source("dataPrep.R");
 }
 
+# Get strings.json from website for easier mob name replacement
+strings <- fromJSON("http://wurstmineberg.de/static/json/strings.json")
+
 # Get columns for killEntity and KilledBy categories respectively
 killEntity <- grep("killEntity", names(playerstats))
 killedByEntity <- grep("KilledBy", names(playerstats))
@@ -13,6 +16,13 @@ killedByEntity <- grep("KilledBy", names(playerstats))
 killEntityMobs <- sub("killEntity.","",names(playerstats[killEntity]))
 killedByEntityMobs <- sub("entityKilledBy.","",names(playerstats[killedByEntity]))
 
+# Substitute mob names with more familiar names
+for(i in 1:length(names(strings$mobs[2,]))){
+  
+  killedByEntityMobs <- sub(names(strings$mobs[2,])[i], strings$mobs[2,i], killedByEntityMobs)
+  killEntityMobs <- sub(names(strings$mobs[2,])[i], strings$mobs[2,i], killEntityMobs)
+
+}; rm(i);
 
 # Generate graphs for killEntity stats
 for(countKill in 1:length(killEntity)){
