@@ -63,7 +63,7 @@ ggplot(playerstats, aes(x = playOneHour,  y = (walkOneCm/1000000), label=player)
 ggsave(file="Plots/DistanceWalked_OnlineTime.png", height=6, width=8)
 
 # Server growth
-ggplot(playerstats, aes(x = joinDate, y = numID, label = player)) + 
+p <- ggplot(playerstats, aes(x = joinDate, y = numID, label = player)) + 
   geom_point(aes(colour=joinStatus), stat="identity") + 
   geom_text(size=2, vjust=-.2, hjust=-.2) +
   ylab("Whitelist Count") + xlab("Date") +
@@ -74,7 +74,7 @@ ggplot(playerstats, aes(x = joinDate, y = numID, label = player)) +
   scale_x_datetime(labels = date_format("%y-%m-%d"),
                    breaks = date_breaks("month"),
                    expand=c(.2,1));
-ggsave(file="Plots/WhitelistGrowth.png", height=6, width=8)
+ggsave(p, file="Plots/WhitelistGrowth.png", height=6, width=8)
 
 # Play time vs server age
 ggplot(playerstats, aes(x = serverAge, y = playOneHour, label=player)) +
@@ -124,8 +124,8 @@ ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,killWither), y=ki
   xLable + labs(y="Withers", title="Withers killed per player")
 ggsave(file="Plots/WithersKilled.png", height=plotHeight, width=plotWidth)
 
-# Number of opened inventories
-ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,openInventory), y=openInventory)) + 
-  barChart + legendTitle + coord_flip() +
-  xLable + labs(y="Inventories Opened", title="How Often Players Opened Their Inventories")
+# Number of opened inventories per played hour
+ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,openInventory/playOneHour), y=openInventory/playOneHour)) + 
+  barChart + legendTitle + coord_flip() + scale_y_discrete(breaks= pretty_breaks()) +
+  xLable + labs(y="Inventories Opened per Hour", title="How Often Players Opened Their Inventories per Hour")
 ggsave(file="Plots/OpenInventory.png", height=plotHeight, width=plotWidth)

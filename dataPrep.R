@@ -200,3 +200,5 @@ if(as.numeric(difftime(nowDate, lastSavedDate, units ="hours")) > 6){
   # Write dataset to file for ze easy access
   write.csv(playerstatsFull, "data/playerstats.csv")
 };
+
+rm(playerstatsOld)
