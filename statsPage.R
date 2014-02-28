@@ -1,8 +1,10 @@
 #! /usr/bin/Rscript
 ## Graphs for the wurstmineberg stats page
 
-# Pull recent data
-source("dataPrep.R")
+# Refresh data if older than 6 hours
+if((as.numeric(format(Sys.time(), "%s")) - as.numeric(now))/60/60 > 6){
+  source("dataPrep.R");
+}
 
 # Define some variables for plot layout and labels
 plotWidth <- 6; plotHeight <- 4;
@@ -13,6 +15,25 @@ xLable <- xlab("Player")
 statusColours <- brewer.pal(9,"Set1")
 names(statusColours) <- levels(playerstats$joinStatus)
 legendTitle <- scale_fill_manual(name = "Join Status", values = statusColours)
+
+# # Get general statistics from playerstats # Experimental!
+# 
+# generalStats <- names(playerstats[names(strings$general)])
+# generalStatNames <- unlist(strings$general[2,], use.names=F)
+# 
+# # Generate general stats barcharts ## Experimental
+# for(i in 1:length(generalStats)){
+#   
+#   Filename <- paste("Plots/statspage/", generalStats[i],".png", sep="")
+#   
+#   p <- ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player, playerstats[, generalStats[i]]), y=playerstats[, generalStats[i]])) + 
+#     barChart + legendTitle + coord_flip() + scale_y_discrete(breaks=pretty_breaks()) +
+#     xLable + labs(y="Units", title=generalStatNames[i])
+#   ggsave(plot=p, file=Filename, height=plotHeight, width=plotWidth)
+#   
+# }; rm(i); rm(Filename); rm(p);
+
+############################
 
 # Animals Bred
 p <- ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player, animalsBred), y=animalsBred)) + 
@@ -98,10 +119,10 @@ p <- ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player, fishCaught)
   xLable + labs(y="Amount of Fish", title="Fish Caught")
 ggsave(plot=p, file="Plots/statspage/fishCaught.png", height=plotHeight, width=plotWidth)
 
-# Games quit
+# Games Quit
 p <- ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player, leaveGame), y=leaveGame)) +
   barChart + legendTitle + coord_flip() +
-  xLable + labs(y="Games quit", title="Games Quit")
+  xLable + labs(y="Games Quit", title="Games Quit")
 ggsave(plot=p, file="Plots/statspage/leaveGame.png", height=plotHeight, width=plotWidth)
 
 # Items Dropped
@@ -238,7 +259,7 @@ p <- ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player, fishCaught/
   xLable + labs(y="Fish per Hour (real time)", title="Fish Caught per Online Time")
 ggsave(plot=p, file="Plots/statspage/fishCaught_weighted.png", height=plotHeight, width=plotWidth)
 
-# Games quit
+# Games Quit
 p <- ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player, leaveGame/playOneHour), y=leaveGame/playOneHour)) +
   barChart + legendTitle + coord_flip() +
   xLable + labs(y="Games Quit per Hour (real time)", title="Games Quit per Online Time")

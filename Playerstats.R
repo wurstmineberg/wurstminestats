@@ -1,5 +1,9 @@
-## plots
-source("dataPrep.R")
+## Some miscellaneous plots
+
+# Refresh data if older than 6 hours
+if((as.numeric(format(Sys.time(), "%s")) - as.numeric(now))/60/60 > 6){
+  source("dataPrep.R");
+}
 
 # Define general legend/guide for all players
 playerTheme <- theme(legend.position="right",
@@ -13,29 +17,26 @@ ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,playOneHour/serve
   geom_bar(colour="black", width=.7, stat="identity") + 
   xlab("Player") + ylab("Online Time (h) by Server Age (d)") +
   ggtitle("Online Time by Server Age") + coord_flip() +
-  scale_fill_manual(name = "Join Status", 
-                    values = statusColours)
+  scale_fill_manual(name = "Join Status", values = statusColours)
 ggsave(file="Plots/OnlineTimebyServerAge.png", height=plotHeight, width=plotWidth)
 
 # Deaths per online hour 
 ggplot(playerstats, aes(x = playOneHour, y = deaths)) + 
-  geom_point(aes(colour=player), group=1) + 
-# geom_smooth(method = lm) + 
+  geom_point(aes(colour=joinStatus), group=1) + 
   ylab("Deaths") + xlab("Online time (hours (real time))") +
   ggtitle("Deaths vs. Online time") +
   playerTheme +
-  scale_colour_discrete(name = "Name") 
+  scale_colour_manual(name = "Join Status", values = statusColours) 
 ggsave(file="Plots/Deaths_OnlineTime.png", height=6, width=8)
 
 # Damage taken vs deaths
 ggplot(playerstats, aes(y=deaths, x=(damageTaken/2000), label=player)) + 
-#  geom_smooth(method = lm, se=F) + 
   geom_point(aes(colour=joinStatus, group=1)) + 
   geom_text(size=2, hjust=-.2, vjust=.4) +
   xlab("Damage Taken (Hearts in thousands)") + ylab("Deaths") +
   ggtitle("Damage Taken vs. Deaths") +
   playerTheme +
-  scale_colour_discrete(name = "Join Status")
+  scale_colour_manual(name = "Join Status", values = statusColours) 
 ggsave(file="Plots/Deaths_DamageTaken.png", height=6, width=8)
 
 # Throw linear modeling at stuff
@@ -44,28 +45,25 @@ cor(playerstats$deaths, playerstats$damageTaken)^2
 
 # Mob kills vs play time
 ggplot(playerstats, aes(x=playOneHour, y=mobKills, label=player)) + 
-#  geom_smooth(method = lm, se=F) + 
   geom_point(aes(colour=joinStatus, group=1)) + 
   geom_text(size=2, hjust=-.2, vjust=.4) +
   ylab("Mob kills (absolute)") + xlab("Online time (hours (real time)))") +
   ggtitle("Mob kills vs. Online time") +
   playerTheme +
-  scale_colour_discrete(name = "Join Status")
+  scale_colour_manual(name = "Join Status", values = statusColours) 
 ggsave(file="Plots/MobKills_OnlineTime.png", height=plotHeight, width=plotWidth)
 
 # Distance walked per online time
 ggplot(playerstats, aes(x = playOneHour,  y = (walkOneCm/1000000), label=player)) + 
-  geom_point(aes(colour=player, group=1)) + 
-# geom_smooth(method = lm) + 
+  geom_point(aes(colour=joinStatus, group=1)) + 
   ylab("Distance walked (km)") + xlab("Online time (hours (real time)))") +
   ggtitle("Distance walked vs. Online time") +
   playerTheme +
-  scale_colour_discrete(name = "Name")
+  scale_colour_manual(name = "Join Status", values = statusColours) 
 ggsave(file="Plots/DistanceWalked_OnlineTime.png", height=6, width=8)
 
 # Server growth
 ggplot(playerstats, aes(x = joinDate, y = numID, label = player)) + 
-# geom_smooth(method = loess, se=F) + 
   geom_point(aes(colour=joinStatus), stat="identity") + 
   geom_text(size=2, vjust=-.2, hjust=-.2) +
   ylab("Whitelist Count") + xlab("Date") +
@@ -85,7 +83,7 @@ ggplot(playerstats, aes(x = serverAge, y = playOneHour, label=player)) +
   ylab("Time spent on server (hours)") + xlab("Age on server (days)") +
   ggtitle("Time spent on server vs. relative age on server") +
   playerTheme +
-  scale_colour_discrete(name = "Join Status")
+  scale_colour_manual(name = "Join Status", values = statusColours) 
 ggsave(file="Plots/ServerAge_PlayTime.png", height=plotHeight, width=plotWidth)
 
 # Distance Traveled Total
@@ -112,6 +110,7 @@ ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,cowRatio), y=cowR
   barChart + legendTitle + coord_flip() +
   xLable + labs(y="Breeds per kills", title="Cow Breed to Cow Kill Ratio")
 ggsave(file="Plots/CowsRatio.png", height=plotHeight, width=plotWidth)
+rm(cowRatio);
 
 # Hoes made
 ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,buildHoe), y=buildHoe)) + 
