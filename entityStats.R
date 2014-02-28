@@ -34,7 +34,7 @@ for(countKill in 1:length(killEntity)){
     xLable + labs(y="Kills", title=paste("Kills of:",killEntityMobs[countKill]))
   ggsave(plot=p, file=killEntityFilename, height=plotHeight, width=plotWidth)
 
-}
+}; rm(countKill);
 
 # Generate graphs for entityKilledBy stats
 for(countDeath in 1:length(killedByEntity)){
@@ -46,4 +46,8 @@ for(countDeath in 1:length(killedByEntity)){
     xLable + labs(y="Deaths", title=paste("Killed by:",killedByEntityMobs[countDeath]))
   ggsave(plot=p, file=killedByEntityFilename, height=plotHeight, width=plotWidth)
   
-}
+}; rm(countDeath);
+
+rm(p)
+rm(killedByEntity, killedByEntityFilename, killedByEntityMobs,
+   killEntity, killEntityFilename, killEntityMobs)
