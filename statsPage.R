@@ -21,14 +21,16 @@ generalStats$scale <- c(1,10^6,10^6,2000,2000,1,10^6,1,10^6,1,10^6,10^6,1000,1,1
 # Generate general stats barcharts ## Experimental
 for(i in 1:statNum){
    
-   Filename <- paste("Plots/statspage/", generalStats$id[i],".png", sep="")
+  Filename <- paste("Plots/statspage/", generalStats$id[i],".png", sep="")
    
-   p <- ggplot(data=playerstats) + 
-  aes(fill=joinStatus, x=reorder(player, playerstats[, generalStats$id[i]]), 
-         y=playerstats[, generalStats$id[i]]/generalStats$scale[i]) +
-   barChart + legendTitle + coord_flip() + scale_y_discrete(breaks=pretty_breaks()) +
-   xLable + labs(y=generalStats$unit[i], title=generalStats$name[i])
-   ggsave(plot=p, file=Filename, height=plotHeight, width=plotWidth)
+  p <- ggplot(data=playerstats)
+  p <- p + aes(fill=joinStatus, x=reorder(player, playerstats[, generalStats$id[i]]), 
+                                y=playerstats[, generalStats$id[i]] / generalStats$scale[i])
+  p <- p + barChart + legendTitle + coord_flip()
+  p <- p + scale_y_discrete(breaks=pretty_breaks())
+  p <- p + xLable + labs(y=generalStats$unit[i], title=generalStats$name[i])
+  
+  ggsave(plot=p, file=Filename, height=plotHeight, width=plotWidth)
    
 }; rm(i, Filename, p, statNum)
 
