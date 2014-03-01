@@ -9,14 +9,16 @@ if((as.numeric(format(Sys.time(), "%s")) - as.numeric(now))/60/60 > 6){
 source("functions.R")
 
 # Get general statistics from playerstats, define metadata (scale, units)
+
 statNum <- ncol(strings$general)
 generalStats <- data.frame(id=rep(0,statNum), name=rep(0,statNum), unit=rep(0,statNum), scale=rep(0,statNum))
 generalStats$id <- names(playerstats[names(strings$general)])
 generalStats$name <- unlist(strings$general[2,], use.names=F)
 generalStats$unit   <- c("Animals", "km", "km", "Hearts (thousands)", "Hearts (thousands)", "Deathcount", "km", "Items", "km", "Fish", "km", "km", "Jumps (thousands)", "Junk", "Quits", "km", "Mobs", "m", "Hours (real life)", "Kills", "km", "Treasure", "km")
-generalStats$scale  <- c(1,        10^6,  10^6, 2000,                 20000,                 1,           10^6,  1,      10^6,  1,     10^6,  10^6, 1000,                 1,      1,      10^6,  1,    1000,  (20*60*60),           1,      10^6, 1,        10^6)
+generalStats$scale  <- c(1,         10^6, 10^6, 2000,                 20000,                 1,           10^6,  1,      10^6,  1,     10^6,  10^6, 1000,                1,      1,      10^6,  1,    1000,  20*60*60,           1,       10^6, 1,          10^6)
 
-# Generate general stats barcharts ## Experimental
+# Generate general stats barcharts
+
 for(i in 1:statNum){
 
   Filename <- paste("Plots/statspage/", generalStats$id[i],".png", sep="")
@@ -35,7 +37,7 @@ for(i in 1:statNum){
 }; rm(i, Filename, p)
 
 
-###################### Weighted by hours played ######################
+# Weighted by hours played
 
 for(i in 1:statNum){
   
