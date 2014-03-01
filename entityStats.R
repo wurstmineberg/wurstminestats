@@ -63,5 +63,4 @@ for(i in 1:length(killedByEntity)){
 # }; rm(i);
 
 
-rm(p)
 rm(killedByEntity, killedByEntityMobs, killEntity, killEntityMobs)
