@@ -14,8 +14,11 @@ playerstats <- fromJSON("http://api.wurstmineberg.de/server/playerstats/general.
 achievements <- fromJSON("http://api.wurstmineberg.de/server/playerstats/achievement.json")
 ## Get item stats
 items <- fromJSON("http://api.wurstmineberg.de/server/playerstats/item.json")
-## Get entity stats # TODO: Incorporate in playerstats
+## Get entity stats 
 entities <- fromJSON("http://api.wurstmineberg.de/server/playerstats/entity.json")
+## Get achievement descriptions from website
+achievementStrings <- fromJSON("http://wurstmineberg.de/static/json/achievements.json")
+achievementStrings$id <- names(achievementStrings[,1])
 
 #### This is where imported datasets get cleaned up so we can actually use them ####
 ##
@@ -166,7 +169,7 @@ inviteGaps <- c(0,round(as.numeric(difftime(playerstats$joinDate[2:nrow(playerst
 playerstats <- join(playerstats, achievements)
 playerstats <- join(playerstats, entities)
 
-# Delete dataframes we don't need separate anymore dataset
+# Delete dataframes we don't need separate anymore
 rm(achievements); rm(entities);
 
 # Reorganizzle rownames just in case ¯\_(ツ)_/¯
