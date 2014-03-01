@@ -11,8 +11,8 @@ library(RColorBrewer)   # Because colours
 
 # Define general legend/guide for all players
 playerTheme <- theme(legend.position="right",
-                legend.key.size = unit(.4, "cm"),
-                legend.text = element_text(size = rel(.8)));
+                    legend.key.size = unit(.4, "cm"),
+                    legend.text = element_text(size = rel(.8)));
 
 # Define some variables for bar chart layout and labels
 plotWidth <- 6; plotHeight <- 4;
