@@ -85,23 +85,25 @@ entities$player <- playerTemp
 rm(playerTemp)
 
 # Crucial part where we resort the original dataframes by matching with the order in people.json
-activePeopleMC <- people$minecraft[people$status != "former"]
+activePeople <- data.frame(id=rep(0, length(people$minecraft[people$status != "former"])), 
+                           mc=rep(0, length(people$minecraft[people$status != "former"])))
+activePeople$mc <- people$minecraft[people$status != "former"]
 
-playerstats <- playerstats[match(activePeopleMC, playerstats$player),]
-achievements <- achievements[match(activePeopleMC, achievements$player),]
-items <- items[match(activePeopleMC, items$player),]
-entities <- entities[match(activePeopleMC, entities$player),]
+playerstats <- playerstats[match(activePeople$mc, playerstats$player),]
+achievements <- achievements[match(activePeople$mc, achievements$player),]
+items <- items[match(activePeople$mc, items$player),]
+entities <- entities[match(activePeople$mc, entities$player),]
 
 ## Get joinDate from people.json, excluding former members
 playerstats$joinDate <- people$join_date[people$status != "former"]
 
 ## Convert player names to people.json-IDs
-activePeopleID <- people$id[people$status != "former"]
+activePeople$id <- people$id[people$status != "former"]
 
-playerstats$player <- activePeopleID
-achievements$player <- activePeopleID
-items$player <- activePeopleID
-entities$player <- activePeopleID
+playerstats$player <- activePeople$id
+achievements$player <- activePeople$id
+items$player <- activePeople$id
+entities$player <- activePeople$id
 
 # Convert to factors with appropriate levels
 playerstats$player <- factor(playerstats$player, levels=playerstats$player)
