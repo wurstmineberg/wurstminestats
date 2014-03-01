@@ -27,27 +27,26 @@ for(i in 1:length(names(strings$mobs[2,]))){
 # Generate graphs for killEntity stats
 for(countKill in 1:length(killEntity)){
 
-  killEntityFilename <- paste("Plots/mobs/",names(playerstats[killEntity[countKill]]),".png", sep="")
+  Filename <- paste("Plots/mobs/",names(playerstats[killEntity[countKill]]),".png", sep="")
   
   p <- ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player, playerstats[,killEntity[countKill]]), y=playerstats[,killEntity[countKill]])) + 
     barChart + legendTitle + coord_flip() + scale_y_discrete(breaks= pretty_breaks()) +
     xLable + labs(y="Kills", title=paste("Kills of:",killEntityMobs[countKill]))
-  ggsave(plot=p, file=killEntityFilename, height=plotHeight, width=plotWidth)
+  ggsave(plot=p, file=Filename, height=plotHeight, width=plotWidth)
 
-}; rm(countKill);
+}; rm(countKill); rm(Filename)
 
 # Generate graphs for entityKilledBy stats
 for(countDeath in 1:length(killedByEntity)){
   
-  killedByEntityFilename <- paste("Plots/mobs/",names(playerstats[killedByEntity[countDeath]]),".png", sep="")
+  Filename <- paste("Plots/mobs/",names(playerstats[killedByEntity[countDeath]]),".png", sep="")
   
   p <- ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player, playerstats[,killedByEntity[countDeath]]), y=playerstats[,killedByEntity[countDeath]])) + 
     barChart + legendTitle + coord_flip() + scale_y_discrete(breaks= pretty_breaks()) +
     xLable + labs(y="Deaths", title=paste("Killed by:",killedByEntityMobs[countDeath]))
-  ggsave(plot=p, file=killedByEntityFilename, height=plotHeight, width=plotWidth)
+  ggsave(plot=p, file=Filename, height=plotHeight, width=plotWidth)
   
-}; rm(countDeath);
+}; rm(countDeath); rm(Filename)
 
 rm(p)
-rm(killedByEntity, killedByEntityFilename, killedByEntityMobs,
-   killEntity, killEntityFilename, killEntityMobs)
+rm(killedByEntity, killedByEntityMobs, killEntity, killEntityMobs)
