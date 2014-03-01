@@ -27,28 +27,37 @@ for(i in 1:length(names(strings$mobs[2,]))){
 }; rm(i);
 
 # Generate graphs for killEntity stats
-for(countKill in 1:length(killEntity)){
+for(i in 1:length(killEntity)){
 
-  Filename <- paste("Plots/mobs/",names(playerstats[killEntity[countKill]]),".png", sep="")
+  Filename <- paste("Plots/mobs/",names(playerstats[killEntity[i]]),".png", sep="")
   
-  p <- ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player, playerstats[,killEntity[countKill]]), y=playerstats[,killEntity[countKill]])) + 
+  p <- ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player, playerstats[,killEntity[i]]), y=playerstats[,killEntity[i]])) + 
     barChart + legendTitle + coord_flip() + scale_y_discrete(breaks= pretty_breaks()) +
-    xLable + labs(y="Kills", title=paste("Kills of:",killEntityMobs[countKill]))
+    xLable + labs(y="Kills", title=paste("Kills of:",killEntityMobs[i]))
   ggsave(plot=p, file=Filename, height=plotHeight, width=plotWidth)
 
-}; rm(countKill); rm(Filename)
+}; rm(i); rm(Filename)
 
 # Generate graphs for entityKilledBy stats
-for(countDeath in 1:length(killedByEntity)){
+for(i in 1:length(killedByEntity)){
   
-  Filename <- paste("Plots/mobs/",names(playerstats[killedByEntity[countDeath]]),".png", sep="")
+  Filename <- paste("Plots/mobs/",names(playerstats[killedByEntity[i]]),".png", sep="")
   
-  p <- ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player, playerstats[,killedByEntity[countDeath]]), y=playerstats[,killedByEntity[countDeath]])) + 
+  p <- ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player, playerstats[,killedByEntity[i]]), y=playerstats[,killedByEntity[i]])) + 
     barChart + legendTitle + coord_flip() + scale_y_discrete(breaks= pretty_breaks()) +
-    xLable + labs(y="Deaths", title=paste("Killed by:",killedByEntityMobs[countDeath]))
+    xLable + labs(y="Deaths", title=paste("Killed by:",killedByEntityMobs[i]))
   ggsave(plot=p, file=Filename, height=plotHeight, width=plotWidth)
   
-}; rm(countDeath); rm(Filename)
+}; rm(i); rm(Filename)
+
+# # Classify by hostile and friendly mobs
+# 
+# for( i in names(playerstats[killEntity]))
+# killFriendlyMobs <- 0
+# for(i in 1:nrow(playerstats)){
+#   killFriendyMobs[i] <- sum(playerstats[i, grep("Pig | Ozelot | MushroomCow | Cow", names(playerstats[killEntity]))])
+# }; rm(i);
+
 
 rm(p)
 rm(killedByEntity, killedByEntityMobs, killEntity, killEntityMobs)
