@@ -43,7 +43,7 @@ rm(cowRatio);
 # Number of opened inventories per played hour
 p <- ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,openInventory/playOneHour), y=openInventory/playOneHour))
 p <- p + barChart + legendTitle + coord_flip() + scale_y_discrete(breaks= pretty_breaks())
-p <- p + xLable + labs(y="Inventories Opened per Hour", title="Inventories Opened per Hour")
+p <- p + xLable + labs(y="Inventories Opened per Hour", title="Inventories Opened weighted by Online Time")
 ggsave(file="Plots/achievements/openInventory_by_Time.png", height=plotHeight, width=plotWidth)
 
 rm(p)
