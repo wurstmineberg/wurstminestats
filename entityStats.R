@@ -5,6 +5,8 @@ if((as.numeric(format(Sys.time(), "%s")) - as.numeric(now))/60/60 > 6){
   source("dataPrep.R");
 }
 
+source("functions.R")
+
 # Get strings.json from website for easier mob name replacement
 strings <- fromJSON("http://wurstmineberg.de/static/json/strings.json")
 
