@@ -25,9 +25,9 @@ for(i in 1:statNum){
   p <- p + aes(fill=joinStatus, x=reorder(player, playerstats[, generalStats$id[i]]), 
                                 y=playerstats[, generalStats$id[i]] / generalStats$scale[i])
   p <- p + barChart + legendTitle + coord_flip()
-  if(generalStats$unit[i] != "km" & generalStats$unit[i] != "m"){
-    p <- p + scale_y_discrete(breaks=pretty_breaks()) 
-  }
+    if(generalStats$unit[i] != "km" & generalStats$unit[i] != "m"){
+      p <- p + scale_y_discrete(breaks=pretty_breaks()) 
+    }
   p <- p + xLable + labs(y=generalStats$unit[i], title=generalStats$name[i])
   
   ggsave(plot=p, file=Filename, height=plotHeight, width=plotWidth)
@@ -47,9 +47,9 @@ for(i in 1:statNum){
   p <- p + aes(fill=joinStatus, x=reorder(player, playerstats[, generalStats$id[i]]/playerstats$playOneHour), 
                y=(playerstats[, generalStats$id[i]] / generalStats$scale[i])/playerstats$playOneHour)
   p <- p + barChart + legendTitle + coord_flip()
-#  if(generalStats$unit[i] != "km" & generalStats$unit[i] != "m"){
-#    p <- p + scale_y_discrete(breaks=pretty_breaks()) 
-#  }
+  #  if(generalStats$unit[i] != "km" & generalStats$unit[i] != "m"){
+  #    p <- p + scale_y_discrete(breaks=pretty_breaks()) 
+  #  }
   p <- p + xLable + labs(y=paste(generalStats$unit[i], "per hour"), title=paste(generalStats$name[i], "weighted by Online Time"))
   
   ggsave(plot=p, file=Filename, height=plotHeight, width=plotWidth)
