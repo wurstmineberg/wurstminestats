@@ -19,6 +19,9 @@ for(i in 1:nrow(achievementStrings)){
                                 y=playerstats[,achievementStrings$id[i]]) 
   p <- p + barChart + legendTitle + coord_flip() + scale_y_discrete(breaks= pretty_breaks())
   p <- p + xLable + ylab("Times Achieved")
+  if(nchar(achievementStrings$description[i]) > 44){
+  p <- p + theme(plot.title = element_text(size=12))
+  }
   p <- p + ggtitle(paste("Achievement:",achievementStrings$displayname[i],"\n",achievementStrings$description[i]))
   
   ggsave(plot=p, file=Filename, height=plotHeight, width=plotWidth)
