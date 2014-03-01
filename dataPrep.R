@@ -187,7 +187,7 @@ rownames(playerstats) <- playerstats$player
 playerstats$timestamp <- now
 playerstatsOld <- read.csv(file="data/playerstats.csv", row.names=1)
 
-# Only append saved date if the new data is at least 12h newer then the last saved data
+# Only append saved date if the new data is at least 6h newer then the last saved data
 nowDate <- as.POSIXct(as.numeric(now), origin="1970-01-01")
 lastSavedDate <- as.POSIXct(max(as.numeric(playerstatsOld$timestamp)), origin="1970-01-01")
 
