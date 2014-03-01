@@ -1,12 +1,6 @@
 # Datapreparations
 
-library(RCurl)
-library(jsonlite)
-library(ggplot2)
-library(scales)     # For datetime scales on plots
-library(gridExtra)  # For annotations outside of plot ## TODO
-library(plyr)       # To join() dataframes
-library(RColorBrewer)   # Because colours
+source("functions.R")
 
 # Get a close enough timestamp for the data age
 # Reimport via as.POSIXct(x,origin="1970-01-01") should be sufficient

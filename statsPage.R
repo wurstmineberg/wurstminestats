@@ -6,15 +6,7 @@ if((as.numeric(format(Sys.time(), "%s")) - as.numeric(now))/60/60 > 6){
   source("dataPrep.R");
 }
 
-# Define some variables for plot layout and labels
-plotWidth <- 6; plotHeight <- 4;
-barChart <- geom_bar(colour="black", width=.7, stat="identity")
-xLable <- xlab("Player")
-
-# Define colour scale to keep status colours static
-statusColours <- brewer.pal(9,"Set1")
-names(statusColours) <- levels(playerstats$joinStatus)
-legendTitle <- scale_fill_manual(name = "Join Status", values = statusColours)
+source("functions.R")
 
 # # Get general statistics from playerstats # Experimental!
 # 
