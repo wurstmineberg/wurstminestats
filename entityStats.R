@@ -54,13 +54,40 @@ for(i in 1:length(killedByEntity)){
   
 }; rm(i, p, Filename)
 
-# # Classify by hostile and friendly mobs
-# 
-# for( i in names(playerstats[killEntity]))
-# killFriendlyMobs <- 0
-# for(i in 1:nrow(playerstats)){
-#   killFriendyMobs[i] <- sum(playerstats[i, grep("Pig | Ozelot | MushroomCow | Cow", names(playerstats[killEntity]))])
-# }; rm(i);
+### Classify by hostile and friendly mobs ###
+
+killFriendly  <- c("killEntity.Bat", "killEntity.Sheep", "killEntity.Pig", "killEntity.Chicken", "killEntity.Cow", 
+                  "killEntity.EntityHorse", "killEntity.Squid", "killEntity.MushroomCow", "killEntity.Villager", 
+                  "killEntity.Ozelot", "killEntity.Wolf")
+killHostile   <- c("killEntity.PigZombie", "killEntity.Blaze", "killEntity.Enderman", "killEntity.Spider", 
+                  "killEntity.Zombie", "killEntity.Skeleton", "killEntity.Creeper", "killEntity.Silverfish", 
+                  "killEntity.Witch", "killEntity.Slime", "killEntity.CaveSpider", "killEntity.MushroomCow", 
+                  "killEntity.LavaSlime", "killEntity.Ghast")
+
+for(i in 1:nrow(playerstats)){
+
+  playerstats$killFriendly[i] <- sum(playerstats[i, killFriendly])
+  playerstats$killHostile[i] <- sum(playerstats[i, killHostile])
+
+}; rm(i);
+
+## Generate graphs for that
+
+# Friendly Mobs
+p <- ggplot(data=playerstats) 
+p <- p + aes(fill=joinStatus, x=reorder(player, killFriendly), y=killFriendly)
+p <- p + barChart + legendTitle + coord_flip() + scale_y_discrete(breaks= pretty_breaks())
+p <- p + xLable + labs(y="Kills", title="Total Friendly Mobs Killed")
+ggsave(plot=p, file="Plots/mobs/KillFriendlies.png", height=plotHeight, width=plotWidth)
+
+# Hostile Mobs
+p <- ggplot(data=playerstats) 
+p <- p + aes(fill=joinStatus, x=reorder(player, killHostile), y=killHostile)
+p <- p + barChart + legendTitle + coord_flip() + scale_y_discrete(breaks= pretty_breaks())
+p <- p + xLable + labs(y="Kills", title="Total Hostile Mobs Killed")
+ggsave(plot=p, file="Plots/mobs/KillHostiles.png", height=plotHeight, width=plotWidth)
+
+
 
 
 rm(killedByEntity, killedByEntityMobs, killEntity, killEntityMobs)
