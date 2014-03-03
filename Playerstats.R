@@ -25,7 +25,7 @@ p <- p + scale_colour_manual(name = "Join Status", values = statusColours)
 ggsave(p, file="Plots/Deaths_OnlineTime.png", height=6, width=8)
 
 # Damage taken vs deaths
-p <- ggplot(playerstats, aes(y=deaths, x=(damageTaken/2000), label=player)) 
+p <- ggplot(playerstats, aes(y=deaths, x=(damageTaken/20000), label=player)) 
 p <- p + geom_point(aes(colour=joinStatus, group=1)) 
 p <- p + geom_text(size=2, hjust=-.2, vjust=.4) 
 p <- p + labs(x="Damage Taken (Hearts in thousands)", y="Deaths") 
