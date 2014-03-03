@@ -88,6 +88,4 @@ p <- p + xLable + labs(y="Kills", title="Total Hostile Mobs Killed")
 ggsave(plot=p, file="Plots/mobs/KillHostiles.png", height=plotHeight, width=plotWidth)
 
 
-
-
 rm(killedByEntity, killedByEntityMobs, killEntity, killEntityMobs)
