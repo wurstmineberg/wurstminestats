@@ -1,12 +1,11 @@
 ## Plots based on achievement stats
 
-# Refresh data if older than 6 hours
-if((as.numeric(format(Sys.time(), "%s")) - as.numeric(now))/60/60 > 6){
-  source("dataPrep.R");
+# Refresh data if older than 6 hours (only if "now" is defined)
+if(length(grep("now", ls())) != 0){
+    if((as.numeric(format(Sys.time(), "%s")) - as.numeric(now))/60/60 > 6){
+      source("dataPrep.R");
+    }
 }
-
-source("functions.R")
-
 
 ## Generate basic plots for all achievements
 for(i in 1:nrow(achievementStrings)){
@@ -44,6 +43,6 @@ rm(cowRatio);
 p <- ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,openInventory/playOneHour), y=openInventory/playOneHour))
 p <- p + barChart + legendTitle + coord_flip() + scale_y_discrete(breaks= pretty_breaks())
 p <- p + xLable + labs(y="Inventories Opened per Hour", title="Inventories Opened weighted by Online Time")
-ggsave(file="Plots/achievements/openInventory_by_Time.png", height=plotHeight, width=plotWidth)
+ggsave(p, file="Plots/achievements/openInventory_by_Time.png", height=plotHeight, width=plotWidth)
 
 rm(p)
