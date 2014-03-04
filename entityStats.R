@@ -56,6 +56,26 @@ for(i in 1:length(killedByEntity)){
   
 }; rm(i, p, Filename)
 
+
+## Most killed/killedBy entity charts
+mobsKilled <- data.frame(killedMob=killEntityMobs,
+                   nKills=unlist(colwise(sum)(playerstats[killEntity]), use.names=F))
+
+p <- ggplot(data=mobsKilled) 
+p <- p + aes(x=reorder(killedMob, nKills), y=nKills)
+p <- p + barChart + coord_flip() + scale_y_discrete(breaks= pretty_breaks())
+p <- p + labs(x="Mobs", y="Kills", title="Killed Mobs")
+ggsave(plot=p, file="Plots/mobs/Kills_byMob.png", height=plotHeight, width=plotWidth)
+
+mobsKilledBy <- data.frame(killedByMob=killedByEntityMobs,
+                    nKilledBy=unlist(colwise(sum)(playerstats[killedByEntity]), use.names=F))
+
+p <- ggplot(data=mobsKilledBy) 
+p <- p + aes(x=reorder(killedByMob, nKilledBy), y=nKilledBy)
+p <- p + barChart + coord_flip() + scale_y_discrete(breaks= pretty_breaks())
+p <- p + labs(x="Mobs", y="Deaths", title="Deaths by Mob")
+ggsave(plot=p, file="Plots/mobs/Deaths_byMob.png", height=plotHeight, width=plotWidth)
+
 ### Classify by hostile and friendly mobs ###
 
 killFriendly  <- c("killEntity.Bat", "killEntity.Sheep", "killEntity.Pig", "killEntity.Chicken", "killEntity.Cow", 
