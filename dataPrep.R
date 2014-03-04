@@ -1,6 +1,14 @@
-# Datapreparations
+## Datapreparations
 
-source("functions.R")
+# Loading all necessary libraries
+library(RCurl)
+library(jsonlite)
+library(ggplot2)
+library(scales)     # For datetime scales on plots
+library(gridExtra)  # For annotations outside of plot ## TODO
+library(plyr)       # To join() dataframes
+library(RColorBrewer)   # Because colours
+
 
 # Get a close enough timestamp for the data age
 # Reimport via as.POSIXct(x,origin="1970-01-01") should be sufficient
@@ -19,6 +27,9 @@ entities <- fromJSON("http://api.wurstmineberg.de/server/playerstats/entity.json
 ## Get achievement descriptions from website
 achievementStrings <- fromJSON("http://wurstmineberg.de/static/json/achievements.json")
 achievementStrings$id <- names(achievementStrings[,1])
+## Get strings.json for some… strings.
+strings <- fromJSON("http://wurstmineberg.de/static/json/strings.json")
+
 
 #### This is where imported datasets get cleaned up so we can actually use them ####
 ##

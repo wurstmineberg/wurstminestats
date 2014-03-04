@@ -1,13 +1,4 @@
-# Defining some functions and variables used by other scripts
-
-# Loading all necessary libraries
-library(RCurl)
-library(jsonlite)
-library(ggplot2)
-library(scales)     # For datetime scales on plots
-library(gridExtra)  # For annotations outside of plot ## TODO
-library(plyr)       # To join() dataframes
-library(RColorBrewer)   # Because colours
+## Defining some functions and variables used by other scripts
 
 # Define general legend/guide for all players
 playerTheme <- theme(legend.position="right",
