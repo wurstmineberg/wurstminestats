@@ -4,11 +4,11 @@
 library(RCurl)
 library(jsonlite)
 library(ggplot2)
-library(scales)     # For datetime scales on plots
-#library(gridExtra)  # For annotations outside of plot ## TODO
-library(plyr)       # To join() dataframes
-library(RColorBrewer)   # Because colours
-required(httr)
+library(scales)       # For datetime scales on plots
+#library(gridExtra)   # For annotations outside of plot ## TODO
+library(plyr)         # To join() dataframes
+library(RColorBrewer) # Because colours
+library(httr)         # For direct web access stuff, apparently
 
 
 # Get a close enough timestamp for the data age
