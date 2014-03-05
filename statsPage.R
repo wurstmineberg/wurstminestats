@@ -16,7 +16,7 @@ generalStats <- data.frame(id=rep(0,statNum), name=rep(0,statNum), unit=rep(0,st
 generalStats$id <- names(playerstats[names(strings$general)])
 generalStats$name <- unlist(strings$general[2,], use.names=F)
 generalStats$unit   <- c("Animals", "km", "km", "Hearts (thousands)", "Hearts (thousands)", "Deathcount", "km", "Items", "km", "Fish", "km", "km", "Jumps (thousands)", "Junk", "Quits", "km", "Mobs", "m", "Hours (real life)", "Kills", "km", "Treasure", "km")
-generalStats$scale  <- c(1,         10^6, 10^6, 20000,                 200000,               1,           10^6,  1,      10^6,  1,     10^6,  10^6, 1000,                1,      1,      10^6,  1,    1000,  20*60*60,           1,       10^6, 1,          10^6)
+generalStats$scale  <- c(1,         10^6, 10^6, 10*2*10^3,            10*2*10^3,             1,           10^6,  1,      10^6,  1,     10^6,  10^6, 1000,                1,      1,      10^6,  1,    1000,  20*60*60,           1,       10^6, 1,          10^6)
 
 # Generate general stats barcharts
 

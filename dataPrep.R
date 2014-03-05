@@ -25,7 +25,7 @@ achievements <- fromJSON("http://api.wurstmineberg.de/server/playerstats/achieve
 items <- fromJSON("http://api.wurstmineberg.de/server/playerstats/item.json")
 ## Get entity stats 
 entities <- fromJSON("http://api.wurstmineberg.de/server/playerstats/entity.json")
-## Get achievement descriptions from website
+## Get achievement descriptions from website and append IDs as extra column
 achievementStrings <- fromJSON("http://wurstmineberg.de/static/json/achievements.json")
 achievementStrings$id <- names(achievementStrings[,1])
 ## Get strings.json for some… strings.
