@@ -168,10 +168,10 @@ for(i in 1:nrow(playerstats)){
 
 ## Resort columns to get interesting stuff first. Manually, like a fucking animal.
 generalColumns <- c("player", "numID", "joinDate", "joinStatus", "serverAge", "serverBirth", "leaveGame",
-                    "deaths", "playerKills","damageDealt","damageTaken", "playOneMinute", 
+                    "deaths", "timeSinceDeath", "playerKills","damageDealt","damageTaken", "playOneMinute", 
                     "playOneHour", "jump", "animalsBred", "mobKills")
 itemColumns <- c("drop", "fishCaught", "treasureFished", "junkFished")
-distanceColumns <- c("distanceTraveled","walkOneCm", "climbOneCm", "minecartOneCm", "horseOneCm", 
+distanceColumns <- c("distanceTraveled","walkOneCm", "crouchOneCm", "sprintOneCm", "climbOneCm", "minecartOneCm", "horseOneCm", 
                      "boatOneCm", "pigOneCm", "fallOneCm", "swimOneCm", "diveOneCm", "flyOneCm")
 
 playerstats <- playerstats[c(generalColumns,itemColumns,distanceColumns)]

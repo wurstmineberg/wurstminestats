@@ -15,8 +15,8 @@ statNum <- ncol(strings$general)
 generalStats <- data.frame(id=rep(0,statNum), name=rep(0,statNum), unit=rep(0,statNum), scale=rep(0,statNum))
 generalStats$id <- names(playerstats[names(strings$general)])
 generalStats$name <- unlist(strings$general[2,], use.names=F)
-generalStats$unit   <- c("Animals", "km", "km", "Hearts (thousands)", "Hearts (thousands)", "Deathcount", "km", "Items", "km", "Fish", "km", "km", "Jumps (thousands)", "Junk", "Quits", "km", "Mobs", "m", "Hours (real life)", "Kills", "km", "Treasure", "km")
-generalStats$scale  <- c(1,         10^6, 10^6, 10*2*10^3,            10*2*10^3,             1,           10^6,  1,      10^6,  1,     10^6,  10^6, 1000,                1,      1,      10^6,  1,    1000,  20*60*60,           1,       10^6, 1,          10^6)
+generalStats$unit   <- c("Animals", "km", "km", "km", "Hearts (thousands)", "Hearts (thousands)", "Deathcount", "km", "Items", "km", "Fish", "km", "km", "Jumps (thousands)", "Junk", "Quits", "km", "Mobs", "m", "Hours (real life)", "Kills", "km", "km", "Treasure", "Hours (real life)", "km")
+generalStats$scale  <- c(1,         10^5, 10^5, 10^5, 10*2*10^3,            10*2*10^3,             1,           10^5,  1,      10^5,  1,     10^5,  10^5, 1000,                1,      1,      10^5,  1,    1000,  20*60*60,           1,       10^5, 10^5, 1,          20*60*60,           10^5)
 
 # Generate general stats barcharts
 
