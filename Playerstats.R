@@ -97,4 +97,19 @@ p <- p + barChart + legendTitle + coord_flip()
 p <- p + xLable + labs(y="Distance (km) per Hour (real time)", title="Total Distance Traveled by Online Time")
 ggsave(p, file="Plots/DistanceTraveled_weighted.png", height=plotHeight, width=plotWidth)
 
+### Death stats
+
+deaths <- data.frame(player = names(latestdeaths$deaths[,1]))
+deaths$timestamp <- unlist(latestdeaths$deaths[,1], use.names=F)
+deaths$cause <- unlist(latestdeaths$deaths[,2], use.names=F)
+deaths$timestamp <- as.POSIXct(deaths$timestamp, tz="UTC")
+deaths$daysSince <- as.numeric(round(difftime(Sys.time(),deaths$timestamp, units="days")))
+
+p <- ggplot(data=deaths)
+p <- p + aes(x=reorder(player,daysSince), y=daysSince)
+p <- p + barChart + legendTitle + coord_flip()
+p <- p + xLable + labs(y="Days Since Death", title="Days Since Players' Latest Death")
+ggsave(p, file="Plots/LatestDeaths.png", height=plotHeight, width=plotWidth)
+
+
 rm(p)

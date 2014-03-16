@@ -31,7 +31,8 @@ achievementStrings <- fromJSON("http://wurstmineberg.de/static/json/achievements
 achievementStrings$id <- names(achievementStrings[,1])
 ## Get strings.json for some… strings.
 strings <- fromJSON("http://wurstmineberg.de/static/json/strings.json")
-
+## Get latest deaths log
+latestdeaths <- fromJSON("http://api.wurstmineberg.de/server/deaths/latest.json")
 
 #### This is where imported datasets get cleaned up so we can actually use them ####
 ##
@@ -76,7 +77,7 @@ for(i in (1:(ncol(items)))) {
   items[i] <- unlist(items[i], use.names=F)
 }; rm(i);
 
-# Do the same for the entities dataset (you guessed it, right?)
+# Do the same for the entities dataset
 for(i in (1:(ncol(entities)))) {
   entities[i] <- unlist(entities[i], use.names=F)
 }; rm(i);
