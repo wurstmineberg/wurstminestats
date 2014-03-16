@@ -84,7 +84,7 @@ killFriendly  <- c("killEntity.Bat", "killEntity.Sheep", "killEntity.Pig", "kill
 killHostile   <- c("killEntity.PigZombie", "killEntity.Blaze", "killEntity.Enderman", "killEntity.Spider", 
                   "killEntity.Zombie", "killEntity.Skeleton", "killEntity.Creeper", "killEntity.Silverfish", 
                   "killEntity.Witch", "killEntity.Slime", "killEntity.CaveSpider", "killEntity.MushroomCow", 
-                  "killEntity.LavaSlime", "killEntity.Ghast")
+                  "killEntity.LavaSlime", "killEntity.Ghast", "killEntity.Endermite")
 
 for(i in 1:nrow(playerstats)){
 
