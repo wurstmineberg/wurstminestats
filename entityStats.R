@@ -68,8 +68,8 @@ p <- p + labs(x="Mobs", y="Kills", title="Killed Mobs")
 ggsave(plot=p, file="Plots/mobs/Kills_byMob.png", height=plotHeight, width=plotWidth)
 
 # … Let's filter out Endermen
-mobsKilled <- mobsKilled[mobsKilled$killedMob != "Enderman",]
-p <- ggplot(data=mobsKilled) 
+mobsKilledFiltered <- mobsKilled[mobsKilled$killedMob != "Enderman",]
+p <- ggplot(data=mobsKilledFiltered) 
 p <- p + aes(x=reorder(killedMob, nKills), y=nKills)
 p <- p + barChart + coord_flip() + scale_y_discrete(breaks= pretty_breaks())
 p <- p + labs(x="Mobs", y="Kills", title="Killed Mobs (except Endermen)")
