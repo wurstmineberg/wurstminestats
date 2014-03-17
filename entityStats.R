@@ -9,9 +9,6 @@ if(length(grep("now", ls())) != 0){
 
 source("functions.R")
 
-# Get strings.json from website for easier mob name replacement
-strings <- fromJSON("http://wurstmineberg.de/static/json/strings.json")
-
 # Get columns for killEntity and KilledBy categories respectively
 killEntity <- grep("killEntity", names(playerstats))
 killedByEntity <- grep("KilledBy", names(playerstats))
