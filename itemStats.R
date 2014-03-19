@@ -80,7 +80,7 @@ itemStats$stat <- as.character(itemStats$stat)
 
 for(i in 1:length(itemStats$stat)){
 
-    filename <- paste("Plots/statspage/items/", itemStats$stat[i], ".png", sep="")
+    filename <- paste("Plots/items/", itemStats$stat[i], ".png", sep="")
     title <- paste("Times item was ", itemStats$action[i], ": ", itemStats$item[i], sep="")
     
     p <- ggplot(data=items)
@@ -88,6 +88,6 @@ for(i in 1:length(itemStats$stat)){
                  y=items[, itemStats$stat[i]])
     p <- p + barChart + legendTitle + coord_flip()
     p <- p + xLable + labs(y=paste("Times", itemStats$action[i]), title=title)
-    ggsave(plot=p, file=Filename, height=plotHeight, width=plotWidth)
+    ggsave(plot=p, file=filename, height=plotHeight, width=plotWidth)
 
 } 
