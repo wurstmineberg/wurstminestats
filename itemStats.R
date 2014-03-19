@@ -23,33 +23,71 @@ itemData$ID <- sub(":",".",itemData$ID)
 itemData$name <- unlist(itemData$name, use.names=F)
 # Get rid of everything else by subsetting
 itemData <- subset(itemData, select=c("numID","ID","name"))
-itemActions <- c("mineBlock.", "craftItem.", "useItem.", "breakItem.")
+itemActions <- c("mineBlock", "craftItem", "useItem", "breakItem")
 
-# Get list of IDs actually existing in items dataset
+# Get list of num and new IDs actually existing in items dataset
 existingNumIDs <- names(items)[grep("\\.[0-9]+$", names(items))]
 existingNumIDs <- sub("craftItem.","", existingNumIDs)
 existingNumIDs <- sub("useItem.","", existingNumIDs)
 existingNumIDs <- sub("mineBlock.","", existingNumIDs)
 existingNumIDs <- sub("breakItem.","", existingNumIDs)
 existingNumIDs <- unique(existingNumIDs)
-existingIDs <- rep(NULL,length(existingNumIDs))
-for(i in 1:length(existingNumIDs)){
-  existingIDs[i] <- sub(existingNumIDs[i], itemData$ID[itemData$numID == existingNumIDs[i]], existingNumIDs[i])
-}; rm(i)
+
 
 # I honestly have no idea anymore what I did here
 for(i in 1:length(existingNumIDs)){
   if(length(grep("TRUE", existingNumIDs[i] == itemData$numID)) == 1){
-    for(k in itemActions){
-      if(ncol(items[names(items) == paste(k,itemData$numID[i], sep="")]) == 1 & ncol(items[names(items) == paste(k,itemData$ID[i], sep="")]) == 1){
+    for(j in itemActions){
+      if(ncol(items[names(items) == paste(j, ".", itemData$numID[i], sep="")]) == 1 & ncol(items[names(items) == paste(j, ".", itemData$ID[i], sep="")]) == 1){
       
-      itemOldID <- items[names(items) == paste(k,itemData$numID[i], sep="")]
-      itemNewID <- items[names(items) == paste(k,itemData$ID[i], sep="")]
+      itemOldID <- items[names(items) == paste(j, ".", itemData$numID[i], sep="")]
+      itemNewID <- items[names(items) == paste(j, ".", itemData$ID[i], sep="")]
       itemNewID <- itemNewID + itemOldID 
       }
     }
   }
-}; rm(i, k, itemOldID, itemNewID, existingNumIDs)
+}; rm(i, j, itemOldID, itemNewID, existingNumIDs)
 
 # Exclude now unneeded old item ID columns
 items <- items[ , !names(items) %in% names(items)[grep("\\.[0-9]+$", names(items))]]
+
+# Let's just construct a dataframe of stats, their items and actions
+existingIDs <- names(items)[grep("[^player]", names(items))]
+itemStats <- data.frame(stat=as.character(existingIDs))
+itemStats$item <-  sub("craftItem.","", existingIDs)
+itemStats$item <- sub("useItem.","", itemStats$item)
+itemStats$item <- sub("mineBlock.","", itemStats$item)
+itemStats$item <- sub("breakItem.","", itemStats$item) 
+
+for(i in 1:length(itemStats$item)){
+  action <- sub(paste(".", itemStats$item[i], sep=""), "", itemStats$stat[i])
+  itemStats$action[i] <- action
+}; rm(i, action)
+
+itemStats$action[itemStats$action == "mineBlock"] <- "mined"
+itemStats$action[itemStats$action == "craftItem"] <- "crafted"
+itemStats$action[itemStats$action == "useItem"] <- "used"
+itemStats$action[itemStats$action == "breakItem"] <- "broken"
+
+for(i in 1:length(itemStats$item)){
+  name <- itemData$name[itemData$ID == itemStats$item[i]]
+  itemStats$item[i] <- name[1]
+}; rm(i, name)
+
+itemStats$stat <- as.character(itemStats$stat)
+
+####
+
+for(i in 1:length(itemStats$stat)){
+
+    filename <- paste("Plots/statspage/items/", itemStats$stat[i], ".png", sep="")
+    title <- paste("Times item was ", itemStats$action[i], ": ", itemStats$item[i], sep="")
+    
+    p <- ggplot(data=items)
+    p <- p + aes(x=reorder(player, items[, itemStats$stat[i]]), 
+                 y=items[, itemStats$stat[i]])
+    p <- p + barChart + legendTitle + coord_flip()
+    p <- p + xLable + labs(y=paste("Times", itemStats$action[i]), title=title)
+    ggsave(plot=p, file=Filename, height=plotHeight, width=plotWidth)
+
+} 
