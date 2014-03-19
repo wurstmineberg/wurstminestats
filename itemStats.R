@@ -24,25 +24,28 @@ itemData$name <- unlist(itemData$name, use.names=F)
 # Get rid of everything else by subsetting
 itemData <- subset(itemData, select=c("numID","ID","name"))
 itemActions <- c("mineBlock", "craftItem", "useItem", "breakItem")
+itemActions <- data.frame(id = as.character(itemActions), 
+                          name=c("mined", "crafted", "used", "broken"))
 
 # Get list of num and new IDs actually existing in items dataset
 existingNumIDs <- names(items)[grep("\\.[0-9]+$", names(items))]
-existingNumIDs <- sub("craftItem.","", existingNumIDs)
-existingNumIDs <- sub("useItem.","", existingNumIDs)
-existingNumIDs <- sub("mineBlock.","", existingNumIDs)
-existingNumIDs <- sub("breakItem.","", existingNumIDs)
+existingNumIDs <- sub("craftItem.", "", existingNumIDs)
+existingNumIDs <- sub("useItem.",   "", existingNumIDs)
+existingNumIDs <- sub("mineBlock.", "", existingNumIDs)
+existingNumIDs <- sub("breakItem.", "", existingNumIDs)
 existingNumIDs <- unique(existingNumIDs)
 
 
-# I honestly have no idea anymore what I did here
+# I honestly have no idea anymore what I did here, but it merges old and new item stats
 for(i in 1:length(existingNumIDs)){
   if(length(grep("TRUE", existingNumIDs[i] == itemData$numID)) == 1){
-    for(j in itemActions){
+    for(j in itemActions$id){
       if(ncol(items[names(items) == paste(j, ".", itemData$numID[i], sep="")]) == 1 & ncol(items[names(items) == paste(j, ".", itemData$ID[i], sep="")]) == 1){
       
       itemOldID <- items[names(items) == paste(j, ".", itemData$numID[i], sep="")]
       itemNewID <- items[names(items) == paste(j, ".", itemData$ID[i], sep="")]
       itemNewID <- itemNewID + itemOldID 
+      
       }
     }
   }
@@ -86,11 +89,11 @@ for(i in 1:length(itemStats$stat)){
     p <- ggplot(data=items)
     p <- p + aes(x=reorder(player, items[, itemStats$stat[i]]), 
                  y=items[, itemStats$stat[i]])
-    p <- p + barChart + legendTitle + coord_flip()
+    p <- p + barChart + legendTitle + coord_flip() + scale_y_discrete(breaks= pretty_breaks())
     p <- p + xLable + labs(y=paste("Times", itemStats$action[i]), title=title)
     ggsave(plot=p, file=filename, height=plotHeight, width=plotWidth)
 
-} 
+}; rm(i, title, filename)
 
 ## Now for something completely different
 
@@ -103,10 +106,15 @@ for(i in 1:length(itemStats$stat)){
   itemStats$leadingPlayer[i] <- as.character(statPlayers[1,1])
   itemStats$playerMax[i] <- statPlayers[1,2]
 
-}
+}; rm(stat, statPlayers)
+
+# Now to look at the different item actions
+# itemStats[itemStats$action == "mined", c("leadingPlayer", "total", "item")]
+
 
 # Write that stuff to disk. Apparently some columns are "lists", which write.csv hates
 class(itemStats$leadingPlayer) <- "character"
 class(itemStats$playerMax) <- "numeric"
 
 write.csv(itemStats, "data/itemStats.csv")
+
