@@ -91,3 +91,22 @@ for(i in 1:length(itemStats$stat)){
     ggsave(plot=p, file=filename, height=plotHeight, width=plotWidth)
 
 } 
+
+## Now for something completely different
+
+for(i in 1:length(itemStats$stat)){
+  
+  stat <- itemStats$stat[i]
+  itemStats$total[i] <- sum(items[, stat], na.rm=T)
+  
+  statPlayers <- items[items[, stat] == max(items[, stat]), c("player", stat)]
+  itemStats$leadingPlayer[i] <- as.character(statPlayers[1,1])
+  itemStats$playerMax[i] <- statPlayers[1,2]
+
+}
+
+# Write that stuff to disk. Apparently some columns are "lists", which write.csv hates
+class(itemStats$leadingPlayer) <- "character"
+class(itemStats$playerMax) <- "numeric"
+
+write.csv(itemStats, "data/itemStats.csv")
