@@ -29,12 +29,10 @@ itemActions <- data.frame(id = as.character(itemActions),
 
 # Get list of num and new IDs actually existing in items dataset
 existingNumIDs <- names(items)[grep("\\.[0-9]+$", names(items))]
-existingNumIDs <- sub("craftItem.", "", existingNumIDs)
-existingNumIDs <- sub("useItem.",   "", existingNumIDs)
-existingNumIDs <- sub("mineBlock.", "", existingNumIDs)
-existingNumIDs <- sub("breakItem.", "", existingNumIDs)
+for(action in itemActions$id){
+  existingNumIDs <- sub(paste(action, ".", sep=""), "", existingNumIDs)
+}; rm(action)
 existingNumIDs <- unique(existingNumIDs)
-
 
 # I honestly have no idea anymore what I did here, but it merges old and new item stats
 for(i in 1:length(existingNumIDs)){
@@ -67,10 +65,11 @@ for(i in 1:length(itemStats$item)){
   itemStats$action[i] <- action
 }; rm(i, action)
 
-itemStats$action[itemStats$action == "mineBlock"] <- "mined"
-itemStats$action[itemStats$action == "craftItem"] <- "crafted"
-itemStats$action[itemStats$action == "useItem"] <- "used"
-itemStats$action[itemStats$action == "breakItem"] <- "broken"
+for(action in itemStats$action){
+  for(i in 1:nrow(itemActions)){
+    itemStats$action[itemStats$action == itemAction$id[i]] <- itemAction$name[i]
+  }
+}; rm(action, i)
 
 for(i in 1:length(itemStats$item)){
   name <- itemData$name[itemData$ID == itemStats$item[i]]
