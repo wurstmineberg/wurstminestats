@@ -109,12 +109,19 @@ for(i in 1:length(itemStats$stat)){
 }; rm(stat, statPlayers)
 
 # Now to look at the different item actions
-# itemStats[itemStats$action == "mined", c("leadingPlayer", "total", "item")]
+itemsTop <- as.data.frame(matrix(0, 10, nrow(itemActions)))
+names(itemsTop) <- itemActions$name
 
+# subset for "mined", substitue with loop over itemActions$name
+for(action in itemActions$name){
+  itemStatsPerAction <- itemStats[itemStats$action == action,]
+  itemStatsPerAction <- head(arrange(itemStatsPerAction, desc(total)), 10)
+  itemsTop[action] <- itemStatsPerAction$item 
+}; rm(action)
 
 # Write that stuff to disk. Apparently some columns are "lists", which write.csv hates
 class(itemStats$leadingPlayer) <- "character"
 class(itemStats$playerMax) <- "numeric"
 
 write.csv(itemStats, "data/itemStats.csv")
-
+write.csv(itemsTop, "data/itemStats.csv")
