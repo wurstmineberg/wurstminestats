@@ -36,11 +36,14 @@ for(action in itemActions$id){
 }; rm(action)
 
 # I honestly have no idea anymore what I did here, but it merges old and new item stats
+tempStats <- items[ , !names(items) %in% names(items)[grep("\\.[0-9]+$", names(items))]]
+tempStats <- as.character(names(tempStats)[grep("[^player]", names(tempStats))])
+
 for(i in 1:length(existingNumIDs)){
   for(action in itemActions$id){
     ID <- itemData$ID[itemData$numID == existingNumIDs[i]]
     
-    if(paste(action, ".", ID, sep="") %in% itemStats$stat){
+    if(paste(action, ".", ID, sep="") %in% tempStats){
       newIDstat <- items[, paste(action, ".", ID, sep="")]
       
       if(paste(action, ".", existingNumIDs[i], sep="") %in% names(items)){
@@ -49,7 +52,7 @@ for(i in 1:length(existingNumIDs)){
       }
     }
   }
-}; rm(i, action, ID, newIDstat, oldIDstat)
+}; rm(i, action, ID, newIDstat, oldIDstat, tempStats)
 
 # Exclude now unneeded old item ID columns
 items <- items[ , !names(items) %in% names(items)[grep("\\.[0-9]+$", names(items))]]
@@ -87,7 +90,7 @@ for(i in 1:length(itemStats$item)){
 itemStats$stat <- as.character(itemStats$stat)
 
 ####
-
+# Plotting the whole mess
 for(i in 1:length(itemStats$stat)){
 
     filename <- paste("Plots/items/", itemStats$stat[i], ".png", sep="")
@@ -102,8 +105,11 @@ for(i in 1:length(itemStats$stat)){
 
 }; rm(i, title, filename)
 
-## Now for something completely different
+############################################
+## Now for something completely different ##
+############################################
 
+# Add some more columns to itemStats for data's sake
 for(i in 1:length(itemStats$stat)){
   
   stat <- itemStats$stat[i]
@@ -126,7 +132,7 @@ for(action in itemActions$name){
   itemsTop[action] <- paste(itemStatsPerAction$item, ": ", itemStatsPerAction$total, sep="")
 }; rm(action)
 
-# Write that stuff to disk. Apparently some columns are "lists", which write.csv hates
+# Write that stuff to disk. Apparently some columns are "lists", which write.csv() hates
 class(itemStats$leadingPlayer) <- "character"
 class(itemStats$playerMax) <- "numeric"
 
