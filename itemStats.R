@@ -116,7 +116,7 @@ names(itemsTop) <- itemActions$name
 for(action in itemActions$name){
   itemStatsPerAction <- itemStats[itemStats$action == action,]
   itemStatsPerAction <- head(arrange(itemStatsPerAction, desc(total)), 10)
-  itemsTop[action] <- itemStatsPerAction$item 
+  itemsTop[action] <- paste(itemStatsPerAction$item, ": ", itemStatsPerAction$total, sep="")
 }; rm(action)
 
 # Write that stuff to disk. Apparently some columns are "lists", which write.csv hates
@@ -124,4 +124,4 @@ class(itemStats$leadingPlayer) <- "character"
 class(itemStats$playerMax) <- "numeric"
 
 write.csv(itemStats, "data/itemStats.csv")
-write.csv(itemsTop, "data/itemStats.csv")
+write.csv(itemsTop, "data/itemsTop.csv")
