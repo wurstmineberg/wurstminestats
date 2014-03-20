@@ -26,28 +26,30 @@ itemData <- subset(itemData, select=c("numID","ID","name"))
 itemActions <- c("mineBlock", "craftItem", "useItem", "breakItem")
 itemActions <- data.frame(id = as.character(itemActions), 
                           name=c("mined", "crafted", "used", "broken"))
+itemActions$id <- as.character(itemActions$id)
+itemActions$name <- as.character(itemActions$name)
 
 # Get list of num and new IDs actually existing in items dataset
 existingNumIDs <- names(items)[grep("\\.[0-9]+$", names(items))]
 for(action in itemActions$id){
   existingNumIDs <- sub(paste(action, ".", sep=""), "", existingNumIDs)
 }; rm(action)
-existingNumIDs <- unique(existingNumIDs)
 
 # I honestly have no idea anymore what I did here, but it merges old and new item stats
 for(i in 1:length(existingNumIDs)){
-  if(length(grep("TRUE", existingNumIDs[i] == itemData$numID)) == 1){
-    for(j in itemActions$id){
-      if(ncol(items[names(items) == paste(j, ".", itemData$numID[i], sep="")]) == 1 & ncol(items[names(items) == paste(j, ".", itemData$ID[i], sep="")]) == 1){
+  for(action in itemActions$id){
+    ID <- itemData$ID[itemData$numID == existingNumIDs[i]]
+    
+    if(paste(action, ".", ID, sep="") %in% itemStats$stat){
+      newIDstat <- items[, paste(action, ".", ID, sep="")]
       
-      itemOldID <- items[names(items) == paste(j, ".", itemData$numID[i], sep="")]
-      itemNewID <- items[names(items) == paste(j, ".", itemData$ID[i], sep="")]
-      itemNewID <- itemNewID + itemOldID 
-      
+      if(paste(action, ".", existingNumIDs[i], sep="") %in% names(items)){
+        oldIDstat <- items[, paste(action, ".", existingNumIDs[i], sep="")]
+        items[, paste(action, ".", ID, sep="")] <- newIDstat + oldIDstat
       }
     }
   }
-}; rm(i, j, itemOldID, itemNewID, existingNumIDs)
+}; rm(i, action, ID, newIDstat, oldIDstat)
 
 # Exclude now unneeded old item ID columns
 items <- items[ , !names(items) %in% names(items)[grep("\\.[0-9]+$", names(items))]]
@@ -55,19 +57,25 @@ items <- items[ , !names(items) %in% names(items)[grep("\\.[0-9]+$", names(items
 # Let's just construct a dataframe of stats, their items and actions
 existingIDs <- names(items)[grep("[^player]", names(items))]
 itemStats <- data.frame(stat=as.character(existingIDs))
-itemStats$item <-  sub("craftItem.","", existingIDs)
-itemStats$item <- sub("useItem.","", itemStats$item)
-itemStats$item <- sub("mineBlock.","", itemStats$item)
-itemStats$item <- sub("breakItem.","", itemStats$item) 
 
+# Setting items to the stat name minus the action portion
+itemStats$item <- existingIDs
+for(item in itemStats$item){
+  for(id in itemActions$id){
+    itemStats$item[itemStats$item == item] <- sub(paste(id, ".", sep=""), "", item)
+  }
+}; rm(item, id)
+
+# Setting the action to the stat name minus the item portion
 for(i in 1:length(itemStats$item)){
   action <- sub(paste(".", itemStats$item[i], sep=""), "", itemStats$stat[i])
   itemStats$action[i] <- action
 }; rm(i, action)
 
+# Substituting action with a more readable name
 for(action in itemStats$action){
   for(i in 1:nrow(itemActions)){
-    itemStats$action[itemStats$action == itemAction$id[i]] <- itemAction$name[i]
+    itemStats$action[itemStats$action == itemActions$id[i]] <- as.character(itemActions$name[i])
   }
 }; rm(action, i)
 
