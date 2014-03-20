@@ -102,6 +102,14 @@ rm(playerTemp)
 activePeople <- data.frame(id=rep(0, length(people$minecraft[people$status != "former"])), 
                            mc=rep(0, length(people$minecraft[people$status != "former"])))
 activePeople$mc <- people$minecraft[people$status != "former"]
+activePeople$name <- people$name[people$status != "former"]
+activePeople$id <- people$id[people$status != "former"]
+
+for(i in 1:length(activePeople$name)){
+  if(is.na(activePeople$name[i])){
+    activePeople$name[i] <- activePeople$id[i]
+  }
+}
 
 playerstats <- playerstats[match(activePeople$mc, playerstats$player),]
 achievements <- achievements[match(activePeople$mc, achievements$player),]
@@ -112,8 +120,6 @@ entities <- entities[match(activePeople$mc, entities$player),]
 playerstats$joinDate <- people$join_date[people$status != "former"]
 
 ## Convert player names to people.json-IDs
-activePeople$id <- people$id[people$status != "former"]
-
 playerstats$player <- activePeople$id
 achievements$player <- activePeople$id
 items$player <- activePeople$id
@@ -190,6 +196,10 @@ rm(achievements); rm(entities);
 
 # Reorganizzle rownames just in case ¯\_(ツ)_/¯
 rownames(playerstats) <- playerstats$player
+
+# Sub player names with display names from activePeople$name
+playerstats$player <- factor(activePeople$name, levels=activePeople$name)
+items$player <- playerstats$player
 
 ## At this point, playerstats is in a usable state, data is comfortably accessible and it contains
 ## both the general player stats and the achievement data. 
