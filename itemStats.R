@@ -103,7 +103,7 @@ for(i in 1:length(itemStats$stat)){
     p <- p + xLable + labs(y=paste("Times", itemStats$action[i]), title=title)
     ggsave(plot=p, file=filename, height=plotHeight, width=plotWidth)
 
-}; rm(i, title, filename)
+}; rm(p, i, title, filename)
 
 ############################################
 ## Now for something completely different ##
@@ -119,7 +119,7 @@ for(i in 1:length(itemStats$stat)){
   itemStats$leadingPlayer[i] <- as.character(statPlayers[1,1])
   itemStats$playerMax[i] <- statPlayers[1,2]
 
-}; rm(stat, statPlayers)
+}; rm(i, stat, statPlayers)
 
 # Now to look at the different item actions
 itemsTop <- as.data.frame(matrix(0, 10, nrow(itemActions)))
