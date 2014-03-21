@@ -55,6 +55,33 @@ for(i in 1:(nrow(playerSessions)-1)){
   }
 }; rm(i)
 
+## Ideally sessions should be separated per day, I guess?
+# Add join/leave time as date only for simplicity in the long run
+playerSessions$joinDate <- format(playerSessions$joinTime, "%F")
+playerSessions$joinDate <- as.POSIXct(playerSessions$joinDate, origin="1970-01-01", tz="UTC")
+playerSessions$leaveDate <- format(playerSessions$leaveTime, "%F")
+playerSessions$leaveDate <- as.POSIXct(playerSessions$leaveDate, origin="1970-01-01", tz="UTC")
+
+overlaps <- playerSessions[playerSessions$leaveDate > playerSessions$joinDate, ]
+noOverlaps <- playerSessions[playerSessions$leaveDate == playerSessions$joinDate, ]
+overlapsNum <- nrow(overlaps)
+
+i <- 1
+for(i in 1:overlapsNum){
+  temp1 <- overlaps[1,]
+  temp1[1, ] <- overlaps[i, ]
+  temp1[2, ] <- overlaps[i, ]
+  
+  temp1$leaveTime[1] <- overlaps$leaveDate[i]
+  temp1$joinTime[2] <- overlaps$leaveDate[i]
+  
+  noOverlaps <- join(noOverlaps, temp1, type="full")
+  rm(temp1)
+}
+playerSessions <- arrange(noOverlaps[names(noOverlaps) != c("joinDate", "leaveDate")], joinTime, person)
+
+rm(overlaps, noOverlaps, overlapsNum)
+
 # Add duration column
 playerSessions$playedMinutes <- as.numeric(difftime(playerSessions$leaveTime, 
                                                     playerSessions$joinTime, unit="mins"))
@@ -101,19 +128,17 @@ p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 p <- p + scale_x_datetime(labels = date_format("%y-%m-%d"),
                           breaks = date_breaks("days"))
 p <- p + scale_y_continuous(breaks=pretty_breaks())
-p <- p + labs(y="Played Hours", x="Day of Login", title="Total Time Played per Day")
+p <- p + labs(y="Played Hours", x="Day", title="Total Time Played per Day")
 ggsave(p, file="Plots/playTime.png", height=6, width=12)
 
 # Actually I want an area plot, but barcharts are fine, too
-p <- ggplot(data=playedPerPerson, aes(x=date, 
-                                     y=timePlayed/60,
-                                     fill=person))
+p <- ggplot(data=playedPerPerson, aes(x=date, y=timePlayed/60, fill=person))
 p <- p + geom_bar(position="stack", stat="identity")
 p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
 p <- p + scale_x_datetime(labels = date_format("%y-%m-%d"),
                           breaks = date_breaks("days"))
 p <- p + scale_y_continuous(breaks=pretty_breaks()) + playerTheme
-p <- p + labs(y="Played Hours", x="Day of Login", title="Total Time Played per Day")
+p <- p + labs(y="Played Hours", x="Day", title="Total Time Played per Day")
 ggsave(p, file="Plots/playTime_perPerson.png", height=6, width=12)
 rm(p)
 
