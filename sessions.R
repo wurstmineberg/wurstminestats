@@ -24,7 +24,10 @@ playerSessions <- data.frame(minecraftNick = character(0),
 # Fill playerSessions with data from sessions$uptimes.sessions in an ugly way because fuck JSON handling in R
 numSessions <- length(sessions$uptimes.sessions)
 
-for(i in 1:(numSessions-2)){
+# If the latest session is NA, we'll just and it RIGHT NOW
+sessions$uptimes.endTime[numSessions] <- Sys.time()
+
+for(i in 1:(numSessions-1)){
   temp1 <- as.data.frame(sessions$uptimes.sessions[i])
   temp2 <- as.data.frame(sessions$uptimes.sessions[i+1])
   
