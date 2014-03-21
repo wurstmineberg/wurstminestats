@@ -116,3 +116,6 @@ p <- p + scale_y_continuous(breaks=pretty_breaks()) + playerTheme
 p <- p + labs(y="Played Hours", x="Date", title="Total Time Played per Day")
 ggsave(p, file="Plots/playTime_perPerson.png", height=6, width=12)
 rm(p)
+
+# Write playerSessions data for whatever reason
+write.csv(playerSessions, "data/playerSessions.csv")
