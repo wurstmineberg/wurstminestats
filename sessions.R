@@ -84,9 +84,11 @@ for(i in 1:length(loggedDays)){
     row <- data.frame(date=as.character(loggedDays[i]), timePlayed=sumPerson, person=as.character(person))
     playedPerPerson <- join(playedPerPerson, row, type="full")
   }
-}
+}; rm(i, person, sumPerson, row, daySet, dayPeople)
+
 playedPerPerson$date <- as.POSIXct(playedPerPerson$date, origin="1970-01-01", tz="UTC")
 playedPerPerson <- arrange(playedPerPerson, date, person)
+playedPerPerson$person <- as.factor(playedPerPerson$person)
 
 # Plotting the things
 p <- ggplot(data=playedPerDay)
@@ -99,12 +101,10 @@ p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 p <- p + scale_x_datetime(labels = date_format("%y-%m-%d"),
                           breaks = date_breaks("days"))
 p <- p + scale_y_continuous(breaks=pretty_breaks())
-p <- p + labs(y="Played Hours", x="Date", title="Total Time Played per Day")
+p <- p + labs(y="Played Hours", x="Day of Login", title="Total Time Played per Day")
 ggsave(p, file="Plots/playTime.png", height=6, width=12)
 
-# Actually I want an area plot
-playedPerPerson$person <- as.factor(playedPerPerson$person)
-
+# Actually I want an area plot, but barcharts are fine, too
 p <- ggplot(data=playedPerPerson, aes(x=date, 
                                      y=timePlayed/60,
                                      fill=person))
@@ -113,7 +113,7 @@ p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 p <- p + scale_x_datetime(labels = date_format("%y-%m-%d"),
                           breaks = date_breaks("days"))
 p <- p + scale_y_continuous(breaks=pretty_breaks()) + playerTheme
-p <- p + labs(y="Played Hours", x="Date", title="Total Time Played per Day")
+p <- p + labs(y="Played Hours", x="Day of Login", title="Total Time Played per Day")
 ggsave(p, file="Plots/playTime_perPerson.png", height=6, width=12)
 rm(p)
 
