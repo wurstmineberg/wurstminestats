@@ -128,7 +128,7 @@ p <- ggplot(data=playedPerDay)
 p <- p + aes(x=date, y=timePlayed/60)
 p <- p + geom_area(alpha=0.7)
 p <- p + geom_point() + geom_path(alpha=.8)
-p <- p + geom_smooth(method="loess", se=F)
+#p <- p + geom_smooth(method="loess", se=F)
 p <- p + geom_hline(yintercept = mean(playedPerDay$timePlayed/60), alpha=.5)
 p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
 p <- p + scale_x_datetime(labels = date_format("%y-%m-%d"),
