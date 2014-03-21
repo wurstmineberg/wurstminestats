@@ -10,7 +10,7 @@ library(grid)         # for unit() in ggplot theme() functions
 library(plyr)         # To join() dataframes
 library(RColorBrewer) # Because colours
 library(httr)         # For direct web access stuff, apparently
-
+library(gdata)        # For reorder() outside of ggplot, reorders factors / levels without fucking shit up
 
 # Get a close enough timestamp for the data age
 # Reimport via as.POSIXct(x,origin="1970-01-01") should be sufficient
@@ -145,8 +145,7 @@ playerstats$joinStatus <- as.factor(people$status[people$status != "former"])
 playerstats$joinDate[playerstats$joinDate == 0] <- NA
 
 # Convert joinDate to POSIXct because time
-playerstats$joinDate <- as.POSIXct(playerstats$joinDate, 
-                                   origin="1970-01-01")
+playerstats$joinDate <- as.POSIXct(playerstats$joinDate, origin="1970-01-01")
 
 ## Convert play time to real time hours as separate column
 playerstats$playOneHour <- (playerstats$playOneMinute/20/60/60)
@@ -192,7 +191,7 @@ playerstats <- join(playerstats, achievements)
 playerstats <- join(playerstats, entities)
 
 # Delete dataframes we don't need separate anymore
-rm(achievements); rm(entities);
+rm(achievements, entities)
 
 # Reorganizzle rownames just in case ¯\_(ツ)_/¯
 rownames(playerstats) <- playerstats$player

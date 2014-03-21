@@ -115,7 +115,13 @@ for(i in 1:length(loggedDays)){
 
 playedPerPerson$date <- as.POSIXct(playedPerPerson$date, origin="1970-01-01", tz="UTC")
 playedPerPerson <- arrange(playedPerPerson, date, person)
+playedPerPerson$person <- as.character(playedPerPerson$person)
+for(i in playedPerPerson$person){
+  playedPerPerson$person[playedPerPerson$person == i] <- activePeople$name[activePeople$id == i]
+}
+
 playedPerPerson$person <- as.factor(playedPerPerson$person)
+playedPerPerson$person <- reorder(playedPerPerson$person, new.order=activePeople$name[activePeople$name %in% unique(playedPerPerson$person)])
 
 # Plotting the things
 p <- ggplot(data=playedPerDay)
