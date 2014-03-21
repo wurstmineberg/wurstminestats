@@ -63,13 +63,30 @@ playerSessions$playedMinutes <- as.numeric(difftime(playerSessions$leaveTime,
 playerSessions$date <- format(playerSessions$joinTime, "%F")
 playerSessions$date <- as.POSIXct(playerSessions$date, origin="1970-01-01", tz="UTC")
 
-loggedDays <- length(unique(playerSessions$date))
+loggedDays <- unique(playerSessions$date)
 playedPerDay <- data.frame(date=unique(playerSessions$date),
-                           timePlayed=numeric(loggedDays))
+                           timePlayed=numeric(length(loggedDays)))
 
-for(i in 1:loggedDays){
-  playedPerDay$timePlayed[i] <- sum(playerSessions$playedMinutes[playerSessions$date == unique(playerSessions$date)[i]])
+for(i in 1:length(loggedDays)){
+  playedPerDay$timePlayed[i] <- sum(playerSessions$playedMinutes[playerSessions$date == loggedDays[i]])
 }; rm(i)
+
+# We also want play time per day per person, so, well…
+playedPerPerson <- data.frame(date=character(0),
+                              timePlayed=numeric(0), person=character(0))
+
+for(i in 1:length(loggedDays)){
+  daySet <- playerSessions[playerSessions$date == loggedDays[i],]
+  dayPeople <- as.character(unique(daySet$person))
+  
+  for(person in dayPeople){
+    sumPerson <- sum(daySet$playedMinutes[daySet$person == person])
+    row <- data.frame(date=as.character(loggedDays[i]), timePlayed=sumPerson, person=as.character(person))
+    playedPerPerson <- join(playedPerPerson, row, type="full")
+  }
+}
+playedPerPerson$date <- as.POSIXct(playedPerPerson$date, origin="1970-01-01", tz="UTC")
+playedPerPerson <- arrange(playedPerPerson, date, person)
 
 # Plotting the things
 p <- ggplot(data=playedPerDay)
@@ -83,20 +100,19 @@ p <- p + scale_x_datetime(labels = date_format("%y-%m-%d"),
                           breaks = date_breaks("days"))
 p <- p + scale_y_continuous(breaks=pretty_breaks())
 p <- p + labs(y="Played Hours", x="Date", title="Total Time Played per Day")
-#print(p)
 ggsave(p, file="Plots/playTime.png", height=6, width=12)
 
 # Actually I want an area plot
-playerSessions$person <- as.factor(playerSessions$person)
+playedPerPerson$person <- as.factor(playedPerPerson$person)
 
-p <- ggplot(data=playerSessions, aes(x=joinTime, 
-                                     y=playedMinutes/60,
+p <- ggplot(data=playedPerPerson, aes(x=date, 
+                                     y=timePlayed/60,
                                      fill=person))
-p <- p + geom_area(position="stack")
+p <- p + geom_bar(position="stack", stat="identity")
 p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
 p <- p + scale_x_datetime(labels = date_format("%y-%m-%d"),
                           breaks = date_breaks("days"))
-p <- p + scale_y_continuous(breaks=pretty_breaks())
+p <- p + scale_y_continuous(breaks=pretty_breaks()) + playerTheme
 p <- p + labs(y="Played Hours", x="Date", title="Total Time Played per Day")
-#print(p)
-#ggsave(p, file="Plots/playTime_area.png", height=6, width=12)
+ggsave(p, file="Plots/playTime_perPerson.png", height=6, width=12)
+rm(p)
