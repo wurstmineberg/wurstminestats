@@ -9,8 +9,6 @@ if(length(grep("now", ls())) != 0){
 
 source("functions.R")
 
-
-
 # Exclude old item IDs because I really don't want to deal with that
 #items <- items[grep("[^0-9]$", names(items))]
 
