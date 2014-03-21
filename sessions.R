@@ -133,7 +133,7 @@ ggsave(p, file="Plots/playTime.png", height=6, width=12)
 
 # Actually I want an area plot, but barcharts are fine, too
 p <- ggplot(data=playedPerPerson, aes(x=date, y=timePlayed/60, fill=person))
-p <- p + geom_bar(position="stack", stat="identity")
+p <- p + geom_bar(position="stack", stat="identity", colour="black")
 p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
 p <- p + scale_x_datetime(labels = date_format("%y-%m-%d"),
                           breaks = date_breaks("days"))
