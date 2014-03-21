@@ -1,5 +1,14 @@
 # Lets look at sessions foo
 
+# Refresh data if older than 6 hours (only if "now" is defined)
+if(length(grep("now", ls())) != 0){
+  if((as.numeric(format(Sys.time(), "%s")) - as.numeric(now))/60/60 > 6){
+    source("dataPrep.R");
+  }
+}
+
+source("functions.R")
+
 sessions <- fromJSON("http://api.wurstmineberg.de/server/sessions/overview.json")
 sessions <- as.data.frame(sessions)
 
@@ -60,16 +69,34 @@ playedPerDay <- data.frame(date=unique(playerSessions$date),
 
 for(i in 1:loggedDays){
   playedPerDay$timePlayed[i] <- sum(playerSessions$playedMinutes[playerSessions$date == unique(playerSessions$date)[i]])
-}
+}; rm(i)
 
 # Plotting the things
 p <- ggplot(data=playedPerDay)
 p <- p + aes(x=date, y=timePlayed/60)
+p <- p + geom_area(alpha=0.7)
 p <- p + geom_point() + geom_path(alpha=.8)
+p <- p + geom_smooth(method="loess", se=F)
 p <- p + geom_hline(yintercept = mean(playedPerDay$timePlayed/60), alpha=.5)
 p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
 p <- p + scale_x_datetime(labels = date_format("%y-%m-%d"),
                           breaks = date_breaks("days"))
 p <- p + scale_y_continuous(breaks=pretty_breaks())
 p <- p + labs(y="Played Hours", x="Date", title="Total Time Played per Day")
+#print(p)
 ggsave(p, file="Plots/playTime.png", height=6, width=12)
+
+# Actually I want an area plot
+playerSessions$person <- as.factor(playerSessions$person)
+
+p <- ggplot(data=playerSessions, aes(x=joinTime, 
+                                     y=playedMinutes/60,
+                                     fill=person))
+p <- p + geom_area(position="stack")
+p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+p <- p + scale_x_datetime(labels = date_format("%y-%m-%d"),
+                          breaks = date_breaks("days"))
+p <- p + scale_y_continuous(breaks=pretty_breaks())
+p <- p + labs(y="Played Hours", x="Date", title="Total Time Played per Day")
+#print(p)
+#ggsave(p, file="Plots/playTime_area.png", height=6, width=12)
