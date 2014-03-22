@@ -95,7 +95,7 @@ for(i in 1:length(itemStats$stat)){
     title <- paste("Times item was ", itemStats$action[i], ": ", itemStats$item[i], sep="")
     
     p <- ggplot(data=items)
-    p <- p + aes(x=reorder(player, items[, itemStats$stat[i]]), 
+    p <- p + aes(x=reorder(player, items[, itemStats$stat[i]], mean, order=T), 
                  y=items[, itemStats$stat[i]])
     p <- p + barChart + legendTitle + coord_flip() + scale_y_discrete(breaks= pretty_breaks())
     p <- p + xLable + labs(y=paste("Times", itemStats$action[i]), title=title)

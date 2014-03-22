@@ -33,14 +33,14 @@ ggsave(p, file="Plots/WhitelistGrowth.png", height=6, width=8)
 
 # Distance Traveled Total
 p <- ggplot(data=playerstats)
-p <- p + aes(fill=joinStatus, x=reorder(player,distanceTraveled, mean,  order=T), y=(distanceTraveled/1000000))
+p <- p + aes(fill=joinStatus, x=reorder(player,distanceTraveled, mean, order=T), y=(distanceTraveled/1000000))
 p <- p + barChart + legendTitle + coord_flip()
 p <- p + xLable + labs(y="Distance (km)", title="Distance Traveled in Total")
 ggsave(p, file="Plots/DistanceTraveled.png", height=plotHeight, width=plotWidth)
 
 # Distance Traveled Total by Online Time
 p <- ggplot(data=playerstats)
-p <- p + aes(fill=joinStatus, x=reorder(player,distanceTraveled/playOneHour, mean,  order=T), y=(distanceTraveled/1000000)/playOneHour)
+p <- p + aes(fill=joinStatus, x=reorder(player,distanceTraveled/playOneHour, mean, order=T), y=(distanceTraveled/1000000)/playOneHour)
 p <- p + barChart + legendTitle + coord_flip()
 p <- p + xLable + labs(y="Distance (km) per Hour (real time)", title="Total Distance Traveled by Online Time")
 ggsave(p, file="Plots/DistanceTraveled_weighted.png", height=plotHeight, width=plotWidth)
@@ -56,7 +56,7 @@ deaths$timestamp <- as.POSIXct(deaths$timestamp, tz="UTC")
 deaths$daysSince <- as.numeric(round(difftime(Sys.time(),deaths$timestamp, units="days")))
 
 p <- ggplot(data=deaths)
-p <- p + aes(x=reorder(player,daysSince, mean,  order=T), y=daysSince)
+p <- p + aes(x=reorder(player,daysSince, mean, order=T), y=daysSince)
 p <- p + barChart + legendTitle + coord_flip()
 p <- p + xLable + labs(y="Days Since Death", title="Days Since Players' Latest Death")
 ggsave(p, file="Plots/LatestDeaths.png", height=plotHeight, width=plotWidth)

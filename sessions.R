@@ -124,9 +124,7 @@ for(i in playedPerPerson$person){
 }
 
 playedPerPerson$person <- as.factor(playedPerPerson$person)
-library(gdata) # This is an ugly workaround due to my still not understanding levels
 playedPerPerson$person <- reorder(playedPerPerson$person, new.order=activePeople$name[activePeople$name %in% unique(playedPerPerson$person)])
-detach("package:gdata", unload=TRUE)
 
 # Plotting the things
 p <- ggplot(data=playedPerDay)

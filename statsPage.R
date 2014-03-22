@@ -25,7 +25,7 @@ for(i in 1:statNum){
   Filename <- paste("Plots/statspage/", generalStats$id[i],".png", sep="")
 
   p <- ggplot(data=playerstats)
-  p <- p + aes(fill=joinStatus, x=reorder(player, playerstats[, generalStats$id[i]]), 
+  p <- p + aes(fill=joinStatus, x=reorder(player, playerstats[, generalStats$id[i]], mean, order=T), 
                                 y=playerstats[, generalStats$id[i]] / generalStats$scale[i])
   p <- p + barChart + legendTitle + coord_flip()
     if(generalStats$unit[i] != "km" & generalStats$unit[i] != "m"){
@@ -47,7 +47,7 @@ for(i in 1:statNum){
   Filename <- paste("Plots/statspage/scaled/", generalStats$id[i],"_scaled.png", sep="")
   
   p <- ggplot(data=playerstats)
-  p <- p + aes(fill=joinStatus, x=reorder(player, playerstats[, generalStats$id[i]]/playerstats$playOneHour), 
+  p <- p + aes(fill=joinStatus, x=reorder(player, playerstats[, generalStats$id[i]]/playerstats$playOneHour, mean, order=T), 
                y=(playerstats[, generalStats$id[i]] / generalStats$scale[i])/playerstats$playOneHour)
   p <- p + barChart + legendTitle + coord_flip()
   #  if(generalStats$unit[i] != "km" & generalStats$unit[i] != "m"){
