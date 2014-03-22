@@ -62,7 +62,6 @@ overlaps <- playerSessions[playerSessions$leaveDate > playerSessions$joinDate, ]
 noOverlaps <- playerSessions[playerSessions$leaveDate == playerSessions$joinDate, ]
 overlapsNum <- nrow(overlaps)
 
-i <- 1
 for(i in 1:overlapsNum){
   temp1 <- overlaps[1,]
   temp1[1, ] <- overlaps[i, ]
@@ -96,7 +95,8 @@ for(i in 1:length(loggedDays)){
 
 # We also want play time per day per person, so, well…
 playedPerPerson <- data.frame(date=character(0),
-                              timePlayed=numeric(0), person=character(0))
+                              timePlayed=numeric(0),
+                              person=character(0))
 
 for(i in 1:length(loggedDays)){
   daySet <- playerSessions[playerSessions$date == loggedDays[i],]
