@@ -207,20 +207,6 @@ items$player <- playerstats$player
 
 # Sooner or later, I want a giant logfile.
 playerstats$timestamp <- now
-playerstatsOld <- read.csv(file="data/playerstats.csv", row.names=1)
 
-# Only append saved date if the new data is at least 6h newer then the last saved data
-nowDate <- as.POSIXct(as.numeric(now), origin="1970-01-01")
-lastSavedDate <- as.POSIXct(max(as.numeric(playerstatsOld$timestamp)), origin="1970-01-01")
-
-if(as.numeric(difftime(nowDate, lastSavedDate, units ="hours")) > 6){
-
-  # Join new data with saved data and order by joinDate, player, then timestamp
-  playerstatsFull <- join(playerstats,playerstatsOld, type="full", match="all")
-  playerstatsFull <- arrange(playerstatsFull, as.Date(joinDate), player, timestamp)
-
-  # Write dataset to file for ze easy access
-  write.csv(playerstatsFull, "data/playerstats.csv")
-};
-
-rm(playerstatsOld)
+source("functions.R")
+writePlayerstatsLog()

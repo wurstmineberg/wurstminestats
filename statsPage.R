@@ -1,13 +1,6 @@
 ## Graphs for the wurstmineberg stats page
 
-# Refresh data if older than 6 hours (only if "now" is defined)
-if(length(grep("now", ls())) != 0){
-    if((as.numeric(format(Sys.time(), "%s")) - as.numeric(now))/60/60 > 6){
-      source("dataPrep.R");
-    }
-}
-
-source("functions.R")
+refreshData()
 
 # Get general statistics from playerstats, define metadata (scale, units)
 
