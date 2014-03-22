@@ -24,20 +24,6 @@ p <- p + scale_x_datetime(labels = date_format("%y-%m-%d"),
                           expand=c(.2,1));
 ggsave(p, file="Plots/WhitelistGrowth.png", height=6, width=8)
 
-# Distance Traveled Total
-p <- ggplot(data=playerstats)
-p <- p + aes(fill=joinStatus, x=reorder(player,distanceTraveled, mean, order=T), y=(distanceTraveled/1000000))
-p <- p + barChart + legendTitle + coord_flip()
-p <- p + xLable + labs(y="Distance (km)", title="Distance Traveled in Total")
-ggsave(p, file="Plots/DistanceTraveled.png", height=plotHeight, width=plotWidth)
-
-# Distance Traveled Total by Online Time
-p <- ggplot(data=playerstats)
-p <- p + aes(fill=joinStatus, x=reorder(player,distanceTraveled/playOneHour, mean, order=T), y=(distanceTraveled/1000000)/playOneHour)
-p <- p + barChart + legendTitle + coord_flip()
-p <- p + xLable + labs(y="Distance (km) per Hour (real time)", title="Total Distance Traveled by Online Time")
-ggsave(p, file="Plots/DistanceTraveled_weighted.png", height=plotHeight, width=plotWidth)
-
 ##################
 ### Death stats ##
 ##################
