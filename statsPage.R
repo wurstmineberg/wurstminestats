@@ -21,20 +21,13 @@ for(i in 1:statNum){
   p <- p + aes(fill=joinStatus, x=reorder(player, playerstats[, generalStats$id[i]], mean, order=T), 
                                 y=playerstats[, generalStats$id[i]] / generalStats$scale[i])
   p <- p + barChart + legendTitle + coord_flip()
-    if(generalStats$unit[i] != "km" & generalStats$unit[i] != "m"){
-      p <- p + scale_y_discrete(breaks=pretty_breaks()) 
-    }
+  p <- p + scale_y_discrete(breaks=pretty_breaks()) 
   p <- p + xLable + labs(y=generalStats$unit[i], title=generalStats$name[i])
   
   ggsave(plot=p, file=Filename, height=plotHeight, width=plotWidth)
-   
-}; rm(i, Filename, p)
 
+  # Weighted by hours played
 
-# Weighted by hours played
-
-for(i in 1:statNum){
-  
   if(generalStats$id[i] == "playOneMinute"){ next };
   
   Filename <- paste("Plots/statspage/scaled/", generalStats$id[i],"_scaled.png", sep="")
@@ -43,11 +36,23 @@ for(i in 1:statNum){
   p <- p + aes(fill=joinStatus, x=reorder(player, playerstats[, generalStats$id[i]]/playerstats$playOneHour, mean, order=T), 
                y=(playerstats[, generalStats$id[i]] / generalStats$scale[i])/playerstats$playOneHour)
   p <- p + barChart + legendTitle + coord_flip()
-  #  if(generalStats$unit[i] != "km" & generalStats$unit[i] != "m"){
-  #    p <- p + scale_y_discrete(breaks=pretty_breaks()) 
-  #  }
+#  p <- p + scale_y_discrete(breaks=pretty_breaks()) 
   p <- p + xLable + labs(y=paste(generalStats$unit[i], "per hour"), title=paste(generalStats$name[i], "weighted by Online Time"))
   
   ggsave(plot=p, file=Filename, height=plotHeight, width=plotWidth)
   
 }; rm(i, Filename, p)
+
+# Distance Traveled Total
+p <- ggplot(data=playerstats)
+p <- p + aes(fill=joinStatus, x=reorder(player,distanceTraveled, mean, order=T), y=(distanceTraveled/1000000))
+p <- p + barChart + legendTitle + coord_flip()
+p <- p + xLable + labs(y="Distance (km)", title="Distance Traveled in Total")
+ggsave(p, file="Plots/statspage/DistanceTraveled.png", height=plotHeight, width=plotWidth)
+
+# Distance Traveled Total by Online Time
+p <- ggplot(data=playerstats)
+p <- p + aes(fill=joinStatus, x=reorder(player,distanceTraveled/playOneHour, mean, order=T), y=(distanceTraveled/1000000)/playOneHour)
+p <- p + barChart + legendTitle + coord_flip()
+p <- p + xLable + labs(y="Distance (km) per hour", title="Total Distance Traveled weighted by Online Time")
+ggsave(p, file="Plots/statspage/DistanceTraveled_scaled.png", height=plotHeight, width=plotWidth)
