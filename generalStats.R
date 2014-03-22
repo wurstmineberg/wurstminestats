@@ -28,7 +28,7 @@ for(i in 1:statNum){
 
   # Weighted by hours played
 
-  if(generalStats$id[i] == "playOneMinute"){ next };
+  if(generalStats$id[i] == "playOneMinute" | generalStats$id[i] == "timeSinceDeath"){ next };
   
   Filename <- paste("Plots/statspage/scaled/", generalStats$id[i],"_scaled.png", sep="")
   

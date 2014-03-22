@@ -3,11 +3,11 @@
 refreshData()
 
 # Online hours relative to age on server
-p <- ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player,playOneHour/serverAge, mean, order=T), y=playOneHour/serverAge))
-p <- p + geom_bar(colour="black", width=.7, stat="identity")
+p <- ggplot(data=playerstats)
+p <- p + aes(fill=joinStatus, x=reorder(player,playOneHour/serverAge, mean, order=T), y=playOneHour/serverAge)
+p <- p + barChart + coord_flip() + legendTitle
 p <- p + labs(x="Player", y="Online Time (h) by Server Age (d)")
-p <- p + ggtitle("Online Time by Server Age") + coord_flip()
-p <- p + scale_fill_manual(name = "Join Status", values = statusColours)
+p <- p + ggtitle("Online Time by Server Age")
 ggsave(p, file="Plots/OnlineTimebyServerAge.png", height=plotHeight, width=plotWidth)
 
 # Server growth
@@ -22,7 +22,7 @@ p <- p + scale_colour_manual(name = "Join Status",
 p <- p + scale_x_datetime(labels = date_format("%y-%m-%d"),
                           breaks = date_breaks("month"),
                           expand=c(.2,1));
-ggsave(p, file="Plots/WhitelistGrowth.png", height=6, width=8)
+ggsave(p, file="Plots/WhitelistGrowth.png", height=6, width=12)
 
 ##################
 ### Death stats ##

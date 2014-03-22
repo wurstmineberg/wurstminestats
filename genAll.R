@@ -6,9 +6,9 @@ source("dataPrep.R")
 source("functions.R")
 
 # These are not
-source("Playerstats.R")
+source("metaStats.R")
 source("achievements.R")
-source("statsPage.R")
+source("generalStats.R")
 source("entityStats.R")
 source("itemStats.R")
 source("sessions.R")
