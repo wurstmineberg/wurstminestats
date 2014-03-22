@@ -10,6 +10,7 @@ library(grid)         # for unit() in ggplot theme() functions
 library(plyr)         # To join() dataframes
 library(RColorBrewer) # Because colours
 library(httr)         # For direct web access stuff, apparently
+library(gdata)        # For some reorder() stuff. Factor levels are hell, people.
 
 # Get a close enough timestamp for the data age
 # Reimport via as.POSIXct(x,origin="1970-01-01") should be sufficient
