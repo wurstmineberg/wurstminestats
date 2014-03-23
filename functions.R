@@ -38,7 +38,6 @@ refreshData <- function(force=FALSE){
 
 # Define function to transform JSON from playerstats API to nice dataframe
 prettyShitUp <- function(data){
-
     ## Removing "stat." and "achievement." prefixes from columns
     names(data) <- sub("stat.","",names(data))
     names(data) <- sub("achievement.","",names(data))
@@ -71,5 +70,20 @@ prettyShitUp <- function(data){
 
     rm(playerTemp)
     return(data)
+}
 
+getDeathStats <- function(){
+    latestdeaths <- fromJSON("http://api.wurstmineberg.de/server/deaths/latest.json")
+
+    deaths <- data.frame(player = names(latestdeaths$deaths[,1]))
+    deaths$timestamp <- unlist(latestdeaths$deaths[,1], use.names=F)
+    deaths$cause <- unlist(latestdeaths$deaths[,2], use.names=F)
+    deaths$timestamp <- as.POSIXct(deaths$timestamp, tz="UTC")
+    deaths$daysSince <- as.numeric(round(difftime(Sys.time(),deaths$timestamp, units="days")))
+    deaths <- deaths[match(activePeople$id, deaths$player), ]
+    deaths$player <- activePeople$name
+    deaths$joinStatus <- playerstats$joinStatus
+    deaths <- deaths[!is.na(deaths$timestamp), ]
+
+    return(deaths)
 }

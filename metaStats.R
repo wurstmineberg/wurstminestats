@@ -3,12 +3,21 @@
 refreshData()
 
 ## Get a vector of the age gaps starting from player[1]
-inviteGaps <- c(0,round(as.numeric(difftime(playerstats$joinDate[2:nrow(playerstats)], playerstats$joinDate[1:(nrow(playerstats)-1)], units="days"))))
+inviteGaps <- c(0,
+                round(
+                      as.numeric(
+                                difftime(
+                                          playerstats$joinDate[2:nrow(playerstats)], 
+                                          playerstats$joinDate[1:(nrow(playerstats)-1)], 
+                                          units="days")
+                                )
+                      )
+                )
 
 # current server age total
 wurstminebergAge <- round(as.numeric(difftime(Sys.time(),
-        playerstats$joinDate[1], 
-        units ="auto")))
+                        playerstats$joinDate[1], 
+                        units ="days")))
 
 # Online hours relative to age on server
 p <- ggplot(data=playerstats)
@@ -35,15 +44,10 @@ ggsave(p, file="Plots/WhitelistGrowth.png", height=6, width=12)
 ##################
 ### Death stats ##
 ##################
-
-deaths <- data.frame(player = names(latestdeaths$deaths[,1]))
-deaths$timestamp <- unlist(latestdeaths$deaths[,1], use.names=F)
-deaths$cause <- unlist(latestdeaths$deaths[,2], use.names=F)
-deaths$timestamp <- as.POSIXct(deaths$timestamp, tz="UTC")
-deaths$daysSince <- as.numeric(round(difftime(Sys.time(),deaths$timestamp, units="days")))
+deaths <- getDeathStats()
 
 p <- ggplot(data=deaths)
-p <- p + aes(x=reorder(player,daysSince, mean, order=T), y=daysSince)
+p <- p + aes(fill=joinStatus, x=reorder(player, daysSince, mean, order=T), y=daysSince)
 p <- p + barChart + legendTitle + coord_flip()
 p <- p + xLable + labs(y="Days Since Death", title="Days Since Players' Latest Death")
 ggsave(p, file="Plots/LatestDeaths.png", height=plotHeight, width=plotWidth)
