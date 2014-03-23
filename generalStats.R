@@ -15,44 +15,47 @@ generalStats$scale  <- c(1,         10^5, 10^5, 10^5, 10*2*10^3,            10*2
 
 for(i in 1:statNum){
 
-  Filename <- paste("Plots/statspage/", generalStats$id[i],".png", sep="")
+  filename  <- paste("Plots/statspage/", generalStats$id[i],".png", sep="")
+  stat      <- generalStats$id[i]
+  statScale <- generalStats$scale[i]
+  statName  <- generalStats$name[i]
+  statUnit  <- generalStats$unit[i]
 
   p <- ggplot(data=playerstats)
-  p <- p + aes(fill=joinStatus, x=reorder(player, playerstats[, generalStats$id[i]], mean, order=T), 
-                                y=playerstats[, generalStats$id[i]] / generalStats$scale[i])
+  p <- p + aes(fill=joinStatus, x=reorder(player, playerstats[, stat], mean, order=T), 
+                                y=playerstats[, stat] / statScale)
   p <- p + barChart + legendTitle + coord_flip()
   p <- p + scale_y_discrete(breaks=pretty_breaks()) 
-  p <- p + xLable + labs(y=generalStats$unit[i], title=generalStats$name[i])
+  p <- p + xLable + labs(y=statUnit, title=statName)
   
-  ggsave(plot=p, file=Filename, height=plotHeight, width=plotWidth)
+  ggsave(plot=p, file=filename, height=plotHeight, width=plotWidth)
 
-  # Weighted by hours played
+  ## Weighted by hours played ##
 
-  if(generalStats$id[i] == "playOneMinute" | generalStats$id[i] == "timeSinceDeath"){ next };
+  if(stat == "playOneMinute" | stat == "timeSinceDeath"){ next };
   
-  Filename <- paste("Plots/statspage/scaled/", generalStats$id[i],"_scaled.png", sep="")
+  filename <- paste("Plots/statspage/scaled/", stat,"_scaled.png", sep="")
   
   p <- ggplot(data=playerstats)
-  p <- p + aes(fill=joinStatus, x=reorder(player, playerstats[, generalStats$id[i]]/playerstats$playOneHour, mean, order=T), 
-               y=(playerstats[, generalStats$id[i]] / generalStats$scale[i])/playerstats$playOneHour)
+  p <- p + aes(fill=joinStatus, x=reorder(player, playerstats[, stat] / playerstats$playOneHour, mean, order=T), 
+               y=(playerstats[, stat] / statScale) / playerstats$playOneHour)
   p <- p + barChart + legendTitle + coord_flip()
-#  p <- p + scale_y_discrete(breaks=pretty_breaks()) 
-  p <- p + xLable + labs(y=paste(generalStats$unit[i], "per hour"), title=paste(generalStats$name[i], "weighted by Online Time"))
+  p <- p + xLable + labs(y=paste(statUnit, "per hour"), title=paste(statName, "weighted by Online Time"))
   
-  ggsave(plot=p, file=Filename, height=plotHeight, width=plotWidth)
+  ggsave(plot=p, file=filename, height=plotHeight, width=plotWidth)
   
-}; rm(i, Filename, p)
+}; rm(i, filename, p, stat, statScale, statUnit, statName)
 
 # Distance Traveled Total
 p <- ggplot(data=playerstats)
 p <- p + aes(fill=joinStatus, x=reorder(player,distanceTraveled, mean, order=T), y=(distanceTraveled/1000000))
 p <- p + barChart + legendTitle + coord_flip()
 p <- p + xLable + labs(y="Distance (km)", title="Distance Traveled in Total")
-ggsave(p, file="Plots/statspage/DistanceTraveled.png", height=plotHeight, width=plotWidth)
+ggsave(plot=p, file="Plots/statspage/DistanceTraveled.png", height=plotHeight, width=plotWidth)
 
 # Distance Traveled Total by Online Time
 p <- ggplot(data=playerstats)
 p <- p + aes(fill=joinStatus, x=reorder(player,distanceTraveled/playOneHour, mean, order=T), y=(distanceTraveled/1000000)/playOneHour)
 p <- p + barChart + legendTitle + coord_flip()
 p <- p + xLable + labs(y="Distance (km) per hour", title="Total Distance Traveled weighted by Online Time")
-ggsave(p, file="Plots/statspage/DistanceTraveled_scaled.png", height=plotHeight, width=plotWidth)
+ggsave(plot=p, file="Plots/statspage/DistanceTraveled_scaled.png", height=plotHeight, width=plotWidth)
