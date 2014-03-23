@@ -8,17 +8,19 @@ sessions <- as.data.frame(sessions)
 sessions$uptimes.startTime <- as.POSIXct(sessions$uptimes.startTime, tz="UTC")
 sessions$uptimes.endTime <- as.POSIXct(sessions$uptimes.endTime, tz="UTC")
 
+## Fill playerSessions with data from sessions$uptimes.sessions in an ugly way because fuck JSON handling in R
+numSessions <- length(sessions$uptimes.sessions)
+
+# If the latest session is NA, we'll just and it RIGHT NOW
+if(is.na(sessions$uptimes.endTime[numSessions])){
+  sessions$uptimes.endTime[numSessions] <- Sys.time()  
+}
+
 # Initialize an empty data frame for player sessions and name
 playerSessions <- data.frame(minecraftNick = character(0),
                              joinTime = character(0),
                              leaveTime = character(0),
                              person = character(0))
-
-# Fill playerSessions with data from sessions$uptimes.sessions in an ugly way because fuck JSON handling in R
-numSessions <- length(sessions$uptimes.sessions)
-
-# If the latest session is NA, we'll just and it RIGHT NOW
-sessions$uptimes.endTime[numSessions] <- Sys.time()
 
 for(i in 1:(numSessions-1)){
   temp1 <- as.data.frame(sessions$uptimes.sessions[i])
@@ -114,7 +116,7 @@ playedPerPerson <- arrange(playedPerPerson, date, person)
 playedPerPerson$person <- as.character(playedPerPerson$person)
 for(i in playedPerPerson$person){
   playedPerPerson$person[playedPerPerson$person == i] <- activePeople$name[activePeople$id == i]
-}
+}; rm(i)
 
 playedPerPerson$person <- as.factor(playedPerPerson$person)
 playedPerPerson$person <- reorder(playedPerPerson$person, new.order=activePeople$name[activePeople$name %in% unique(playedPerPerson$person)])
