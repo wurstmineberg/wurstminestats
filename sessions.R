@@ -2,83 +2,12 @@
 
 refreshData()
 
-sessions <- fromJSON("http://api.wurstmineberg.de/server/sessions/overview.json")
-sessions <- as.data.frame(sessions)
+sessions <- getSessions()
 
-sessions$uptimes.startTime <- as.POSIXct(sessions$uptimes.startTime, tz="UTC")
-sessions$uptimes.endTime <- as.POSIXct(sessions$uptimes.endTime, tz="UTC")
+playerSessions <- getPlayerSessions()
 
-## Fill playerSessions with data from sessions$uptimes.sessions in an ugly way because fuck JSON handling in R
-numSessions <- length(sessions$uptimes.sessions)
-
-# If the latest session is NA, we'll just and it RIGHT NOW
-if(is.na(sessions$uptimes.endTime[numSessions])){
-  sessions$uptimes.endTime[numSessions] <- Sys.time()  
-}
-
-# Initialize an empty data frame for player sessions and name
-playerSessions <- data.frame(minecraftNick = character(0),
-                             joinTime = character(0),
-                             leaveTime = character(0),
-                             person = character(0))
-
-# This uses session endTimes as leaveTime in case the session ended in a non-standard way
-for(i in 1:(numSessions-1)){
-  temp1 <- as.data.frame(sessions$uptimes.sessions[i])
-  temp2 <- as.data.frame(sessions$uptimes.sessions[i+1])
-  
-  if(NA %in% temp1$leaveTime){
-    temp1$leaveTime[is.na(temp1$leaveTime)] <- as.character(sessions$uptimes.endTime[i])
-  }
-  if(NA %in% temp2$leaveTime){
-    temp2$leaveTime[is.na(temp2$leaveTime)] <- as.character(sessions$uptimes.endTime[i+1])
-  }
-  
-  tempMerge <- join(temp1, temp2, type="full")
-  rm(temp1, temp2)
-  playerSessions <- join(tempMerge, playerSessions, type="full")
-}; rm(i, tempMerge)
-
-playerSessions <- arrange(playerSessions, joinTime, leaveTime)
-
-# Now we reformat shit
-playerSessions$joinTime <- as.POSIXct(playerSessions$joinTime, tz="UTC")
-playerSessions$leaveTime <- as.POSIXct(playerSessions$leaveTime, tz="UTC")
-
-# Fixing remains of the last fix (overlapping sessions get sequentialized)
-for(i in 1:(nrow(playerSessions)-1)){
-  if(playerSessions$minecraftNick[i] == playerSessions$minecraftNick[i+1]){
-    if(playerSessions$leaveTime[i] > playerSessions$joinTime[i+1]){
-      playerSessions$leaveTime[i] <- playerSessions$joinTime[i+1]
-    }
-  }
-}; rm(i)
-
-## Ideally sessions should be separated per day, I guess?
-# Add join/leave time as date only for simplicity in the long run
-playerSessions$joinDate <- format(playerSessions$joinTime, "%F")
-playerSessions$joinDate <- as.POSIXct(playerSessions$joinDate, origin="1970-01-01", tz="UTC")
-playerSessions$leaveDate <- format(playerSessions$leaveTime, "%F")
-playerSessions$leaveDate <- as.POSIXct(playerSessions$leaveDate, origin="1970-01-01", tz="UTC")
-
-overlaps <- playerSessions[playerSessions$leaveDate > playerSessions$joinDate, ]
-noOverlaps <- playerSessions[playerSessions$leaveDate == playerSessions$joinDate, ]
-overlapsNum <- nrow(overlaps)
-
-for(i in 1:overlapsNum){
-  temp1 <- overlaps[1,]
-  temp1[1, ] <- overlaps[i, ]
-  temp1[2, ] <- overlaps[i, ]
-  
-  temp1$leaveTime[1] <- overlaps$leaveDate[i]
-  temp1$joinTime[2] <- overlaps$leaveDate[i]
-  
-  noOverlaps <- join(noOverlaps, temp1, type="full")
-  rm(temp1)
-}
-playerSessions <- arrange(noOverlaps[names(noOverlaps) != c("joinDate", "leaveDate")], joinTime, person)
-
-rm(overlaps, noOverlaps, overlapsNum)
+# Ideally sessions should be separated per day, I guess?
+playerSessions <- splitSessionsByDay(playerSessions)
 
 # Add duration column
 playerSessions$playedMinutes <- as.numeric(difftime(playerSessions$leaveTime, 
