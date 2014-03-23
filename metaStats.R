@@ -30,7 +30,7 @@ ggsave(p, file="Plots/OnlineTimebyServerAge.png", height=plotHeight, width=plotW
 # Server growth
 p <- ggplot(playerstats, aes(x = joinDate, y = numID, label = player)) 
 p <- p + geom_point(aes(colour=joinStatus), stat="identity") 
-p <- p + geom_text(size=2, vjust=-.2, hjust=-.2) 
+p <- p + geom_text(size=3, hjust=-.2) 
 p <- p + labs(y="Whitelist Count", x="Date") 
 p <- p + ggtitle("Wurstmineberg Server Growth") 
 p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
