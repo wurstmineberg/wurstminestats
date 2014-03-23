@@ -18,8 +18,6 @@ source("functions.R")
 # Reimport via as.POSIXct(x,origin="1970-01-01") should be sufficient
 now <- format(Sys.time(), "%s")
 
-## Get people.json for player id and join dates
-people <- fromJSON("http://wurstmineberg.de/assets/serverstatus/people.json")
 ## Get player stats from wurstmineberg API
 playerstats <- fromJSON("http://api.wurstmineberg.de/server/playerstats/general.json")
 ## Get achievements
@@ -37,22 +35,7 @@ strings <- fromJSON("http://wurstmineberg.de/static/json/strings.json")
 #### This is where imported datasets get cleaned up so we can actually use them ####
 
 ## Reformat people.json
-people <- as.data.frame(people[1])
-names(people) <- sub("people.","",names(people))
-# Add category to people$status for easier matching
-people$status[is.na(people$status)] <- "later"
-
-activePeople <- data.frame(id=rep(0, length(people$minecraft[people$status != "former"])), 
-                           mc=rep(0, length(people$minecraft[people$status != "former"])))
-activePeople$mc <- people$minecraft[people$status != "former"]
-activePeople$name <- people$name[people$status != "former"]
-activePeople$id <- people$id[people$status != "former"]
-
-for(i in 1:length(activePeople$name)){
-  if(is.na(activePeople$name[i])){
-    activePeople$name[i] <- activePeople$id[i]
-  }
-}; rm(i)
+activePeople <- getActivePeople()
 
 # Reformat stat datasets
 playerstats   <- prettyShitUp(playerstats)
@@ -60,24 +43,15 @@ achievements  <- prettyShitUp(achievements)
 entities      <- prettyShitUp(entities)
 items         <- prettyShitUp(items)
 
-## Get joinDate from people.json, excluding former members
-playerstats$joinDate <- people$join_date[people$status != "former"]
-
 ## Getting rid of NAs and assuming 0 (again. Don't ask.)
 playerstats[is.na(playerstats)] <- 0
 
 # Just to get a numeric ID to have an easy index and player numID. Yes, rownames, I know.
 playerstats$numID <- (1:(nrow(playerstats)))
 
-## Give people status values because lol
-playerstats$joinStatus <- as.factor(people$status[people$status != "former"])
-
-# In case of missing join date, apply NA
-# For invited but not yet joined players
-playerstats$joinDate[playerstats$joinDate == 0] <- NA
-
-# Convert joinDate to POSIXct because time
-playerstats$joinDate <- as.POSIXct(playerstats$joinDate, origin="1970-01-01")
+## Give people joinStatus and joinDate from activePoeple
+playerstats$joinStatus <- activePoeple$joinStatus
+playerstats$joinDate <- activePoeple$joinDate
 
 ## Convert play time to real time hours as separate column
 playerstats$playOneHour <- (playerstats$playOneMinute/20/60/60)

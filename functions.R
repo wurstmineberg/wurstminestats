@@ -87,3 +87,35 @@ getDeathStats <- function(){
 
     return(deaths)
 }
+
+getActivePeople <- function(){
+    ## Get people.json for player id and join dates
+    people <- fromJSON("http://wurstmineberg.de/assets/serverstatus/people.json")
+    people <- as.data.frame(people[1])
+    names(people) <- sub("people.","",names(people))
+    # Add category to people$status for easier matching
+    people$status[is.na(people$status)] <- "later"
+
+    activePeople <- data.frame(id=rep(0, length(people$minecraft[people$status != "former"])), 
+                               mc=rep(0, length(people$minecraft[people$status != "former"])))
+    activePeople$mc <- people$minecraft[people$status != "former"]
+    activePeople$name <- people$name[people$status != "former"]
+    activePeople$id <- people$id[people$status != "former"]
+
+    for(i in 1:length(activePeople$name)){
+      if(is.na(activePeople$name[i])){
+        activePeople$name[i] <- activePeople$id[i]
+      }
+    }; rm(i)
+
+    activePeople$joinDate <- people$join_date[people$status != "former"]
+    # In case of missing join date, apply NA
+    # For invited but not yet joined players
+    activePeople$joinDate[people$joinDate == 0] <- NA
+    # Convert joinDate to POSIXct because time
+    activePeople$joinDate <- as.POSIXct(activePeople$joinDate, origin="1970-01-01")
+
+    activePeople$joinStatus <- as.factor(people$status[people$status != "former"])
+
+    return(activePeople)
+}
