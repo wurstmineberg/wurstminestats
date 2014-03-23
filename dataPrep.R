@@ -22,8 +22,6 @@ now <- format(Sys.time(), "%s")
 playerstats <- fromJSON("http://api.wurstmineberg.de/server/playerstats/general.json")
 ## Get achievements
 achievements <- fromJSON("http://api.wurstmineberg.de/server/playerstats/achievement.json")
-## Get item stats
-items <- fromJSON("http://api.wurstmineberg.de/server/playerstats/item.json")
 ## Get entity stats 
 entities <- fromJSON("http://api.wurstmineberg.de/server/playerstats/entity.json")
 ## Get achievement descriptions from website and append IDs as extra column
@@ -41,7 +39,6 @@ activePeople <- getActivePeople()
 playerstats   <- prettyShitUp(playerstats)
 achievements  <- prettyShitUp(achievements)
 entities      <- prettyShitUp(entities)
-items         <- prettyShitUp(items)
 
 ## Getting rid of NAs and assuming 0 (again. Don't ask.)
 playerstats[is.na(playerstats)] <- 0
@@ -50,23 +47,13 @@ playerstats[is.na(playerstats)] <- 0
 playerstats$numID <- (1:(nrow(playerstats)))
 
 ## Give people joinStatus and joinDate from activePoeple
-playerstats$joinStatus <- activePoeple$joinStatus
-playerstats$joinDate <- activePoeple$joinDate
+playerstats$joinStatus <- activePeople$joinStatus
+playerstats$joinDate <- activePeople$joinDate
+playerstats$serverAge <- activePeople$serverAge
+playerstats$serverBirth <- activePeople$serverBirth
 
 ## Convert play time to real time hours as separate column
 playerstats$playOneHour <- (playerstats$playOneMinute/20/60/60)
-
-## Define server birth and server age times
-
-# player specific server age (days since their whitelisting)
-playerstats$serverAge <- round(as.numeric(difftime(Sys.time(),
-                          playerstats$joinDate[playerstats$numID], 
-                          units ="days")))
-
-# player specific server birth (days they've been whitelisted after server creation)
-playerstats$serverBirth <-round(as.numeric(difftime(playerstats$joinDate[playerstats$numID],
-                          playerstats$joinDate[1], 
-                          units ="days")))
 
 # Get total distance column by summing up all *OneCm rows per player
 playerstats$distanceTraveled <- 0
@@ -92,12 +79,8 @@ playerstats <- join(playerstats, entities)
 # Delete dataframes we don't need separate anymore
 rm(achievements, entities)
 
-# Reorganizzle rownames just in case ¯\_(ツ)_/¯
-#rownames(playerstats) <- playerstats$player
-
 # Sub player names with display names from activePeople$name
 playerstats$player <- factor(activePeople$name, levels=activePeople$name)
-items$player <- playerstats$player
 
 ## At this point, playerstats is in a usable state, data is comfortably accessible and it contains
 ## both the general player stats and the achievement data. 

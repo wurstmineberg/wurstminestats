@@ -80,9 +80,15 @@ getDeathStats <- function(){
     deaths$cause <- unlist(latestdeaths$deaths[,2], use.names=F)
     deaths$timestamp <- as.POSIXct(deaths$timestamp, tz="UTC")
     deaths$daysSince <- as.numeric(round(difftime(Sys.time(),deaths$timestamp, units="days")))
+
+    # Match against activePeople and sort accordingly
     deaths <- deaths[match(activePeople$id, deaths$player), ]
+
     deaths$player <- activePeople$name
-    deaths$joinStatus <- playerstats$joinStatus
+    deaths$joinStatus <- activePeople$joinStatus
+
+    # Remove NAs introduced by matching with activePoeple
+    # Should be uneccessary when everyone hase been active / died since logging started
     deaths <- deaths[!is.na(deaths$timestamp), ]
 
     return(deaths)
@@ -102,20 +108,114 @@ getActivePeople <- function(){
     activePeople$name <- people$name[people$status != "former"]
     activePeople$id <- people$id[people$status != "former"]
 
+    # Get people names, and if not set, use ID instead
     for(i in 1:length(activePeople$name)){
       if(is.na(activePeople$name[i])){
         activePeople$name[i] <- activePeople$id[i]
       }
-    }; rm(i)
+    }
 
     activePeople$joinDate <- people$join_date[people$status != "former"]
     # In case of missing join date, apply NA
     # For invited but not yet joined players
     activePeople$joinDate[people$joinDate == 0] <- NA
-    # Convert joinDate to POSIXct because time
-    activePeople$joinDate <- as.POSIXct(activePeople$joinDate, origin="1970-01-01")
+    # Convert joinDate to POSIXct UTC because time
+    activePeople$joinDate <- as.POSIXct(activePeople$joinDate, origin="1970-01-01", tz="UTC")
 
+    # player specific server age (days since their whitelisting)
+    activePeople$serverAge <- round(as.numeric(difftime(Sys.time(),
+                                                       activePeople$joinDate, 
+                                                       units ="days")))
+    
+    # player specific server birth (days they've been whitelisted after server creation)
+    activePeople$serverBirth <-round(as.numeric(difftime(activePeople$joinDate,
+                                                        activePeople$joinDate[1], 
+                                                        units ="days")))
+    
     activePeople$joinStatus <- as.factor(people$status[people$status != "former"])
 
     return(activePeople)
+}
+
+mergeItemStats <- function(items){
+    # Get list of num and new IDs actually existing in items dataset
+    existingNumIDs <- names(items)[grep("\\.[0-9]+$", names(items))]
+    for(action in itemActions$id){
+      existingNumIDs <- sub(paste(action, ".", sep=""), "", existingNumIDs)
+    }; rm(action)
+
+    # I honestly have no idea anymore what I did here, but it merges old and new item stats
+    tempStats <- items[ , !names(items) %in% names(items)[grep("\\.[0-9]+$", names(items))]]
+    tempStats <- as.character(names(tempStats)[grep("[^player]", names(tempStats))])
+
+    for(i in 1:length(existingNumIDs)){
+      for(action in itemActions$id){
+        ID <- itemData$ID[itemData$numID == existingNumIDs[i]]
+        
+        if(paste(action, ".", ID, sep="") %in% tempStats){
+          newIDstat <- items[, paste(action, ".", ID, sep="")]
+          
+          if(paste(action, ".", existingNumIDs[i], sep="") %in% names(items)){
+            oldIDstat <- items[, paste(action, ".", existingNumIDs[i], sep="")]
+            items[, paste(action, ".", ID, sep="")] <- newIDstat + oldIDstat
+          }
+        }
+      }
+    }
+
+    # Exclude now unneeded old item ID columns
+    items <- items[ , !names(items) %in% names(items)[grep("\\.[0-9]+$", names(items))]]
+
+    return(items)
+}
+
+# Requires mergeItemStats to be executed on items dataframe
+getItemStats <- function(){
+    # Let's just construct a dataframe of stats, their items and actions
+    existingIDs <- names(items)[grep("[^player]", names(items))]
+    itemStats <- data.frame(stat=as.character(existingIDs))
+
+    # Setting items to the stat name minus the action portion
+    itemStats$item <- existingIDs
+    for(item in itemStats$item){
+      for(id in itemActions$id){
+        itemStats$item[itemStats$item == item] <- sub(paste(id, ".", sep=""), "", item)
+      }
+    }; rm(item, id)
+
+    # Setting the action to the stat name minus the item portion
+    for(i in 1:length(itemStats$item)){
+      action <- sub(paste(".", itemStats$item[i], sep=""), "", itemStats$stat[i])
+      itemStats$action[i] <- action
+    }; rm(i, action)
+
+    # Substituting action with a more readable name
+    for(action in itemStats$action){
+      for(i in 1:nrow(itemActions)){
+        itemStats$action[itemStats$action == itemActions$id[i]] <- as.character(itemActions$name[i])
+      }
+    }; rm(action, i)
+
+    for(i in 1:length(itemStats$item)){
+      name <- itemData$name[itemData$ID == itemStats$item[i]]
+      itemStats$item[i] <- name[1]
+    }; rm(i, name)
+
+    itemStats$stat <- as.character(itemStats$stat)
+
+    # Add some more columns to itemStats for data's sake
+    for(i in 1:length(itemStats$stat)){
+      stat <- itemStats$stat[i]
+      itemStats$total[i] <- sum(items[, stat], na.rm=T)
+      
+      statPlayers <- items[items[, stat] == max(items[, stat]), c("player", stat)]
+      itemStats$leadingPlayer[i] <- as.character(statPlayers[1,1])
+      itemStats$playerMax[i] <- statPlayers[1,2]
+    }
+
+    # Apparently some columns are "lists", which write.csv() hates
+    class(itemStats$leadingPlayer) <- "character"
+    class(itemStats$playerMax) <- "numeric"
+
+    return(itemStats)
 }
