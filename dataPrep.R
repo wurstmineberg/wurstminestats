@@ -61,7 +61,7 @@ for(i in 1:nrow(playerstats)){
   playerstats$distanceTraveled[i] <- sum(playerstats[i, grep("OneCm", colnames(playerstats))])
 }; rm(i);
 
-## Resort columns to get interesting stuff first. Manually, like a fucking animal.
+#### Resort columns to get interesting stuff first. Manually, like a fucking animal. ####
 generalColumns <- c("player", "numID", "joinDate", "joinStatus", "serverAge", "serverBirth", "leaveGame",
                     "deaths", "timeSinceDeath", "playerKills","damageDealt","damageTaken", "playOneMinute", 
                     "playOneHour", "jump", "animalsBred", "mobKills")
@@ -70,7 +70,7 @@ distanceColumns <- c("distanceTraveled","walkOneCm", "crouchOneCm", "sprintOneCm
                      "boatOneCm", "pigOneCm", "fallOneCm", "swimOneCm", "diveOneCm", "flyOneCm")
 
 playerstats <- playerstats[c(generalColumns,itemColumns,distanceColumns)]
-rm(generalColumns,itemColumns,distanceColumns)
+rm(generalColumns, itemColumns, distanceColumns)
 
 ## Join playerstats with achievements and entities dataframes. This feels very epic.
 playerstats <- join(playerstats, achievements)
@@ -78,9 +78,6 @@ playerstats <- join(playerstats, entities)
 
 # Delete dataframes we don't need separate anymore
 rm(achievements, entities)
-
-# Sub player names with display names from activePeople$name
-playerstats$player <- factor(activePeople$name, levels=activePeople$name)
 
 ## At this point, playerstats is in a usable state, data is comfortably accessible and it contains
 ## both the general player stats and the achievement data. 
@@ -93,19 +90,17 @@ playerstats$timestamp <- now
 writePlayerstatsLog()
 
 # Define general legend/guide for all players
-playerTheme <- theme(legend.position="right",
-                    legend.key.size = unit(.4, "cm"),
-                    legend.text = element_text(size = rel(.8)));
+playerTheme <- theme(legend.position  = "right",
+                    legend.key.size   = unit(.4, "cm"),
+                    legend.text       = element_text(size = rel(.8))
+                    )
 
 # Define some variables for bar chart layout and labels
 plotWidth <- 6; plotHeight <- 4;
-barChart <- geom_bar(colour="black", width=.7, stat="identity")
-xLable <- xlab("Player")
-
+barChart  <- geom_bar(colour="black", width=.7, stat="identity")
+xLable    <- xlab("Player")
 
 # Define colour scale to keep status colours static
-if("playerstats" %in% ls()){
-    statusColours <- brewer.pal(9,"Set1")
-    names(statusColours) <- levels(playerstats$joinStatus)
-    legendTitle <- scale_fill_manual(name = "Join Status", values = statusColours)
-}
+statusColours         <- brewer.pal(9,"Set1")
+names(statusColours)  <- levels(activePeople$joinStatus)
+legendTitle           <- scale_fill_manual(name = "Join Status", values = statusColours)

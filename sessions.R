@@ -2,18 +2,20 @@
 
 refreshData()
 
-sessions <- getSessions()
-
-playerSessions <- getPlayerSessions()
+sessions        <- getSessions()
+playerSessions  <- getPlayerSessions()
 
 # Ideally sessions should be separated per day, I guess?
-playerSessions <- splitSessionsByDay(playerSessions)
+playerSessions  <- splitSessionsByDay(playerSessions)
 
 # Add duration column
 playerSessions$playedMinutes <- as.numeric(difftime(playerSessions$leaveTime, 
                                                     playerSessions$joinTime, unit="mins"))
 
-# We want play time per day, sooooo…
+########################################
+## We want play time per day, sooooo… ##
+########################################
+
 playerSessions$date <- format(playerSessions$joinTime, "%F")
 playerSessions$date <- as.POSIXct(playerSessions$date, origin="1970-01-01", tz="UTC")
 
@@ -25,7 +27,10 @@ for(i in 1:length(loggedDays)){
   playedPerDay$timePlayed[i] <- sum(playerSessions$playedMinutes[playerSessions$date == loggedDays[i]])
 }; rm(i)
 
-# We also want play time per day per person, so, well…
+##########################################################
+## We also want play time per day per person, so, well… ##
+###########################################################
+
 playedPerPerson <- data.frame(date=character(0),
                               timePlayed=numeric(0),
                               person=character(0))
@@ -51,7 +56,10 @@ for(i in playedPerPerson$person){
 playedPerPerson$person <- as.factor(playedPerPerson$person)
 playedPerPerson$person <- reorder(playedPerPerson$person, new.order=activePeople$name[activePeople$name %in% unique(playedPerPerson$person)])
 
-# Plotting the things
+#########################
+## Plotting the things ##
+#########################
+
 p <- ggplot(data=playedPerDay)
 p <- p + aes(x=date, y=timePlayed/60)
 p <- p + geom_area(alpha=0.7) + geom_point() + geom_path(alpha=.8)

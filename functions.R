@@ -68,7 +68,8 @@ prettyShitUp <- function(data){
     data$player <- playerTemp
     data <- data[match(activePeople$mc, data$player), ]
 
-    rm(playerTemp)
+    data$player <- factor(activePeople$name, levels=activePeople$name)
+    
     return(data)
 }
 
@@ -76,16 +77,16 @@ getDeathStats <- function(){
     latestdeaths <- fromJSON("http://api.wurstmineberg.de/server/deaths/latest.json")
 
     deaths <- data.frame(player = names(latestdeaths$deaths[,1]))
-    deaths$timestamp <- unlist(latestdeaths$deaths[,1], use.names=F)
-    deaths$cause <- unlist(latestdeaths$deaths[,2], use.names=F)
-    deaths$timestamp <- as.POSIXct(deaths$timestamp, tz="UTC")
-    deaths$daysSince <- as.numeric(round(difftime(Sys.time(),deaths$timestamp, units="days")))
+    deaths$timestamp    <- unlist(latestdeaths$deaths[,1], use.names=F)
+    deaths$cause        <- unlist(latestdeaths$deaths[,2], use.names=F)
+    deaths$timestamp    <- as.POSIXct(deaths$timestamp, tz="UTC")
+    deaths$daysSince    <- as.numeric(round(difftime(Sys.time(),deaths$timestamp, units="days")))
 
     # Match against activePeople and sort accordingly
     deaths <- deaths[match(activePeople$id, deaths$player), ]
 
-    deaths$player <- activePeople$name
-    deaths$joinStatus <- activePeople$joinStatus
+    deaths$player       <- activePeople$name
+    deaths$joinStatus   <- activePeople$joinStatus
 
     # Remove NAs introduced by matching with activePoeple
     # Should be uneccessary when everyone hase been active / died since logging started
@@ -101,14 +102,14 @@ getActivePeople <- function(){
     names(people) <- sub("people.","",names(people))
     # Add category to people$status for easier matching
     people$status[is.na(people$status)] <- "later"
+    people$numID <- 1:nrow(people)
 
-    activePeople <- data.frame(id=rep(0, length(people$minecraft[people$status != "former"])), 
-                               mc=rep(0, length(people$minecraft[people$status != "former"])))
-    activePeople$mc <- people$minecraft[people$status != "former"]
-    activePeople$name <- people$name[people$status != "former"]
-    activePeople$id <- people$id[people$status != "former"]
+    activePeople        <- data.frame(numID= people$numID[people$status != "former"])
+    activePeople$id     <- people$id[people$status != "former"]
+    activePeople$mc     <- people$minecraft[people$status != "former"]
+    activePeople$name   <- people$name[people$status != "former"]
 
-    # Get people names, and if not set, use ID instead
+    # If people name not set, use ID instead
     for(i in 1:length(activePeople$name)){
       if(is.na(activePeople$name[i])){
         activePeople$name[i] <- activePeople$id[i]
@@ -173,7 +174,7 @@ mergeItemStats <- function(items){
 getItemStats <- function(){
     # Let's just construct a dataframe of stats, their items and actions
     existingIDs <- names(items)[grep("[^player]", names(items))]
-    itemStats <- data.frame(stat=as.character(existingIDs))
+    itemStats   <- data.frame(stat=as.character(existingIDs))
 
     # Setting items to the stat name minus the action portion
     itemStats$item <- existingIDs
@@ -224,8 +225,8 @@ getSessions <- function(){
     sessions <- fromJSON("http://api.wurstmineberg.de/server/sessions/overview.json")
     sessions <- as.data.frame(sessions)
 
-    sessions$uptimes.startTime <- as.POSIXct(sessions$uptimes.startTime, tz="UTC")
-    sessions$uptimes.endTime <- as.POSIXct(sessions$uptimes.endTime, tz="UTC")
+    sessions$uptimes.startTime  <- as.POSIXct(sessions$uptimes.startTime, tz="UTC")
+    sessions$uptimes.endTime    <- as.POSIXct(sessions$uptimes.endTime, tz="UTC")
 
     ## Fill playerSessions with data from sessions$uptimes.sessions in an ugly way because fuck JSON handling in R
     numSessions <- length(sessions$uptimes.sessions)
@@ -281,10 +282,10 @@ getPlayerSessions <- function(){
 }
 
 splitSessionsByDay <- function(playerSessions){
-    playerSessions$joinDate <- format(playerSessions$joinTime, "%F")
-    playerSessions$joinDate <- as.POSIXct(playerSessions$joinDate, origin="1970-01-01", tz="UTC")
-    playerSessions$leaveDate <- format(playerSessions$leaveTime, "%F")
-    playerSessions$leaveDate <- as.POSIXct(playerSessions$leaveDate, origin="1970-01-01", tz="UTC")
+    playerSessions$joinDate     <- format(playerSessions$joinTime, "%F")
+    playerSessions$joinDate     <- as.POSIXct(playerSessions$joinDate, origin="1970-01-01", tz="UTC")
+    playerSessions$leaveDate    <- format(playerSessions$leaveTime, "%F")
+    playerSessions$leaveDate    <- as.POSIXct(playerSessions$leaveDate, origin="1970-01-01", tz="UTC")
 
     overlaps <- playerSessions[playerSessions$leaveDate > playerSessions$joinDate, ]
     noOverlaps <- playerSessions[playerSessions$leaveDate == playerSessions$joinDate, ]
