@@ -22,6 +22,7 @@ playerSessions <- data.frame(minecraftNick = character(0),
                              leaveTime = character(0),
                              person = character(0))
 
+# This uses session endTimes as leaveTime in case the session ended in a non-standard way
 for(i in 1:(numSessions-1)){
   temp1 <- as.data.frame(sessions$uptimes.sessions[i])
   temp2 <- as.data.frame(sessions$uptimes.sessions[i+1])
@@ -44,7 +45,7 @@ playerSessions <- arrange(playerSessions, joinTime, leaveTime)
 playerSessions$joinTime <- as.POSIXct(playerSessions$joinTime, tz="UTC")
 playerSessions$leaveTime <- as.POSIXct(playerSessions$leaveTime, tz="UTC")
 
-# Fixing remains of the last fix
+# Fixing remains of the last fix (overlapping sessions get sequentialized)
 for(i in 1:(nrow(playerSessions)-1)){
   if(playerSessions$minecraftNick[i] == playerSessions$minecraftNick[i+1]){
     if(playerSessions$leaveTime[i] > playerSessions$joinTime[i+1]){
