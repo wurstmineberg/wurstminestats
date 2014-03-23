@@ -10,10 +10,13 @@ plotWidth <- 6; plotHeight <- 4;
 barChart <- geom_bar(colour="black", width=.7, stat="identity")
 xLable <- xlab("Player")
 
+
 # Define colour scale to keep status colours static
-statusColours <- brewer.pal(9,"Set1")
-names(statusColours) <- levels(playerstats$joinStatus)
-legendTitle <- scale_fill_manual(name = "Join Status", values = statusColours)
+if("playerstats" %in% ls()){
+    statusColours <- brewer.pal(9,"Set1")
+    names(statusColours) <- levels(playerstats$joinStatus)
+    legendTitle <- scale_fill_manual(name = "Join Status", values = statusColours)
+}
 
 ## Sooner or later, I want a giant log file.
 # Call this after periodic data refreshes
@@ -47,4 +50,42 @@ refreshData <- function(){
       source("dataPrep.R");
     }
   }
+}
+
+# Define function to transform JSON from playerstats API to nice dataframe
+prettyShitUp <- function(data){
+
+    ## Removing "stat." and "achievement." prefixes from columns
+    names(data) <- sub("stat.","",names(data))
+    names(data) <- sub("achievement.","",names(data))
+    # Fix for exploreAllBiomes shit
+    if("exploreAllBiomes" %in% names(data)){
+        data <- subset(data, select=-exploreAllBiomes)
+    }
+    
+    data[data == "NULL"] <- "0"
+
+    ## Extract player names to separate variable
+    # Note: These are the minecraft usernames
+    playerTemp <- names(data[,1])
+
+    ## Getting rid of the nested list stuff
+    # This took me so long, please don't even ask me about it.
+    for(i in (1:(ncol(data)))) {
+      data[i] <- unlist(data[i], use.names=F)
+    }; rm(i);
+
+    ## Getting rid of NAs and assuming 0
+    data[data == NA] <- 0
+
+    ## Numericizzle
+    data <- as.data.frame(mapply(as.numeric,data))
+
+    ## Sorting according to people.json, requires activePoeple to be generated from people.json
+    data$player <- playerTemp
+    data <- data[match(activePeople$mc, data$player), ]
+
+    rm(playerTemp)
+    return(data)
+
 }

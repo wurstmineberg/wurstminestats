@@ -12,6 +12,8 @@ library(RColorBrewer) # Because colours
 library(httr)         # For direct web access stuff, apparently
 library(gdata)        # For some reorder() stuff. Factor levels are hell, people.
 
+source("functions.R")
+
 # Get a close enough timestamp for the data age
 # Reimport via as.POSIXct(x,origin="1970-01-01") should be sufficient
 now <- format(Sys.time(), "%s")
@@ -35,70 +37,13 @@ strings <- fromJSON("http://wurstmineberg.de/static/json/strings.json")
 latestdeaths <- fromJSON("http://api.wurstmineberg.de/server/deaths/latest.json")
 
 #### This is where imported datasets get cleaned up so we can actually use them ####
-##
-## Removing "stat." and "achievement." prefixes from columns
-names(playerstats) <- sub("stat.","",names(playerstats))
-playerstats[playerstats == "NULL"] <- "0"
 
-names(achievements) <- sub("achievement.","",names(achievements))
-achievements <- achievements[names(achievements) != "exploreAllBiomes"]
-achievements[achievements == "NULL"] <- "0"
-
-names(items) <- sub("stat.","",names(items))
-items[items == "NULL"] <- "0"
-
-names(entities) <- sub("stat.","",names(entities))
-entities[entities == "NULL"] <- "0"
-
-# (Temp?) fix for new people.json format
+## Reformat people.json
 people <- as.data.frame(people[1])
 names(people) <- sub("people.","",names(people))
-
-## Extract player names to separate variable
-# Note: These are the minecraft usernames
-playerTemp <- names(playerstats[,1])
-
-## Add category to people$status for easier matching
+# Add category to people$status for easier matching
 people$status[is.na(people$status)] <- "later"
 
-## Getting rid of the nested list stuff
-# This took me so long, please don't even ask me about it.
-for(i in (1:(ncol(playerstats)))) {
-  playerstats[i] <- unlist(playerstats[i], use.names=F)
-}; rm(i);
-
-# Do the same for the achievement dataset
-for(i in (1:(ncol(achievements)))) {
-  achievements[i] <- unlist(achievements[i], use.names=F)
-}; rm(i);
-
-# Do the same for the items dataset
-for(i in (1:(ncol(items)))) {
-  items[i] <- unlist(items[i], use.names=F)
-}; rm(i);
-
-# Do the same for the entities dataset
-for(i in (1:(ncol(entities)))) {
-  entities[i] <- unlist(entities[i], use.names=F)
-}; rm(i);
-
-## Getting rid of NAs and assuming 0
-playerstats[playerstats == NA] <- 0
-
-## Numericizzle
-playerstats <- as.data.frame(mapply(as.numeric,playerstats))
-achievements <- as.data.frame(mapply(as.numeric,achievements))
-items <- as.data.frame(mapply(as.numeric,items))
-entities <- as.data.frame(mapply(as.numeric,entities))
-
-## Sorting according to people.json
-playerstats$player <- playerTemp
-achievements$player <- playerTemp
-items$player <- playerTemp
-entities$player <- playerTemp
-rm(playerTemp)
-
-# Crucial part where we resort the original dataframes by matching with the order in people.json
 activePeople <- data.frame(id=rep(0, length(people$minecraft[people$status != "former"])), 
                            mc=rep(0, length(people$minecraft[people$status != "former"])))
 activePeople$mc <- people$minecraft[people$status != "former"]
@@ -109,27 +54,16 @@ for(i in 1:length(activePeople$name)){
   if(is.na(activePeople$name[i])){
     activePeople$name[i] <- activePeople$id[i]
   }
-}
+}; rm(i)
 
-playerstats <- playerstats[match(activePeople$mc, playerstats$player),]
-achievements <- achievements[match(activePeople$mc, achievements$player),]
-items <- items[match(activePeople$mc, items$player),]
-entities <- entities[match(activePeople$mc, entities$player),]
+# Reformat stat datasets
+playerstats   <- prettyShitUp(playerstats)
+achievements  <- prettyShitUp(achievements)
+entities      <- prettyShitUp(entities)
+items         <- prettyShitUp(items)
 
 ## Get joinDate from people.json, excluding former members
 playerstats$joinDate <- people$join_date[people$status != "former"]
-
-## Convert player names to people.json-IDs
-playerstats$player <- activePeople$id
-achievements$player <- activePeople$id
-items$player <- activePeople$id
-entities$player <- activePeople$id
-
-# Convert to factors with appropriate levels
-playerstats$player <- factor(playerstats$player, levels=playerstats$player)
-achievements$player <- factor(playerstats$player, levels=playerstats$player)
-items$player <- factor(playerstats$player, levels=playerstats$player)
-entities$player <- factor(playerstats$player, levels=playerstats$player)
 
 ## Getting rid of NAs and assuming 0 (again. Don't ask.)
 playerstats[is.na(playerstats)] <- 0
@@ -161,10 +95,6 @@ playerstats$serverAge <- round(as.numeric(difftime(Sys.time(),
 playerstats$serverBirth <-round(as.numeric(difftime(playerstats$joinDate[playerstats$numID],
                           playerstats$joinDate[1], 
                           units ="days")))
-# current server age total
-wurstminebergAge <- round(as.numeric(difftime(Sys.time(),
-        playerstats$joinDate[1], 
-        units ="auto")))
 
 # Get total distance column by summing up all *OneCm rows per player
 playerstats$distanceTraveled <- 0
@@ -183,9 +113,6 @@ distanceColumns <- c("distanceTraveled","walkOneCm", "crouchOneCm", "sprintOneCm
 playerstats <- playerstats[c(generalColumns,itemColumns,distanceColumns)]
 rm(generalColumns,itemColumns,distanceColumns)
 
-## Get a vector of the age gaps starting from player[1]
-inviteGaps <- c(0,round(as.numeric(difftime(playerstats$joinDate[2:nrow(playerstats)], playerstats$joinDate[1:(nrow(playerstats)-1)], units="days"))))
-
 ## Join playerstats with achievements and entities dataframes. This feels very epic.
 playerstats <- join(playerstats, achievements)
 playerstats <- join(playerstats, entities)
@@ -194,7 +121,7 @@ playerstats <- join(playerstats, entities)
 rm(achievements, entities)
 
 # Reorganizzle rownames just in case ¯\_(ツ)_/¯
-rownames(playerstats) <- playerstats$player
+#rownames(playerstats) <- playerstats$player
 
 # Sub player names with display names from activePeople$name
 playerstats$player <- factor(activePeople$name, levels=activePeople$name)
@@ -208,5 +135,4 @@ items$player <- playerstats$player
 # Sooner or later, I want a giant logfile.
 playerstats$timestamp <- now
 
-source("functions.R")
 writePlayerstatsLog()

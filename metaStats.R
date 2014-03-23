@@ -2,6 +2,14 @@
 
 refreshData()
 
+## Get a vector of the age gaps starting from player[1]
+inviteGaps <- c(0,round(as.numeric(difftime(playerstats$joinDate[2:nrow(playerstats)], playerstats$joinDate[1:(nrow(playerstats)-1)], units="days"))))
+
+# current server age total
+wurstminebergAge <- round(as.numeric(difftime(Sys.time(),
+        playerstats$joinDate[1], 
+        units ="auto")))
+
 # Online hours relative to age on server
 p <- ggplot(data=playerstats)
 p <- p + aes(fill=joinStatus, x=reorder(player,playOneHour/serverAge, mean, order=T), y=playOneHour/serverAge)
