@@ -5,7 +5,7 @@ refreshData()
 # Get general statistics from playerstats, define metadata (scale, units)
 
 statNum <- ncol(strings$general)
-generalStats <- data.frame(id=rep(0,statNum), name=rep(0,statNum), unit=rep(0,statNum), scale=rep(0,statNum))
+generalStats <- data.frame(id=character(statNum), name=character(statNum), unit=character(statNum), scale=numeric(statNum))
 generalStats$id <- names(playerstats[names(strings$general)])
 generalStats$name <- unlist(strings$general[2,], use.names=F)
 generalStats$unit   <- c("Animals", "km", "km", "km", "Hearts (thousands)", "Hearts (thousands)", "Deathcount", "km", "Items", "km", "Fish", "km", "km", "Jumps (thousands)", "Junk", "Quits", "km", "Mobs", "m", "Hours (real life)", "Kills", "km", "km", "Hours (real life)", "Treasure", "km")
