@@ -32,7 +32,7 @@ for(i in 1:nrow(achievementStrings)){
   
   ggsave(plot=p, file=filename, height=plotHeight, width=plotWidth)
 
-}; rm(i, p, filename)
+}; rm(i, p, filename, name, ID, description)
 
 #######################################
 ## Generate selected weighted charts ##

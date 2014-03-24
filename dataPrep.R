@@ -80,9 +80,8 @@ itemData$name   <- unlist(itemData$name, use.names=F)
 itemData        <- subset(itemData, select=c("numID","ID","name"))
 
 ## Get table of item actions and readable names ##
-itemActions         <- data.frame(id = character(4), name = character(4))
-itemActions$id      <- c("mineBlock", "craftItem"   , "useItem" , "breakItem")
-itemActions$name    <- c("mined"    , "crafted"     , "used"    , "broken")
+itemActions     <- data.frame(id    = c("mineBlock", "craftItem"   , "useItem" , "breakItem"), 
+                              name  = c("mined"    , "crafted"     , "used"    , "broken"))
 
 ## Merge old and new item stat IDs and whate have you ##
 items <- mergeItemStats(items, itemActions, itemData)
