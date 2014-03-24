@@ -28,7 +28,7 @@ for(i in 1:statNum){
   p <- ggplot(data=playerstats)
   p <- p + aes(fill=joinStatus, x=reorder(player, playerstats[, stat], mean, order=T), 
                                 y=playerstats[, stat] / statScale)
-  p <- p + barChart + legendTitle + coord_flip()
+  p <- p + barChart + statusFillScale + coord_flip()
   p <- p + scale_y_discrete(breaks=pretty_breaks()) 
   p <- p + xLable + labs(y=statUnit, title=statName)
   
@@ -43,7 +43,7 @@ for(i in 1:statNum){
   p <- ggplot(data=playerstats)
   p <- p + aes(fill=joinStatus, x=reorder(player, playerstats[, stat] / playerstats$playOneHour, mean, order=T), 
                y=(playerstats[, stat] / statScale) / playerstats$playOneHour)
-  p <- p + barChart + legendTitle + coord_flip()
+  p <- p + barChart + statusFillScale + coord_flip()
   p <- p + xLable + labs(y=paste(statUnit, "per hour"), title=paste(statName, "weighted by Online Time"))
   
   ggsave(plot=p, file=filename, height=plotHeight, width=plotWidth)
@@ -53,13 +53,13 @@ for(i in 1:statNum){
 # Distance Traveled Total
 p <- ggplot(data=playerstats)
 p <- p + aes(fill=joinStatus, x=reorder(player,distanceTraveled, mean, order=T), y=(distanceTraveled/1000000))
-p <- p + barChart + legendTitle + coord_flip()
+p <- p + barChart + statusFillScale + coord_flip()
 p <- p + xLable + labs(y="Distance (km)", title="Distance Traveled in Total")
 ggsave(plot=p, file="Plots/statspage/DistanceTraveled.png", height=plotHeight, width=plotWidth)
 
 # Distance Traveled Total by Online Time
 p <- ggplot(data=playerstats)
 p <- p + aes(fill=joinStatus, x=reorder(player,distanceTraveled/playOneHour, mean, order=T), y=(distanceTraveled/1000000)/playOneHour)
-p <- p + barChart + legendTitle + coord_flip()
+p <- p + barChart + statusFillScale + coord_flip()
 p <- p + xLable + labs(y="Distance (km) per hour", title="Total Distance Traveled weighted by Online Time")
 ggsave(plot=p, file="Plots/statspage/DistanceTraveled_scaled.png", height=plotHeight, width=plotWidth)

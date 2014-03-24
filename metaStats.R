@@ -17,24 +17,25 @@ wurstminebergAge <- round(as.numeric(difftime(Sys.time(),
 
 # Online hours relative to age on server
 p <- ggplot(data=playerstats)
-p <- p + aes(fill=joinStatus, x=reorder(player, playOneHour/serverAge, mean, order=T), y=playOneHour/serverAge)
-p <- p + barChart + coord_flip() + legendTitle
+p <- p + aes(fill=joinStatus, x=sortLevels(player, playOneHour/activePeople$serverAge), 
+                              y=playOneHour/activePeople$serverAge)
+p <- p + barChart + coord_flip() + statusFillScale + playerTheme
 p <- p + labs(x="Player", y="Online Time (h) by Server Age (d)")
 p <- p + ggtitle("Online Time by Server Age")
 ggsave(p, file="Plots/OnlineTimebyServerAge.png", height=plotHeight, width=plotWidth)
 
 # Server growth
-p <- ggplot(playerstats, aes(x = joinDate, y = numID, label = player)) 
-p <- p + geom_point(aes(colour=joinStatus), stat="identity") 
-p <- p + geom_text(size=3, hjust=-.2) 
-p <- p + labs(y="Whitelist Count", x="Date") 
-p <- p + ggtitle("Wurstmineberg Server Growth") 
+p <- ggplot(data=activePeople) 
+p <- p + aes(x = joinDate, y = 1:nrow(activePeople), label = name, colour=joinStatus)
+p <- p + geom_point(stat="identity") + geom_text(size=3, hjust=-.2) 
+p <- p + labs(y = "Whitelist Count", x = "Date", title = "Wurstmineberg Server Growth") 
 p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
-p <- p + scale_colour_manual(name = "Join Status", 
-                             values = statusColours) 
-p <- p + scale_x_datetime(labels = date_format("%y-%m-%d"),
+p <- p + statusColourScale + playerTheme
+p <- p + scale_x_datetime(labels = date_format("%Y %b"),
                           breaks = date_breaks("month"),
-                          expand=c(.2,1));
+                          minor_breaks = date_breaks("week"),
+                          expand = c(.2,1))
+p <- p + scale_y_discrete(breaks=pretty_breaks())
 ggsave(p, file="Plots/WhitelistGrowth.png", height=6, width=12)
 
 ##################

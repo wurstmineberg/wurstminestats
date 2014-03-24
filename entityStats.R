@@ -31,7 +31,7 @@ for(i in 1:length(killEntity)){
   
   p <- ggplot(data=playerstats) 
   p <- p + aes(fill=joinStatus, x=reorder(player, playerstats[,killEntity[i]], mean, order=T), y=playerstats[,killEntity[i]], mean, order=T)
-  p <- p + barChart + legendTitle + coord_flip() + scale_y_discrete(breaks= pretty_breaks())
+  p <- p + barChart + statusFillScale + coord_flip() + scale_y_discrete(breaks= pretty_breaks())
   p <- p + xLable + labs(y="Kills", title=paste("Kills of:",killEntityMobs[i]))
   
   ggsave(plot=p, file=filename, height=plotHeight, width=plotWidth)
@@ -49,7 +49,7 @@ for(i in 1:length(killedByEntity)){
   p <- ggplot(data=playerstats) 
   p <- p + aes(fill=joinStatus, x=reorder(player, playerstats[,killedByEntity[i]], mean, order=T), 
                                 y=playerstats[,killedByEntity[i]])
-  p <- p + barChart + legendTitle + coord_flip() + scale_y_discrete(breaks= pretty_breaks())
+  p <- p + barChart + statusFillScale + coord_flip() + scale_y_discrete(breaks= pretty_breaks())
   p <- p + xLable + labs(y="Deaths", title=paste("Killed by:",killedByEntityMobs[i]))
   
   ggsave(plot=p, file=filename, height=plotHeight, width=plotWidth)
@@ -117,14 +117,14 @@ for(i in 1:nrow(playerstats)){
 # Friendly Mobs #
 p <- ggplot(data=playerstats) 
 p <- p + aes(fill=joinStatus, x=reorder(player, killFriendly, mean, order=T), y=killFriendly)
-p <- p + barChart + legendTitle + coord_flip() + scale_y_discrete(breaks= pretty_breaks())
+p <- p + barChart + statusFillScale + coord_flip() + scale_y_discrete(breaks= pretty_breaks())
 p <- p + xLable + labs(y="Kills", title="Total Friendly Mobs Killed")
 ggsave(plot=p, file="Plots/mobs/KillFriendlies.png", height=plotHeight, width=plotWidth)
 
 # Hostile Mobs #
 p <- ggplot(data=playerstats) 
 p <- p + aes(fill=joinStatus, x=reorder(player, killHostile, mean, order=T), y=killHostile)
-p <- p + barChart + legendTitle + coord_flip() + scale_y_discrete(breaks= pretty_breaks())
+p <- p + barChart + statusFillScale + coord_flip() + scale_y_discrete(breaks= pretty_breaks())
 p <- p + xLable + labs(y="Kills", title="Total Hostile Mobs Killed")
 ggsave(plot=p, file="Plots/mobs/KillHostiles.png", height=plotHeight, width=plotWidth)
 

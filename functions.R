@@ -1,20 +1,21 @@
-## Defining some functions and variables used by other scripts
+## Defining some functions used by other scripts
 
-## Sooner or later, I want a giant log file.
-# Call this after periodic data refreshes
+#########################
+### General functions ###
+#########################
 
 writePlayerstatsLog <- function(){
 
   playerstatsOld <- read.csv(file="data/playerstats.csv", row.names=1)
 
   # Only append saved date if the new data is at least 6h newer then the last saved data
-  nowDate <- as.POSIXct(as.numeric(now), origin="1970-01-01")
+  nowDate <- as.POSIXct(as.numeric(dataTime), origin="1970-01-01")
   lastSavedDate <- as.POSIXct(max(as.numeric(playerstatsOld$timestamp)), origin="1970-01-01")
 
   if(as.numeric(difftime(nowDate, lastSavedDate, units ="hours")) > 6){
 
     # Join new data with saved data and order by joinDate, player, then timestamp
-    playerstatsFull <- join(playerstats,playerstatsOld, type="full", match="all")
+    playerstatsFull <- join(playerstats, playerstatsOld, type="full", match="all")
     playerstatsFull <- arrange(playerstatsFull, as.Date(joinDate), player, timestamp)
 
     # Write dataset to file for ze easy access
@@ -22,10 +23,10 @@ writePlayerstatsLog <- function(){
   }
 }
 
-# Refresh data if older than 6 hours (only if "now" is defined)
+# Refresh data if older than 6 hours (only if "dataTime" is defined)
 refreshData <- function(force=FALSE){
-   if("now" %in% ls()){
-    if((as.numeric(format(Sys.time(), "%s")) - as.numeric(now))/60/60 > 6){
+   if("dataTime" %in% ls()){
+    if((as.numeric(format(Sys.time(), "%s")) - as.numeric(dataTime))/60/60 > 6){
       source("dataPrep.R");
     } else if (force == TRUE){
         source("dataPrep.R")
@@ -38,6 +39,12 @@ getStrings <- function(){
         strings <- fromJSON("http://wurstmineberg.de/static/json/strings.json")
     }
     return(strings)
+}
+
+sortLevels <- function(factors, reference, sortFunction = mean){
+  sortedLevels <- reorder(factors, reference, sortFunction, order=T)
+  
+  return(sortedLevels)
 }
 
 # Define function to transform JSON from playerstats API to nice dataframe
@@ -142,7 +149,11 @@ getActivePeople <- function(){
     return(activePeople)
 }
 
-mergeItemStats <- function(items, itemActions){
+#################################
+### Functions for itemStats.R ###
+#################################
+
+mergeItemStats <- function(items, itemActions, itemData){
     # Get list of num and new IDs actually existing in items dataset
     existingNumIDs <- names(items)[grep("\\.[0-9]+$", names(items))]
     for(action in itemActions$id){
@@ -175,7 +186,7 @@ mergeItemStats <- function(items, itemActions){
 }
 
 # Requires mergeItemStats to be executed on items dataframe
-getItemStats <- function(items, itemActions){
+getItemStats <- function(items, itemActions, itemData){
     # Let's just construct a dataframe of stats, their items and actions
     existingIDs <- names(items)[grep("[^player]", names(items))]
     itemStats   <- data.frame(stat=as.character(existingIDs))
@@ -224,6 +235,10 @@ getItemStats <- function(items, itemActions){
 
     return(itemStats)
 }
+
+################################
+### Functions for sessions.R ###
+################################
 
 getSessions <- function(){
     sessions <- fromJSON("http://api.wurstmineberg.de/server/sessions/overview.json")
@@ -282,6 +297,9 @@ getPlayerSessions <- function(sessions){
       }
     }
 
+    playerSessions$date <- format(playerSessions$joinTime, "%F")
+    playerSessions$date <- as.POSIXct(playerSessions$date, origin="1970-01-01", tz="UTC")
+
     return(playerSessions)
 }
 
@@ -306,7 +324,9 @@ splitSessionsByDay <- function(playerSessions){
       noOverlaps <- join(noOverlaps, temp1, type="full")
       rm(temp1)
     }
-    playerSessions <- arrange(noOverlaps[names(noOverlaps) != c("joinDate", "leaveDate")], joinTime, person)
-
+    
+    playerSessions <- arrange(noOverlaps, joinTime, person)
+    playerSessions <- playerSessions[c("person", "date", "joinTime", "leaveTime")]
+    
     return(playerSessions)
 }
