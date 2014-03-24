@@ -16,11 +16,8 @@ playerSessions$playedMinutes <- as.numeric(difftime(playerSessions$leaveTime,
 ## We want play time per day, sooooo… ##
 ########################################
 
-playerSessions$date <- format(playerSessions$joinTime, "%F")
-playerSessions$date <- as.POSIXct(playerSessions$date, origin="1970-01-01", tz="UTC")
-
-loggedDays <- unique(playerSessions$date)
-playedPerDay <- data.frame(date=unique(playerSessions$date),
+loggedDays    <- unique(playerSessions$date)
+playedPerDay  <- data.frame(date=unique(playerSessions$date),
                            timePlayed=numeric(length(loggedDays)))
 
 for(i in 1:length(loggedDays)){
@@ -36,19 +33,23 @@ playedPerPerson <- data.frame(date=character(0),
                               person=character(0))
 
 for(i in 1:length(loggedDays)){
-  daySet <- playerSessions[playerSessions$date == loggedDays[i],]
+  daySet    <- playerSessions[playerSessions$date == loggedDays[i], ]
   dayPeople <- as.character(unique(daySet$person))
   
   for(person in dayPeople){
-    sumPerson <- sum(daySet$playedMinutes[daySet$person == person])
-    row <- data.frame(date=as.character(loggedDays[i]), timePlayed=sumPerson, person=as.character(person))
+    sumPerson   <- sum(daySet$playedMinutes[daySet$person == person])
+    row         <- data.frame(date=as.character(loggedDays[i]), 
+                              timePlayed=sumPerson, 
+                              person=as.character(person))
+
     playedPerPerson <- join(playedPerPerson, row, type="full")
   }
-}; rm(i, person, sumPerson, row, daySet, dayPeople)
+}; rm(i, person, sumPerson, row, daySet, dayPeople, loggedDays)
 
-playedPerPerson$date <- as.POSIXct(playedPerPerson$date, origin="1970-01-01", tz="UTC")
-playedPerPerson <- arrange(playedPerPerson, date, person)
-playedPerPerson$person <- as.character(playedPerPerson$person)
+playedPerPerson$date    <- as.POSIXct(playedPerPerson$date, origin="1970-01-01", tz="UTC")
+playedPerPerson         <- arrange(playedPerPerson, date, person)
+playedPerPerson$person  <- as.character(playedPerPerson$person)
+
 for(i in playedPerPerson$person){
   playedPerPerson$person[playedPerPerson$person == i] <- activePeople$name[activePeople$id == i]
 }; rm(i)
@@ -82,6 +83,7 @@ p <- p + scale_x_datetime(labels = date_format("%y-%m-%d"),
                           breaks = date_breaks("days"))
 p <- p + scale_y_continuous(breaks=pretty_breaks()) + playerTheme
 p <- p + labs(y="Played Hours", x="Day", title="Total Time Played per Day")
+p <- p + legendPeople 
 ggsave(p, file="Plots/playTime_perPerson.png", height=6, width=12)
 rm(p)
 
