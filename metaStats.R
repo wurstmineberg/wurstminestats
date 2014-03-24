@@ -42,7 +42,7 @@ ggsave(p, file="Plots/WhitelistGrowth.png", height=6, width=12)
 deaths <- getDeathStats()
 
 p <- ggplot(data=deaths)
-p <- p + aes(fill=joinStatus, x=reorder(player, daysSince, mean, order=T), y=daysSince)
+p <- p + aes(fill=joinStatus, x=reorder(player, desc(daysSince), mean, order=T), y=daysSince)
 p <- p + barChart + statusFillScale + coord_flip()
 p <- p + xLable + labs(y="Days Since Death", title="Days Since Players' Latest Death")
 ggsave(p, file="Plots/LatestDeaths.png", height=plotHeight, width=plotWidth)
