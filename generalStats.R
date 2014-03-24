@@ -2,16 +2,20 @@
 
 refreshData()
 
-# Get general statistics from playerstats, define metadata (scale, units)
+# Get strings.json for some… strings. (General stat IDs, display names)
+strings <- getStrings()
 
-statNum <- ncol(strings$general)
-generalStats <- data.frame(id=character(statNum), name=character(statNum), unit=character(statNum), scale=numeric(statNum))
-generalStats$id <- names(playerstats[names(strings$general)])
-generalStats$name <- unlist(strings$general[2,], use.names=F)
+# Get general statistics from playerstats, define metadata (scale, units)
+statNum             <- ncol(strings$general)
+generalStats        <- data.frame(id=character(statNum), name=character(statNum), unit=character(statNum), scale=numeric(statNum))
+generalStats$id     <- names(playerstats[names(strings$general)])
+generalStats$name   <- unlist(strings$general[2,], use.names=F)
 generalStats$unit   <- c("Animals", "km", "km", "km", "Hearts (thousands)", "Hearts (thousands)", "Deathcount", "km", "Items", "km", "Fish", "km", "km", "Jumps (thousands)", "Junk", "Quits", "km", "Mobs", "m", "Hours (real life)", "Kills", "km", "km", "Hours (real life)", "Treasure", "km")
 generalStats$scale  <- c(1,         10^5, 10^5, 10^5, 10*2*10^3,            10*2*10^3,             1,           10^5,  1,      10^5,  1,     10^5,  10^5, 1000,                1,      1,      10^5,  1,    1000,  20*60*60,           1,       10^5, 10^5,  20*60*60,           1,          10^5)
 
-# Generate general stats barcharts
+#########################################################################
+## Generate general stats barcharts and versions scaled by online time ##
+#########################################################################
 
 for(i in 1:statNum){
 

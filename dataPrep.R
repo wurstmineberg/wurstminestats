@@ -24,11 +24,6 @@ playerstats <- fromJSON("http://api.wurstmineberg.de/server/playerstats/general.
 achievements <- fromJSON("http://api.wurstmineberg.de/server/playerstats/achievement.json")
 ## Get entity stats 
 entities <- fromJSON("http://api.wurstmineberg.de/server/playerstats/entity.json")
-## Get achievement descriptions from website and append IDs as extra column
-achievementStrings <- fromJSON("http://wurstmineberg.de/static/json/achievements.json")
-achievementStrings$id <- names(achievementStrings[,1])
-## Get strings.json for some… strings.
-strings <- fromJSON("http://wurstmineberg.de/static/json/strings.json")
 
 #### This is where imported datasets get cleaned up so we can actually use them ####
 
@@ -47,9 +42,9 @@ playerstats[is.na(playerstats)] <- 0
 playerstats$numID <- (1:(nrow(playerstats)))
 
 ## Give people joinStatus and joinDate from activePoeple
-playerstats$joinStatus <- activePeople$joinStatus
-playerstats$joinDate <- activePeople$joinDate
-playerstats$serverAge <- activePeople$serverAge
+playerstats$joinStatus  <- activePeople$joinStatus
+playerstats$joinDate    <- activePeople$joinDate
+playerstats$serverAge   <- activePeople$serverAge
 playerstats$serverBirth <- activePeople$serverBirth
 
 ## Convert play time to real time hours as separate column
@@ -61,18 +56,15 @@ for(i in 1:nrow(playerstats)){
   playerstats$distanceTraveled[i] <- sum(playerstats[i, grep("OneCm", colnames(playerstats))])
 }; rm(i);
 
-#### Resort columns to get interesting stuff first. Manually, like a fucking animal. ####
+## Resort columns to get interesting stuff first. ##
 generalColumns <- c("player", "numID", "joinDate", "joinStatus", "serverAge", "serverBirth", "leaveGame",
-                    "deaths", "timeSinceDeath", "playerKills","damageDealt","damageTaken", "playOneMinute", 
+                    "deaths", "timeSinceDeath", "playerKills", "damageDealt", "damageTaken", "playOneMinute", 
                     "playOneHour", "jump", "animalsBred", "mobKills")
-itemColumns <- c("drop", "fishCaught", "treasureFished", "junkFished")
-distanceColumns <- c("distanceTraveled","walkOneCm", "crouchOneCm", "sprintOneCm", "climbOneCm", "minecartOneCm", "horseOneCm", 
-                     "boatOneCm", "pigOneCm", "fallOneCm", "swimOneCm", "diveOneCm", "flyOneCm")
 
-playerstats <- playerstats[c(generalColumns,itemColumns,distanceColumns)]
-rm(generalColumns, itemColumns, distanceColumns)
+playerstats <- playerstats[c(generalColumns, setdiff(names(playerstats), generalColumns))]
+rm(generalColumns)
 
-## Join playerstats with achievements and entities dataframes. This feels very epic.
+## Join playerstats with achievements and entities dataframes. ##
 playerstats <- join(playerstats, achievements)
 playerstats <- join(playerstats, entities)
 
@@ -80,9 +72,9 @@ playerstats <- join(playerstats, entities)
 rm(achievements, entities)
 
 ## At this point, playerstats is in a usable state, data is comfortably accessible and it contains
-## both the general player stats and the achievement data. 
+## the general player stats, the achievement data and entity stats. Item stats are dealt with in itemStats.R 
 ## What happens now is my attempt to create a log file of playerstats in playerstat.csv, which in the future 
-## might be interesting as a basis for playeractivity over time.
+## might be interesting as a basis for player activity over time.
 
 # Sooner or later, I want a giant logfile.
 playerstats$timestamp <- now

@@ -2,29 +2,41 @@
 
 refreshData()
 
-## Generate basic plots for all achievements
+## Get achievement descriptions from website and append IDs as extra column
+achievementStrings    <- fromJSON("http://wurstmineberg.de/static/json/achievements.json")
+achievementStrings$id <- names(achievementStrings[,1])
+
+###############################################
+## Generate basic plots for all achievements ##
+###############################################
+
 for(i in 1:nrow(achievementStrings)){
 
-  if(achievementStrings$id[i] == "exploreAllBiomes"){ next };
+  ID          <- achievementStrings$id[i]
+  name        <- achievementStrings$displayname[i]
+  description <- achievementStrings$description[i]
 
-  Filename <- paste("Plots/achievements/",achievementStrings$id[i],".png", sep="")
+  if(ID == "exploreAllBiomes"){ next };
+
+  filename <- paste("Plots/achievements/", ID,".png", sep="")
   
   p <- ggplot(data=playerstats)
-  p <- p + aes(fill=joinStatus, x=reorder(player, playerstats[ , achievementStrings$id[i]], mean, order=T), 
-                                y=playerstats[,achievementStrings$id[i]]) 
+  p <- p + aes(fill=joinStatus, x=reorder(player, playerstats[ , ID], mean, order=T), 
+                                y=playerstats[ , ID]) 
   p <- p + barChart + legendTitle + coord_flip() + scale_y_discrete(breaks= pretty_breaks())
   p <- p + xLable + ylab("Times Achieved")
-      if(nchar(achievementStrings$description[i], type="width") > 44){
+      if(nchar(description, type="width") > 44){
         p <- p + theme(plot.title = element_text(size=12))
       }
-  p <- p + ggtitle(paste("Achievement:", achievementStrings$displayname[i], "\n", achievementStrings$description[i]))
+  p <- p + ggtitle(paste("Achievement:", name, "\n", description))
   
-  ggsave(plot=p, file=Filename, height=plotHeight, width=plotWidth)
+  ggsave(plot=p, file=filename, height=plotHeight, width=plotWidth)
 
-}; rm(i, p, Filename)
+}; rm(i, p, filename)
 
-
-## Generate selected weighted charts
+#######################################
+## Generate selected weighted charts ##
+#######################################
 
 # Cow kill to cow breed ratio
 cowRatio <- as.numeric(sub("NaN", "0", playerstats$breedCow/(playerstats$killCow)))

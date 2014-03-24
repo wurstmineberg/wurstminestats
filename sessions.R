@@ -3,7 +3,7 @@
 refreshData()
 
 sessions        <- getSessions()
-playerSessions  <- getPlayerSessions()
+playerSessions  <- getPlayerSessions(sessions)
 
 # Ideally sessions should be separated per day, I guess?
 playerSessions  <- splitSessionsByDay(playerSessions)
@@ -29,7 +29,7 @@ for(i in 1:length(loggedDays)){
 
 ##########################################################
 ## We also want play time per day per person, so, well… ##
-###########################################################
+##########################################################
 
 playedPerPerson <- data.frame(date=character(0),
                               timePlayed=numeric(0),
@@ -60,6 +60,8 @@ playedPerPerson$person <- reorder(playedPerPerson$person, new.order=activePeople
 ## Plotting the things ##
 #########################
 
+# Plotting playedPerDay
+
 p <- ggplot(data=playedPerDay)
 p <- p + aes(x=date, y=timePlayed/60)
 p <- p + geom_area(alpha=0.7) + geom_point() + geom_path(alpha=.8)
@@ -71,7 +73,8 @@ p <- p + scale_y_continuous(breaks=pretty_breaks())
 p <- p + labs(y="Played Hours", x="Day", title="Total Time Played per Day")
 ggsave(p, file="Plots/playTime.png", height=6, width=12)
 
-# Actually I want an area plot, but barcharts are fine, too
+# Plotting playedPerPerson 
+
 p <- ggplot(data=playedPerPerson, aes(x=date, y=timePlayed/60, fill=person))
 p <- p + geom_bar(position="stack", stat="identity", colour="black")
 p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
@@ -82,5 +85,8 @@ p <- p + labs(y="Played Hours", x="Day", title="Total Time Played per Day")
 ggsave(p, file="Plots/playTime_perPerson.png", height=6, width=12)
 rm(p)
 
-# Write playerSessions data for whatever reason
+###################################################
+## Write playerSessions to disk in case whatever ##
+###################################################
+
 write.csv(playerSessions, "data/playerSessions.csv")

@@ -19,10 +19,7 @@ writePlayerstatsLog <- function(){
 
     # Write dataset to file for ze easy access
     write.csv(playerstatsFull, "data/playerstats.csv")
-    rm(playerstatsFull)
-  };
-
-  rm(playerstatsOld, nowDate)
+  }
 }
 
 # Refresh data if older than 6 hours (only if "now" is defined)
@@ -34,6 +31,13 @@ refreshData <- function(force=FALSE){
         source("dataPrep.R")
     }
   }
+}
+
+getStrings <- function(){
+    if("strings" %in% ls() == F){
+        strings <- fromJSON("http://wurstmineberg.de/static/json/strings.json")
+    }
+    return(strings)
 }
 
 # Define function to transform JSON from playerstats API to nice dataframe
@@ -138,7 +142,7 @@ getActivePeople <- function(){
     return(activePeople)
 }
 
-mergeItemStats <- function(items){
+mergeItemStats <- function(items, itemActions){
     # Get list of num and new IDs actually existing in items dataset
     existingNumIDs <- names(items)[grep("\\.[0-9]+$", names(items))]
     for(action in itemActions$id){
@@ -171,7 +175,7 @@ mergeItemStats <- function(items){
 }
 
 # Requires mergeItemStats to be executed on items dataframe
-getItemStats <- function(){
+getItemStats <- function(items, itemActions){
     # Let's just construct a dataframe of stats, their items and actions
     existingIDs <- names(items)[grep("[^player]", names(items))]
     itemStats   <- data.frame(stat=as.character(existingIDs))
@@ -239,7 +243,7 @@ getSessions <- function(){
     return(sessions)
 }
 
-getPlayerSessions <- function(){
+getPlayerSessions <- function(sessions){
     # Initialize an empty data frame for player sessions and name
     playerSessions <- data.frame(minecraftNick = character(0),
                                  joinTime = character(0),

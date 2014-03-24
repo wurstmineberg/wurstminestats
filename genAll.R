@@ -1,14 +1,13 @@
 #! /usr/bin/Rscript
 ## Headless / IDE-less executable script to autogenerate all the plots
 
-# These are biggies and are required for everything else to work
-source("dataPrep.R")
-source("functions.R")
+# This is the biggie
+source("dataPrep.R")        # Loads all libraries, calls functions.R, which is needed for pretty much everything
 
-# These are not
-source("metaStats.R")
-source("achievements.R")
-source("generalStats.R")
-source("entityStats.R")
-source("itemStats.R")
-source("sessions.R")
+# These are not, but they all require dataPrep.R
+source("metaStats.R")       # 
+source("achievements.R")    # 
+source("generalStats.R")    # 
+source("entityStats.R")     # Adds killFriendly and killHostile columns to playerstats
+source("itemStats.R")       # 
+source("sessions.R")        # 

@@ -16,14 +16,14 @@ itemData        <- subset(itemData, select=c("numID","ID","name"))
 
 # Get table of item actions and readable names
 itemActions         <- data.frame(id = character(4), name = character(4))
-itemActions$id      <- c("mineBlock", "craftItem", "useItem", "breakItem")
-itemActions$name    <- c("mined", "crafted", "used", "broken")
+itemActions$id      <- c("mineBlock", "craftItem"   , "useItem" , "breakItem")
+itemActions$name    <- c("mined"    , "crafted"     , "used"    , "broken")
 
 # Merge old and new item stat IDs and whate have you
-items <- mergeItemStats(items)
+items <- mergeItemStats(items, itemActions)
 
 # Get a dataframe of item stat ID, item name and action
-itemStats <- getItemStats()
+itemStats <- getItemStats(items, itemActions)
 
 items$player        <- activePeople$name
 items$joinStatus    <- activePeople$joinStatus
