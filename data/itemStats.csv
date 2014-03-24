@@ -21,22 +21,22 @@
 "20","useItem.minecraft.jungle_stairs","Jungle Wood Stairs","used",106,"monographic",106
 "21","craftItem.minecraft.boat","Boat","crafted",52,"naturalismus",29
 "22","useItem.minecraft.bed","Bed","used",107,"naturalismus",48
-"23","useItem.minecraft.torch","Torch","used",10850,"DarkEagle",2076
+"23","useItem.minecraft.torch","Torch","used",10851,"DarkEagle",2076
 "24","mineBlock.minecraft.wooden_pressure_plate","Wooden Pressure Plate","mined",10,"daborstie",6
 "25","mineBlock.minecraft.sandstone","Sandstone","mined",7086,"Lichtlos",6903
-"26","mineBlock.minecraft.stone","Stone","mined",196437,"BenemitC",42939
+"26","mineBlock.minecraft.stone","Stone","mined",196438,"BenemitC",42939
 "27","useItem.minecraft.iron_shovel","Iron Shovel","used",63827,"DarkEagle",59337
 "28","useItem.minecraft.ender_chest","Ender Chest","used",79,"naturalismus",37
 "29","craftItem.minecraft.iron_ingot","Iron Ingot","crafted",5244,"naturalismus",1682
 "30","craftItem.minecraft.wooden_pressure_plate","Wooden Pressure Plate","crafted",45,"madmalik",32
-"31","craftItem.minecraft.planks","Wooden Planks","crafted",34712,"DarkEagle",7944
+"31","craftItem.minecraft.planks","Wooden Planks","crafted",34720,"DarkEagle",7944
 "32","craftItem.minecraft.bucket","Bucket","crafted",35,"naturalismus",21
-"33","useItem.minecraft.diamond_sword","Diamond Sword","used",7530,"Lichtlos",2402
+"33","useItem.minecraft.diamond_sword","Diamond Sword","used",7536,"Lichtlos",2402
 "34","mineBlock.minecraft.iron_bars","Iron Bars","mined",412,"BenemitC",375
-"35","useItem.minecraft.minecart","Minecart","used",901,"Fenhl",253
+"35","useItem.minecraft.minecart","Minecart","used",908,"Fenhl",260
 "36","mineBlock.minecraft.planks","Wooden Planks","mined",5421,"BenemitC",1329
 "37","useItem.minecraft.diamond_shovel","Diamond Shovel","used",60384,"BenemitC",28092
-"38","useItem.minecraft.diamond_axe","Diamond Axe","used",28276,"BenemitC",8478
+"38","useItem.minecraft.diamond_axe","Diamond Axe","used",28277,"BenemitC",8478
 "39","useItem.minecraft.diamond_hoe","Diamond Hoe","used",107,"Jemus42",105
 "40","mineBlock.minecraft.nether_brick_stairs","Nether Brick Stairs","mined",294,"Jemus42",259
 "41","mineBlock.minecraft.cocoa","Cocoa","mined",7,"monographic",4
@@ -44,24 +44,24 @@
 "43","mineBlock.minecraft.dirt","Dirt","mined",81922,"DarkEagle",40706
 "44","useItem.minecraft.planks","Wooden Planks","used",8013,"DarkEagle",4839
 "45","useItem.minecraft.dirt","Dirt","used",36543,"DarkEagle",25502
-"46","useItem.minecraft.log","Wood","used",4846,"DarkEagle",2400
-"47","mineBlock.minecraft.netherrack","Netherrack","mined",28960,"naturalismus",10641
+"46","useItem.minecraft.log","Wood","used",4847,"DarkEagle",2400
+"47","mineBlock.minecraft.netherrack","Netherrack","mined",29169,"naturalismus",10641
 "48","craftItem.minecraft.emerald","Emerald","crafted",1539,"Fenhl",1092
 "49","craftItem.minecraft.nether_brick","Nether Brick","crafted",4411,"Fenhl",2668
-"50","useItem.minecraft.stone_slab","Slab","used",16774,"DarkEagle",6489
+"50","useItem.minecraft.stone_slab","Slab","used",16981,"DarkEagle",6489
 "51","breakItem.minecraft.iron_shovel","Iron Shovel","broken",249,"DarkEagle",234
 "52","mineBlock.minecraft.melon_block","Melon","mined",9,"monographic",5
 "53","mineBlock.minecraft.log","Wood","mined",16309,"DarkEagle",5232
 "54","useItem.minecraft.flint_and_steel","Flint and Steel","used",1950,"Messaz",1209
 "55","mineBlock.minecraft.torch","Torch","mined",2509,"DarkEagle",570
-"56","mineBlock.minecraft.cobblestone","Cobblestone","mined",3305,"Fenhl",498
+"56","mineBlock.minecraft.cobblestone","Cobblestone","mined",3414,"Fenhl",607
 "57","mineBlock.minecraft.jungle_stairs","Jungle Wood Stairs","mined",7,"monographic",7
-"58","mineBlock.minecraft.stone_slab","Slab","mined",4323,"DarkEagle",1479
+"58","mineBlock.minecraft.stone_slab","Slab","mined",4430,"DarkEagle",1479
 "59","useItem.minecraft.pumpkin_seeds","Pumpkin Seeds","used",8,"drseilzug",7
 "60","craftItem.minecraft.iron_pickaxe","Iron Pickaxe","crafted",297,"DarkEagle",171
 "61","craftItem.minecraft.crafting_table","Crafting Table","crafted",1272,"naturalismus",770
 "62","craftItem.minecraft.netherbrick","Nether Brick","crafted",945,"DarkEagle",576
-"63","mineBlock.minecraft.tallgrass","Tall Grass","mined",2978,"daborstie",923
+"63","mineBlock.minecraft.tallgrass","Tall Grass","mined",2980,"daborstie",923
 "64","mineBlock.minecraft.nether_brick","Nether Brick","mined",1270,"BenemitC",453
 "65","useItem.minecraft.crafting_table","Crafting Table","used",2526,"naturalismus",1335
 "66","mineBlock.minecraft.monster_egg","Monster Egg","mined",96,"L3viathan",46
@@ -69,12 +69,12 @@
 "68","useItem.minecraft.comparator","Comparator","used",200,"Fenhl",156
 "69","useItem.minecraft.nether_brick_stairs","Nether Brick Stairs","used",68,"DarkEagle",32
 "70","mineBlock.minecraft.coal_block","Block of Coal","mined",2,"L3viathan",1
-"71","useItem.minecraft.sticky_piston","Sticky Piston","used",299,"Messaz",141
-"72","useItem.minecraft.sign","Sign","used",907,"Fenhl",489
+"71","useItem.minecraft.sticky_piston","Sticky Piston","used",301,"Messaz",141
+"72","useItem.minecraft.sign","Sign","used",911,"Fenhl",493
 "73","breakItem.minecraft.iron_pickaxe","Iron Pickaxe","broken",260,"DarkEagle",165
-"74","useItem.minecraft.cobblestone","Cobblestone","used",13227,"papierschiff",2785
+"74","useItem.minecraft.cobblestone","Cobblestone","used",13338,"papierschiff",2785
 "75","craftItem.minecraft.coal","Coal","crafted",4372,"Fenhl",2307
-"76","mineBlock.minecraft.stonebrick","Stone Brick","mined",17250,"L3viathan",6037
+"76","mineBlock.minecraft.stonebrick","Stone Brick","mined",17252,"L3viathan",6037
 "77","mineBlock.minecraft.brick_block","Brick","mined",153,"BenemitC",92
 "78","breakItem.minecraft.wooden_pickaxe","Wooden Pickaxe","broken",16,"Bediko",6
 "79","mineBlock.minecraft.double_plant","Large Flower","mined",152,"katethie",44
@@ -87,7 +87,7 @@
 "86","useItem.minecraft.oak_stairs","Oak Wood Stairs","used",1236,"naturalismus",564
 "87","mineBlock.minecraft.piston","Piston","mined",114,"naturalismus",80
 "88","useItem.minecraft.shears","Shears","used",2771,"Jemus42",1708
-"89","craftItem.minecraft.redstone_torch","Redstone Torch","crafted",715,"Fenhl",410
+"89","craftItem.minecraft.redstone_torch","Redstone Torch","crafted",733,"Fenhl",428
 "90","craftItem.minecraft.stone","Stone","crafted",26998,"DarkEagle",16569
 "91","craftItem.minecraft.iron_axe","Iron Axe","crafted",44,"DarkEagle",24
 "92","mineBlock.minecraft.red_flower","Flower","mined",373,"katethie",168
@@ -95,7 +95,7 @@
 "94","useItem.minecraft.iron_sword","Iron Sword","used",3409,"daborstie",1209
 "95","useItem.minecraft.dye","Dye","used",465,"madmalik",212
 "96","mineBlock.minecraft.brick_stairs","Brick Stairs","mined",24,"katethie",24
-"97","craftItem.minecraft.redstone","Redstone Dust","crafted",2357,"Fenhl",1133
+"97","craftItem.minecraft.redstone","Redstone Dust","crafted",2375,"Fenhl",1151
 "98","craftItem.minecraft.stone_button","Stone Button","crafted",69,"BenemitC",30
 "99","craftItem.minecraft.fence_gate","Fence Gate","crafted",24,"daborstie",12
 "100","craftItem.minecraft.spruce_stairs","Spruce Wood Stairs","crafted",532,"DarkEagle",336
@@ -109,7 +109,7 @@
 "108","mineBlock.minecraft.birch_stairs","Birch Wood Stairs","mined",145,"Messaz",126
 "109","mineBlock.minecraft.oak_stairs","Oak Wood Stairs","mined",1422,"naturalismus",499
 "110","useItem.minecraft.fence_gate","Fence Gate","used",32,"daborstie",18
-"111","useItem.minecraft.stonebrick","Stone Brick","used",40174,"BenemitC",25959
+"111","useItem.minecraft.stonebrick","Stone Brick","used",40176,"BenemitC",25959
 "112","useItem.minecraft.leaves","Leaves","used",1691,"Jemus42",966
 "113","breakItem.minecraft.iron_axe","Iron Axe","broken",28,"DarkEagle",21
 "114","useItem.minecraft.wooden_slab","Wooden Slab","used",1168,"BenemitC",639
@@ -121,8 +121,8 @@
 "120","craftItem.minecraft.cake","Cake","crafted",4,"katethie",2
 "121","useItem.minecraft.spruce_stairs","Spruce Wood Stairs","used",910,"DarkEagle",633
 "122","craftItem.minecraft.shears","Shears","crafted",23,"Jemus42",7
-"123","useItem.minecraft.stone_button","Stone Button","used",97,"BenemitC",39
-"124","craftItem.minecraft.stick","Stick","crafted",8486,"DarkEagle",1792
+"123","useItem.minecraft.stone_button","Stone Button","used",98,"BenemitC",39
+"124","craftItem.minecraft.stick","Stick","crafted",8494,"DarkEagle",1792
 "125","useItem.minecraft.wooden_axe","Wooden Axe","used",47,"katethie",47
 "126","mineBlock.minecraft.fence","Fence","mined",1230,"DarkEagle",438
 "127","mineBlock.minecraft.obsidian","Obsidian","mined",1026,"naturalismus",310
@@ -141,7 +141,7 @@
 "140","mineBlock.minecraft.ice","Ice","mined",378,"Jemus42",230
 "141","mineBlock.minecraft.gold_ore","Gold Ore","mined",546,"daborstie",128
 "142","craftItem.minecraft.bed","Bed","crafted",33,"naturalismus",16
-"143","craftItem.minecraft.paper","Paper","crafted",21322,"Fenhl",12670
+"143","craftItem.minecraft.paper","Paper","crafted",21328,"Fenhl",12676
 "144","mineBlock.minecraft.emerald_ore","Emerald Ore","mined",66,"BenemitC",20
 "145","useItem.minecraft.redstone_ore","Redstone Ore","used",51,"Jemus42",39
 "146","useItem.minecraft.ender_pearl","Ender Pearl","used",295,"Jemus42",186
@@ -149,7 +149,7 @@
 "148","useItem.minecraft.fishing_rod","Fishing Rod","used",60,"L3viathan",35
 "149","useItem.minecraft.rail","Rail","used",522,"naturalismus",325
 "150","mineBlock.minecraft.anvil","Anvil","mined",16,"Jemus42",5
-"151","useItem.minecraft.diamond_pickaxe","Diamond Pickaxe","used",213150,"BenemitC",57933
+"151","useItem.minecraft.diamond_pickaxe","Diamond Pickaxe","used",213667,"BenemitC",57933
 "152","useItem.minecraft.mushroom_stew","Mushroom Stew","used",30,"L3viathan",17
 "153","mineBlock.minecraft.golden_rail","Powered Rail","mined",1287,"L3viathan",837
 "154","craftItem.minecraft.hopper","Hopper","crafted",255,"Jemus42",130
@@ -161,7 +161,7 @@
 "160","useItem.minecraft.glowstone","Glowstone","used",1430,"naturalismus",670
 "161","useItem.minecraft.hopper","Hopper","used",547,"Fenhl",234
 "162","useItem.minecraft.ice","Ice","used",687,"Jemus42",610
-"163","craftItem.minecraft.sign","Sign","crafted",353,"Fenhl",185
+"163","craftItem.minecraft.sign","Sign","crafted",356,"Fenhl",188
 "164","mineBlock.minecraft.glass","Glass","mined",1328,"Messaz",726
 "165","mineBlock.minecraft.chest","Chest","mined",1468,"naturalismus",646
 "166","useItem.minecraft.redstone_block","Block of Redstone","used",16,"naturalismus",6
@@ -170,8 +170,8 @@
 "169","useItem.minecraft.stained_glass","Stained Glass","used",10,"Jemus42",6
 "170","useItem.minecraft.boat","Boat","used",2,"Jemus42",2
 "171","mineBlock.minecraft.glowstone","Glowstone","mined",1847,"naturalismus",1006
-"172","mineBlock.minecraft.quartz_ore","Nether Quartz Ore","mined",1687,"naturalismus",1401
-"173","useItem.minecraft.stone","Stone","used",16293,"naturalismus",4882
+"172","mineBlock.minecraft.quartz_ore","Nether Quartz Ore","mined",1690,"naturalismus",1401
+"173","useItem.minecraft.stone","Stone","used",16298,"naturalismus",4882
 "174","useItem.minecraft.sapling","Sapling","used",2010,"Fenhl",488
 "175","useItem.minecraft.egg","Egg","used",19,"Jemus42",19
 "176","useItem.minecraft.writable_book","Book and Quill","used",2,"Jemus42",1
@@ -190,13 +190,13 @@
 "189","useItem.minecraft.emerald_ore","Emerald Ore","used",16,"Jemus42",8
 "190","useItem.minecraft.carpet","Carpet","used",424,"Lichtlos",162
 "191","breakItem.minecraft.diamond_shovel","Diamond Shovel","broken",6,"DarkEagle",3
-"192","useItem.minecraft.glass","Glass","used",5568,"naturalismus",2063
+"192","useItem.minecraft.glass","Glass","used",5569,"naturalismus",2063
 "193","mineBlock.minecraft.end_stone","End Stone","mined",2328,"Jemus42",971
 "194","craftItem.minecraft.ladder","Ladder","crafted",951,"BenemitC",270
 "195","useItem.minecraft.cooked_beef","Steak","used",404,"Jemus42",191
 "196","useItem.minecraft.trapdoor","Trapdoor","used",579,"Jemus42",354
 "197","useItem.minecraft.snowball","Snowball","used",1,"Jemus42",1
-"198","useItem.minecraft.bow","Bow","used",496,"Fenhl",265
+"198","useItem.minecraft.bow","Bow","used",805,"Fenhl",574
 "199","craftItem.minecraft.bowl","Bowl","crafted",4,"Jemus42",4
 "200","mineBlock.minecraft.lapis_ore","Lapis Lazuli Ore","mined",217,"Jemus42",81
 "201","mineBlock.minecraft.ender_chest","Ender Chest","mined",28,"BenemitC",12
@@ -207,14 +207,14 @@
 "206","mineBlock.minecraft.redstone_ore","Redstone Ore","mined",1696,"papierschiff",579
 "207","useItem.minecraft.bucket","Bucket","used",252,"Jemus42",86
 "208","useItem.minecraft.bookshelf","Bookshelf","used",100,"daborstie",45
-"209","craftItem.minecraft.book","Book","crafted",511,"papierschiff",256
+"209","craftItem.minecraft.book","Book","crafted",513,"papierschiff",256
 "210","craftItem.minecraft.stone_hoe","Stone Hoe","crafted",10,"Bediko",4
 "211","craftItem.minecraft.leather_chestplate","Leather Tunic","crafted",18,"Jemus42",8
 "212","mineBlock.minecraft.beacon","Beacon","mined",29,"Jemus42",19
 "213","useItem.minecraft.beacon","Beacon","used",32,"Jemus42",19
 "214","useItem.minecraft.rotten_flesh","Rotten Flesh","used",84,"L3viathan",60
 "215","mineBlock.minecraft.bookshelf","Bookshelf","mined",105,"Messaz",51
-"216","mineBlock.minecraft.furnace","Furnace","mined",80,"DarkEagle",30
+"216","mineBlock.minecraft.furnace","Furnace","mined",81,"DarkEagle",30
 "217","useItem.minecraft.golden_rail","Powered Rail","used",9909,"Lichtlos",3186
 "218","mineBlock.minecraft.stained_glass","Stained Glass","mined",4,"Jemus42",4
 "219","mineBlock.minecraft.hopper","Hopper","mined",117,"Fenhl",38
@@ -231,7 +231,7 @@
 "230","useItem.minecraft.record_mellohi","Music Disc: C418  mellohi","used",8,"Fenhl",5
 "231","useItem.minecraft.brewing_stand","Brewing Stand","used",1,"drseilzug",1
 "232","useItem.minecraft.cobblestone_wall","Cobblestone Wall","used",788,"DarkEagle",702
-"233","mineBlock.minecraft.sticky_piston","Sticky Piston","mined",204,"Messaz",120
+"233","mineBlock.minecraft.sticky_piston","Sticky Piston","mined",205,"Messaz",120
 "234","useItem.minecraft.snow","Snow Block","used",61,"drseilzug",61
 "235","useItem.minecraft.string","String","used",419,"Fenhl",417
 "236","useItem.minecraft.redstone_lamp","Redstone Lamp","used",33,"Fenhl",19
@@ -247,8 +247,8 @@
 "246","craftItem.minecraft.iron_hoe","Iron Hoe","crafted",4,"BenemitC",2
 "247","craftItem.minecraft.snow","Snow Block","crafted",739,"drseilzug",638
 "248","craftItem.minecraft.iron_bars","Iron Bars","crafted",2256,"BenemitC",2208
-"249","useItem.minecraft.iron_block","Block of Iron","used",681,"L3viathan",544
-"250","useItem.minecraft.item_frame","Item Frame","used",637,"Fenhl",478
+"249","useItem.minecraft.iron_block","Block of Iron","used",682,"L3viathan",544
+"250","useItem.minecraft.item_frame","Item Frame","used",640,"Fenhl",481
 "251","mineBlock.minecraft.dropper","Dropper","mined",70,"Bediko",57
 "252","mineBlock.minecraft.redstone_lamp","Redstone Lamp","mined",27,"BenemitC",20
 "253","useItem.minecraft.nether_wart","Nether Wart","used",23,"drseilzug",21
@@ -325,10 +325,10 @@
 "324","craftItem.minecraft.compass","Compass","crafted",72,"naturalismus",64
 "325","useItem.minecraft.stone_brick_stairs","Stone Brick Stairs","used",8582,"DarkEagle",4347
 "326","mineBlock.minecraft.noteblock","Note Block","mined",7,"Fenhl",7
-"327","useItem.minecraft.cooked_chicken","Cooked Chicken","used",315,"Fenhl",308
+"327","useItem.minecraft.cooked_chicken","Cooked Chicken","used",326,"Fenhl",319
 "328","useItem.minecraft.noteblock","Note Block","used",13,"Fenhl",13
 "329","craftItem.minecraft.fire_charge","Fire Charge","crafted",180,"Fenhl",177
-"330","useItem.minecraft.light_weighted_pressure_plate","Weighted Pressure Plate (Light)","used",49,"Fenhl",49
+"330","useItem.minecraft.light_weighted_pressure_plate","Weighted Pressure Plate (Light)","used",134,"Fenhl",134
 "331","craftItem.minecraft.ender_chest","Ender Chest","crafted",53,"naturalismus",44
 "332","craftItem.minecraft.stone_brick_stairs","Stone Brick Stairs","crafted",5808,"DarkEagle",2952
 "333","craftItem.minecraft.tripwire_hook","Tripwire Hook","crafted",126,"Fenhl",126
@@ -337,79 +337,80 @@
 "336","craftItem.minecraft.trapped_chest","Trapped Chest","crafted",63,"Fenhl",63
 "337","craftItem.minecraft.wool","Wool","crafted",44,"daborstie",42
 "338","craftItem.minecraft.redstone_lamp","Redstone Lamp","crafted",16,"Fenhl",15
-"339","craftItem.minecraft.blaze_powder","Blaze Powder","crafted",152,"Fenhl",92
-"340","mineBlock.minecraft.stone_brick_stairs","Stone Brick Stairs","mined",3111,"BenemitC",1893
-"341","craftItem.minecraft.oak_stairs","Oak Wood Stairs","crafted",472,"Fenhl",208
-"342","mineBlock.minecraft.leaves2","Leaves","mined",176,"DarkEagle",91
-"343","mineBlock.minecraft.log2","Wood","mined",424,"DarkEagle",372
-"344","craftItem.minecraft.golden_leggings","Golden Leggings","crafted",2,"BenemitC",1
-"345","mineBlock.minecraft.light_weighted_pressure_plate","Weighted Pressure Plate (Light)","mined",49,"Fenhl",49
-"346","useItem.minecraft.flower_pot","Flower Pot","used",13,"daborstie",12
-"347","craftItem.minecraft.slime","Slime Block","crafted",13,"Fenhl",8
-"348","mineBlock.minecraft.detector_rail","Detector Rail","mined",12,"Lichtlos",6
-"349","mineBlock.minecraft.tripwire_hook","Tripwire Hook","mined",2,"Fenhl",2
-"350","mineBlock.minecraft.sapling","Sapling","mined",83,"Lichtlos",32
-"351","craftItem.minecraft.piston","Piston","crafted",118,"Fenhl",61
-"352","useItem.minecraft.activator_rail","Activator Rail","used",461,"Fenhl",451
-"353","mineBlock.minecraft.activator_rail","Activator Rail","mined",6,"naturalismus",5
-"354","mineBlock.minecraft.clay","Clay Block","mined",50,"sascha",24
-"355","craftItem.minecraft.light_weighted_pressure_plate","Weighted Pressure Plate (Light)","crafted",1,"Fenhl",1
-"356","craftItem.minecraft.dispenser","Dispenser","crafted",5,"naturalismus",4
-"357","useItem.minecraft.jukebox","Jukebox","used",3,"Fenhl",3
-"358","mineBlock.minecraft.gold_block","Block of Gold","mined",3,"naturalismus",3
-"359","craftItem.minecraft.iron_leggings","Iron Leggings","crafted",3,"naturalismus",1
-"360","craftItem.minecraft.iron_helmet","Iron Helmet","crafted",7,"Bediko",2
-"361","craftItem.minecraft.iron_door","Iron Door","crafted",32,"BenemitC",12
-"362","useItem.minecraft.stained_hardened_clay","Stained Clay","used",372,"madmalik",362
-"363","craftItem.minecraft.cooked_porkchop","Cooked Porkchop","crafted",83,"naturalismus",76
-"364","craftItem.minecraft.iron_boots","Iron Boots","crafted",6,"Lichtlos",2
-"365","mineBlock.minecraft.cobblestone_wall","Cobblestone Wall","mined",196,"DarkEagle",195
-"366","mineBlock.minecraft.deadbush","Dead Bush","mined",6,"Lichtlos",5
-"367","craftItem.minecraft.stone_pickaxe","Stone Pickaxe","crafted",85,"Bediko",66
-"368","mineBlock.minecraft.nether_brick_fence","Nether Brick Fence","mined",44,"DarkEagle",34
-"369","mineBlock.minecraft.glass_pane","Glass Pane","mined",50,"Messaz",48
-"370","useItem.minecraft.skull","Mob Head","used",16,"naturalismus",14
-"371","useItem.minecraft.slime","Slime Block","used",1,"naturalismus",1
-"372","craftItem.minecraft.iron_chestplate","Iron Chestplate","crafted",3,"naturalismus",1
-"373","craftItem.minecraft.glass_pane","Glass Pane","crafted",304,"Messaz",192
-"374","craftItem.minecraft.painting","Painting","crafted",1,"naturalismus",1
-"375","useItem.minecraft.glass_pane","Glass Pane","used",251,"Messaz",159
-"376","mineBlock.minecraft.waterlily","Lily Pad","mined",9,"naturalismus",9
-"377","craftItem.minecraft.clay","Clay Block","crafted",1,"naturalismus",1
-"378","useItem.minecraft.hopper_minecart","Minecart with Hopper","used",4,"naturalismus",4
-"379","useItem.minecraft.nether_brick_fence","Nether Brick Fence","used",176,"DarkEagle",156
-"380","useItem.minecraft.red_flower","Flower","used",27,"daborstie",26
-"381","mineBlock.minecraft.packed_ice","Packed Ice","mined",3097,"naturalismus",3097
-"382","useItem.minecraft.sandstone_stairs","Sandstone Stairs","used",318,"Lichtlos",273
-"383","craftItem.minecraft.diamond_shovel","Diamond Shovel","crafted",8,"Messaz",3
-"384","craftItem.minecraft.jukebox","Jukebox","crafted",1,"naturalismus",1
-"385","craftItem.minecraft.hopper_minecart","Minecart with Hopper","crafted",4,"naturalismus",4
-"386","useItem.minecraft.vine","Vines","used",1,"naturalismus",1
-"387","useItem.minecraft.cooked_porkchop","Cooked Porkchop","used",10,"naturalismus",10
-"388","mineBlock.minecraft.hardened_clay","Hardened Clay","mined",70,"naturalismus",70
-"389","craftItem.minecraft.sandstone_stairs","Sandstone Stairs","crafted",280,"Lichtlos",216
-"390","mineBlock.minecraft.stained_hardened_clay","Stained Clay","mined",130,"naturalismus",65
-"391","useItem.minecraft.gold_ore","Gold Ore","used",5,"Lichtlos",4
-"392","mineBlock.minecraft.sandstone_stairs","Sandstone Stairs","mined",104,"Lichtlos",93
-"393","useItem.minecraft.hardened_clay","Hardened Clay","used",6,"naturalismus",6
-"394","useItem.minecraft.stone_axe","Stone Axe","used",3446,"Bediko",1206
-"395","useItem.minecraft.stone_pickaxe","Stone Pickaxe","used",9324,"Bediko",7350
-"396","useItem.minecraft.stone_sword","Stone Sword","used",76,"madmalik",49
-"397","craftItem.minecraft.hay_block","Hay Bale","crafted",128,"papierschiff",128
-"398","craftItem.minecraft.wheat","Wheat","crafted",135,"papierschiff",135
-"399","craftItem.minecraft.diamond_block","Block of Diamond","crafted",31,"papierschiff",19
-"400","mineBlock.minecraft.wooden_button","Wooden Button","mined",20,"DarkEagle",12
-"401","craftItem.minecraft.wooden_hoe","Wooden Hoe","crafted",13,"Lichtlos",6
-"402","useItem.minecraft.wooden_sword","Wooden Sword","used",19,"viirus42",17
-"403","craftItem.minecraft.wooden_pickaxe","Wooden Pickaxe","crafted",31,"Bediko",18
-"404","craftItem.minecraft.wooden_sword","Wooden Sword","crafted",5,"daborstie",2
-"405","craftItem.minecraft.stone_shovel","Stone Shovel","crafted",73,"daborstie",36
-"406","useItem.minecraft.stone_shovel","Stone Shovel","used",9626,"daborstie",4773
-"407","breakItem.minecraft.stone_shovel","Stone Shovel","broken",67,"daborstie",36
-"408","useItem.minecraft.acacia_stairs","Acacia Wood Stairs","used",14,"alexex",14
-"409","mineBlock.minecraft.acacia_stairs","Acacia Wood Stairs","mined",1,"alexex",1
-"410","breakItem.minecraft.diamond_pickaxe","Diamond Pickaxe","broken",13,"BenemitC",9
-"411","craftItem.minecraft.stained_hardened_clay","Stained Clay","crafted",320,"madmalik",320
-"412","useItem.minecraft.golden_sword","Golden Sword","used",506,"Lichtlos",279
-"413","breakItem.minecraft.stone_sword","Stone Sword","broken",1,"madmalik",1
-"414","craftItem.minecraft.lit_pumpkin","Jack o'Lantern","crafted",64,"madmalik",64
+"339","breakItem.minecraft.bow","Bow","broken",1,"Fenhl",1
+"340","craftItem.minecraft.blaze_powder","Blaze Powder","crafted",152,"Fenhl",92
+"341","mineBlock.minecraft.stone_brick_stairs","Stone Brick Stairs","mined",3111,"BenemitC",1893
+"342","craftItem.minecraft.oak_stairs","Oak Wood Stairs","crafted",472,"Fenhl",208
+"343","mineBlock.minecraft.leaves2","Leaves","mined",176,"DarkEagle",91
+"344","mineBlock.minecraft.log2","Wood","mined",424,"DarkEagle",372
+"345","craftItem.minecraft.golden_leggings","Golden Leggings","crafted",2,"BenemitC",1
+"346","mineBlock.minecraft.light_weighted_pressure_plate","Weighted Pressure Plate (Light)","mined",134,"Fenhl",134
+"347","useItem.minecraft.flower_pot","Flower Pot","used",13,"daborstie",12
+"348","craftItem.minecraft.slime","Slime Block","crafted",13,"Fenhl",8
+"349","mineBlock.minecraft.detector_rail","Detector Rail","mined",12,"Lichtlos",6
+"350","mineBlock.minecraft.tripwire_hook","Tripwire Hook","mined",2,"Fenhl",2
+"351","mineBlock.minecraft.sapling","Sapling","mined",83,"Lichtlos",32
+"352","craftItem.minecraft.piston","Piston","crafted",118,"Fenhl",61
+"353","useItem.minecraft.activator_rail","Activator Rail","used",461,"Fenhl",451
+"354","mineBlock.minecraft.activator_rail","Activator Rail","mined",6,"naturalismus",5
+"355","mineBlock.minecraft.clay","Clay Block","mined",50,"sascha",24
+"356","craftItem.minecraft.light_weighted_pressure_plate","Weighted Pressure Plate (Light)","crafted",1,"Fenhl",1
+"357","craftItem.minecraft.dispenser","Dispenser","crafted",5,"naturalismus",4
+"358","useItem.minecraft.jukebox","Jukebox","used",3,"Fenhl",3
+"359","mineBlock.minecraft.gold_block","Block of Gold","mined",3,"naturalismus",3
+"360","craftItem.minecraft.iron_leggings","Iron Leggings","crafted",3,"naturalismus",1
+"361","craftItem.minecraft.iron_helmet","Iron Helmet","crafted",7,"Bediko",2
+"362","craftItem.minecraft.iron_door","Iron Door","crafted",32,"BenemitC",12
+"363","useItem.minecraft.stained_hardened_clay","Stained Clay","used",372,"madmalik",362
+"364","craftItem.minecraft.cooked_porkchop","Cooked Porkchop","crafted",83,"naturalismus",76
+"365","craftItem.minecraft.iron_boots","Iron Boots","crafted",6,"Lichtlos",2
+"366","mineBlock.minecraft.cobblestone_wall","Cobblestone Wall","mined",196,"DarkEagle",195
+"367","mineBlock.minecraft.deadbush","Dead Bush","mined",6,"Lichtlos",5
+"368","craftItem.minecraft.stone_pickaxe","Stone Pickaxe","crafted",85,"Bediko",66
+"369","mineBlock.minecraft.nether_brick_fence","Nether Brick Fence","mined",44,"DarkEagle",34
+"370","mineBlock.minecraft.glass_pane","Glass Pane","mined",50,"Messaz",48
+"371","useItem.minecraft.skull","Mob Head","used",16,"naturalismus",14
+"372","useItem.minecraft.slime","Slime Block","used",1,"naturalismus",1
+"373","craftItem.minecraft.iron_chestplate","Iron Chestplate","crafted",3,"naturalismus",1
+"374","craftItem.minecraft.glass_pane","Glass Pane","crafted",304,"Messaz",192
+"375","craftItem.minecraft.painting","Painting","crafted",1,"naturalismus",1
+"376","useItem.minecraft.glass_pane","Glass Pane","used",251,"Messaz",159
+"377","mineBlock.minecraft.waterlily","Lily Pad","mined",9,"naturalismus",9
+"378","craftItem.minecraft.clay","Clay Block","crafted",1,"naturalismus",1
+"379","useItem.minecraft.hopper_minecart","Minecart with Hopper","used",4,"naturalismus",4
+"380","useItem.minecraft.nether_brick_fence","Nether Brick Fence","used",176,"DarkEagle",156
+"381","useItem.minecraft.red_flower","Flower","used",27,"daborstie",26
+"382","mineBlock.minecraft.packed_ice","Packed Ice","mined",3097,"naturalismus",3097
+"383","useItem.minecraft.sandstone_stairs","Sandstone Stairs","used",318,"Lichtlos",273
+"384","craftItem.minecraft.diamond_shovel","Diamond Shovel","crafted",8,"Messaz",3
+"385","craftItem.minecraft.jukebox","Jukebox","crafted",1,"naturalismus",1
+"386","craftItem.minecraft.hopper_minecart","Minecart with Hopper","crafted",4,"naturalismus",4
+"387","useItem.minecraft.vine","Vines","used",1,"naturalismus",1
+"388","useItem.minecraft.cooked_porkchop","Cooked Porkchop","used",10,"naturalismus",10
+"389","mineBlock.minecraft.hardened_clay","Hardened Clay","mined",70,"naturalismus",70
+"390","craftItem.minecraft.sandstone_stairs","Sandstone Stairs","crafted",280,"Lichtlos",216
+"391","mineBlock.minecraft.stained_hardened_clay","Stained Clay","mined",130,"naturalismus",65
+"392","useItem.minecraft.gold_ore","Gold Ore","used",5,"Lichtlos",4
+"393","mineBlock.minecraft.sandstone_stairs","Sandstone Stairs","mined",104,"Lichtlos",93
+"394","useItem.minecraft.hardened_clay","Hardened Clay","used",6,"naturalismus",6
+"395","useItem.minecraft.stone_axe","Stone Axe","used",3446,"Bediko",1206
+"396","useItem.minecraft.stone_pickaxe","Stone Pickaxe","used",9324,"Bediko",7350
+"397","useItem.minecraft.stone_sword","Stone Sword","used",76,"madmalik",49
+"398","craftItem.minecraft.hay_block","Hay Bale","crafted",128,"papierschiff",128
+"399","craftItem.minecraft.wheat","Wheat","crafted",135,"papierschiff",135
+"400","craftItem.minecraft.diamond_block","Block of Diamond","crafted",31,"papierschiff",19
+"401","mineBlock.minecraft.wooden_button","Wooden Button","mined",20,"DarkEagle",12
+"402","craftItem.minecraft.wooden_hoe","Wooden Hoe","crafted",13,"Lichtlos",6
+"403","useItem.minecraft.wooden_sword","Wooden Sword","used",19,"viirus42",17
+"404","craftItem.minecraft.wooden_pickaxe","Wooden Pickaxe","crafted",31,"Bediko",18
+"405","craftItem.minecraft.wooden_sword","Wooden Sword","crafted",5,"daborstie",2
+"406","craftItem.minecraft.stone_shovel","Stone Shovel","crafted",73,"daborstie",36
+"407","useItem.minecraft.stone_shovel","Stone Shovel","used",9626,"daborstie",4773
+"408","breakItem.minecraft.stone_shovel","Stone Shovel","broken",67,"daborstie",36
+"409","useItem.minecraft.acacia_stairs","Acacia Wood Stairs","used",14,"alexex",14
+"410","mineBlock.minecraft.acacia_stairs","Acacia Wood Stairs","mined",1,"alexex",1
+"411","breakItem.minecraft.diamond_pickaxe","Diamond Pickaxe","broken",13,"BenemitC",9
+"412","craftItem.minecraft.stained_hardened_clay","Stained Clay","crafted",320,"madmalik",320
+"413","useItem.minecraft.golden_sword","Golden Sword","used",506,"Lichtlos",279
+"414","breakItem.minecraft.stone_sword","Stone Sword","broken",1,"madmalik",1
+"415","craftItem.minecraft.lit_pumpkin","Jack o'Lantern","crafted",64,"madmalik",64
