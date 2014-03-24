@@ -45,7 +45,7 @@ deaths <- getDeathStats()
 
 p <- ggplot(data=deaths)
 p <- p + aes(fill=joinStatus, x=reorder(player, daysSince, mean, order=T), y=daysSince)
-p <- p + barChart + legendTitle + coord_flip()
+p <- p + barChart + statusFillScale + coord_flip()
 p <- p + xLable + labs(y="Days Since Death", title="Days Since Players' Latest Death")
 ggsave(p, file="Plots/LatestDeaths.png", height=plotHeight, width=plotWidth)
 rm(p)
