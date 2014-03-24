@@ -11,7 +11,7 @@ for(i in 1:length(itemStats$stat)){
     stat        <- itemStats$stat[i]
     action      <- itemStats$action[i]
     itemName    <- itemStats$item[i]
-    filename    <- paste("Plots/items/", stat, ".png", sep="")
+    filename    <- paste("Plots/items/", action, "/", stat, ".png", sep="")
     title       <- paste("Times item was ", action, ": ", itemName, sep="")
 
     p <- ggplot(data=playerstats)
