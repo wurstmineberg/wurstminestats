@@ -114,11 +114,23 @@ getActivePeople <- function(){
     # Add category to people$status for easier matching
     people$status[is.na(people$status)] <- "later"
     people$numID <- 1:nrow(people)
+    
+    # Handle favColours
+    for(col in c("red", "green", "blue")){
+      people$favColor[, col] <- as.hexmode(people$favColor[, col])
+    }
+    people$color <- paste("#", people$favColor[, "red"], 
+                          people$favColor[, "green"], 
+                          people$favColor[, "blue"], sep="")
+    people$color[people$color == "#NANANA"] <- NA
 
-    activePeople        <- data.frame(numID= people$numID[people$status != "former"])
+    ## Start to construct activePeople, which is like people.json, but useful ##
+    
+    activePeople        <- data.frame(numID = people$numID[people$status != "former"])
     activePeople$id     <- people$id[people$status != "former"]
     activePeople$mc     <- people$minecraft[people$status != "former"]
     activePeople$name   <- people$name[people$status != "former"]
+    activePeople$color  <- people$color[people$status != "former"]
 
     # If people name not set, use ID instead
     for(i in 1:length(activePeople$name)){
