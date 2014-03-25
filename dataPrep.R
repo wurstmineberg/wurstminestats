@@ -117,5 +117,5 @@ statusColourScale     <- scale_colour_manual(name = "Join Status", values = stat
 peopleColours         <- activePeople$color
 paletteColours        <- c(brewer.pal(9, "Set1"), brewer.pal(12,"Set3"), brewer.pal(8,"Set2"))
 peopleColours[is.na(peopleColours)] <- head(paletteColours, length(peopleColours[is.na(peopleColours)]))
-names(peopleColours)  <- levels(activePeople$name)
+activePeople$color    <- peopleColours
 legendPeople          <- scale_fill_manual(name = "People", values = peopleColours)

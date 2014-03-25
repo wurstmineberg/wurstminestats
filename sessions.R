@@ -75,6 +75,7 @@ p <- p + labs(y="Played Hours", x="Day", title="Total Time Played per Day")
 ggsave(p, file="Plots/playTime.png", height=6, width=12)
 
 # Plotting playedPerPerson 
+fillColours <- activePeople$color[activePeople$name %in% playedPerPerson$person]
 
 p <- ggplot(data=playedPerPerson, aes(x=date, y=timePlayed/60, fill=person))
 p <- p + geom_bar(position="stack", stat="identity", colour="black")
@@ -83,9 +84,9 @@ p <- p + scale_x_datetime(labels = date_format("%y-%m-%d"),
                           breaks = date_breaks("days"))
 p <- p + scale_y_continuous(breaks=pretty_breaks()) + playerTheme
 p <- p + labs(y="Played Hours", x="Day", title="Total Time Played per Day")
-p <- p + legendPeople 
+p <- p + scale_fill_manual(name="People", values=fillColours)
 ggsave(p, file="Plots/playTime_perPerson.png", height=6, width=12)
-rm(p)
+rm(p, fillColours)
 
 ###################################################
 ## Write playerSessions to disk in case whatever ##
