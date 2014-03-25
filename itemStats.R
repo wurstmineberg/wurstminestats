@@ -26,15 +26,12 @@ for(i in 1:length(itemStats$stat)){
 ## Now for something completely different ##
 ############################################
 
-# Now to look at the different item actions
-itemsTop <- as.data.frame(matrix(0, 10, nrow(itemActions)))
-names(itemsTop) <- itemActions$name
+## Now to look at the different item actions ##
 
-# subset for each action, get top 10 items for each action, and plot them
+# subset for each action, get top 20 items for each action, and plot them
 for(action in itemActions$name){
   itemStatsPerAction <- itemStats[itemStats$action == action,]
-  itemStatsPerAction <- head(arrange(itemStatsPerAction, desc(total)), 10)
-  itemsTop[action]   <- paste(itemStatsPerAction$item, ": ", itemStatsPerAction$total, sep="")
+  itemStatsPerAction <- head(arrange(itemStatsPerAction, desc(total)), 20)
 
   p <- ggplot(data=itemStatsPerAction)
   p <- p + aes(x=sortLevels(item, total), y=total)
@@ -47,4 +44,3 @@ for(action in itemActions$name){
 
 # Write that stuff to disk. 
 write.csv(itemStats,    "data/itemStats.csv")
-write.csv(itemsTop,     "data/itemsTop.csv")
