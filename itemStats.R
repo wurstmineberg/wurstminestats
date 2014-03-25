@@ -30,11 +30,19 @@ for(i in 1:length(itemStats$stat)){
 itemsTop <- as.data.frame(matrix(0, 10, nrow(itemActions)))
 names(itemsTop) <- itemActions$name
 
-# subset for each action, get top 10 items for each action
+# subset for each action, get top 10 items for each action, and plot them
 for(action in itemActions$name){
   itemStatsPerAction <- itemStats[itemStats$action == action,]
   itemStatsPerAction <- head(arrange(itemStatsPerAction, desc(total)), 10)
   itemsTop[action]   <- paste(itemStatsPerAction$item, ": ", itemStatsPerAction$total, sep="")
+
+  p <- ggplot(data=itemStatsPerAction)
+  p <- p + aes(x=sortLevels(item, total), y=total)
+  p <- p + barChart + coord_flip()
+  p <- p + labs(x="Item", y=paste("Times", action, sep=" "))
+  p <- p + ggtitle(paste("Top", action, "items", sep=" "))
+  ggsave(plot=p, file=paste("Plots/items/top_", action, ".png", sep=""), height=plotHeight, width=plotWidth)
+  
 }; rm(action, itemStatsPerAction)
 
 # Write that stuff to disk. 
