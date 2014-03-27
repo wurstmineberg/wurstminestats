@@ -108,8 +108,5 @@ statusColours         <- brewer.pal(9,"Set1")
 statusFillScale       <- scale_fill_manual(   name = "Join Status", values = statusColours)
 statusColourScale     <- scale_colour_manual( name = "Join Status", values = statusColours)
 
-# Quick fix overrides
-activePeople$color[activePeople$name == "Farthen"] <- "#800080"
 activePeople          <- fixPeopleColors(activePeople)
-
 legendPeople          <- scale_fill_manual(name = "People", values = activePeople$color)
