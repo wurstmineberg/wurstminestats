@@ -41,6 +41,16 @@ getStrings <- function(){
     return(strings)
 }
 
+getItemData <- function(){
+    ## Get items.json from our website for names/ids ##
+    itemData        <- fromJSON("http://wurstmineberg.de/static/json/items.json")
+    itemData$numID  <- names(itemData$id)
+    itemData$ID     <- unlist(itemData$id, use.names=F)
+    itemData$ID     <- sub(":",".", itemData$ID)
+    itemData$name   <- unlist(itemData$name, use.names=F)
+    itemData        <- subset(itemData, select=c("numID","ID","name"))
+}
+
 sortLevels <- function(factors, reference, sortFunction = mean){
   sortedLevels <- reorder(factors, reference, sortFunction, order=T)
   
@@ -119,9 +129,9 @@ getActivePeople <- function(){
     for(col in c("red", "green", "blue")){
       people$favColor[, col] <- as.hexmode(people$favColor[, col])
     }
-    people$color <- paste("#", people$favColor[, "red"], 
-                          people$favColor[, "green"], 
-                          people$favColor[, "blue"], sep="")
+    people$color <- paste("#",  people$favColor[, "red"], 
+                                people$favColor[, "green"], 
+                                people$favColor[, "blue"], sep="")
     people$color[people$color == "#NANANA"] <- NA
 
     ## Start to construct activePeople, which is like people.json, but useful ##
@@ -140,8 +150,7 @@ getActivePeople <- function(){
     }
 
     activePeople$joinDate <- people$join_date[people$status != "former"]
-    # In case of missing join date, apply NA
-    # For invited but not yet joined players
+    # In case of missing join date, apply NA / For invited but not yet joined players
     activePeople$joinDate[people$joinDate == 0] <- NA
     # Convert joinDate to POSIXct UTC because time
     activePeople$joinDate <- as.POSIXct(activePeople$joinDate, origin="1970-01-01", tz="UTC")
@@ -297,7 +306,7 @@ getPlayerSessions <- function(sessions){
     playerSessions <- arrange(playerSessions, joinTime, leaveTime)
 
     # Now we reformat shit
-    playerSessions$joinTime <- as.POSIXct(playerSessions$joinTime, tz="UTC")
+    playerSessions$joinTime  <- as.POSIXct(playerSessions$joinTime, tz="UTC")
     playerSessions$leaveTime <- as.POSIXct(playerSessions$leaveTime, tz="UTC")
 
     # Fixing remains of the last fix (overlapping sessions get sequentialized)
@@ -321,8 +330,8 @@ splitSessionsByDay <- function(playerSessions){
     playerSessions$leaveDate    <- format(playerSessions$leaveTime, "%F")
     playerSessions$leaveDate    <- as.POSIXct(playerSessions$leaveDate, origin="1970-01-01", tz="UTC")
 
-    overlaps <- playerSessions[playerSessions$leaveDate > playerSessions$joinDate, ]
-    noOverlaps <- playerSessions[playerSessions$leaveDate == playerSessions$joinDate, ]
+    overlaps    <- playerSessions[playerSessions$leaveDate > playerSessions$joinDate, ]
+    noOverlaps  <- playerSessions[playerSessions$leaveDate == playerSessions$joinDate, ]
     overlapsNum <- nrow(overlaps)
 
     for(i in 1:overlapsNum){
@@ -331,7 +340,7 @@ splitSessionsByDay <- function(playerSessions){
       temp1[2, ] <- overlaps[i, ]
       
       temp1$leaveTime[1] <- overlaps$leaveDate[i]
-      temp1$joinTime[2] <- overlaps$leaveDate[i]
+      temp1$joinTime[2]  <- overlaps$leaveDate[i]
       
       noOverlaps <- join(noOverlaps, temp1, type="full")
       rm(temp1)
@@ -342,3 +351,46 @@ splitSessionsByDay <- function(playerSessions){
     
     return(playerSessions)
 }
+
+## Handling the clusterfuck that is colors
+
+colDiff <- function(col.i, col.j){
+  absDiff <- sum(abs(col2rgb(col.i) - col2rgb(col.j)))
+  return(absDiff)
+}
+
+colErrors <- function(peopleTemp){
+  peopleTemp$colConflict <- 0
+  for(i in 1:nrow(peopleTemp)){
+    for(j in nrow(peopleTemp):1){
+      if(peopleTemp$name[i] == peopleTemp$name[j]){next}
+      
+      if(colDiff(peopleTemp$color[i], peopleTemp$color[j]) < 50){
+        peopleTemp$colConflict[i] <- peopleTemp$colConflict[i] + 1
+      }
+    }
+  }
+  return(peopleTemp)
+}
+
+fixPeopleColors <- function(peopleTemp){
+    peopleTemp$colFixed <- !is.na(peopleTemp$color)
+    peopleTemp$colConflict <- 1
+    while(sum(peopleTemp$colConflict) > 0){
+      for(i in 1:nrow(peopleTemp)){
+
+        if(peopleTemp$colConflict[i] > 0){
+          if(!peopleTemp$colFixed[i]){
+            peopleTemp$color[i] <- sample(colours(), 1)
+          } else if(is.na(peopleTemp$color[i])){
+            peopleTemp$color[i] <- sample(colours(), 1)
+          }
+        }
+
+      }
+      peopleTemp <- colErrors(peopleTemp)
+    }
+    peopleTemp <- peopleTemp[, !names(peopleTemp) %in% c("colFixed", "colConflict")]
+    return(peopleTemp)
+}
+
