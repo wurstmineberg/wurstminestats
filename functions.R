@@ -121,11 +121,11 @@ getActivePeople <- function(){
     people <- fromJSON("http://wurstmineberg.de/assets/serverstatus/people.json")
     people <- as.data.frame(people[1])
     names(people) <- sub("people.","",names(people))
-    # Add category to people$status for easier matching
+    # Add category to people$status for easier matching, give numIDs excluding Dinnerbone
     people$status[is.na(people$status)] <- "later"
-    people$numID <- 1:nrow(people)
+    people$numID[people$id != "dinnerbone"] <- 1:nrow(people[people$id != "dinnerbone", ])
     
-    # Handle favColours
+    ## Handle favColours
     for(col in c("red", "green", "blue")){
       people$favColor[, col] <- as.hexmode(people$favColor[, col])
     }
@@ -141,6 +141,7 @@ getActivePeople <- function(){
     activePeople$mc     <- people$minecraft[people$status != "former"]
     activePeople$name   <- people$name[people$status != "former"]
     activePeople$color  <- people$color[people$status != "former"]
+    activePeople$invitedBy <- people$invitedBy[people$status != "former"]
 
     # If people name not set, use ID instead
     for(i in 1:length(activePeople$name)){
@@ -166,6 +167,11 @@ getActivePeople <- function(){
                                                         units ="days")))
     
     activePeople$joinStatus <- as.factor(people$status[people$status != "former"])
+    
+    activePeople$inviteGap <- c(0, round(as.numeric(difftime(
+                                          activePeople$joinDate[2:nrow(activePeople)], 
+                                          activePeople$joinDate[1:(nrow(activePeople)-1)], 
+                                          units="days"))))
 
     return(activePeople)
 }
@@ -352,7 +358,9 @@ splitSessionsByDay <- function(playerSessions){
     return(playerSessions)
 }
 
-## Handling the clusterfuck that is colors
+###############################################
+### Handling the clusterfuck that is colors ###
+###############################################
 
 colDiff <- function(col.i, col.j){
   absDiff <- sum(abs(col2rgb(col.i) - col2rgb(col.j)))
@@ -365,7 +373,7 @@ colErrors <- function(peopleTemp){
     for(j in nrow(peopleTemp):1){
       if(peopleTemp$name[i] == peopleTemp$name[j]){next}
       
-      if(colDiff(peopleTemp$color[i], peopleTemp$color[j]) < 50){
+      if(colDiff(peopleTemp$color[i], peopleTemp$color[j]) < 80){
         peopleTemp$colConflict[i] <- peopleTemp$colConflict[i] + 1
       }
     }
@@ -394,3 +402,26 @@ fixPeopleColors <- function(peopleTemp){
     return(peopleTemp)
 }
 
+#########################
+### For the lulz shit ###
+#########################
+
+serverBirthday <- function(activePeople){
+  now <- as.POSIXlt(Sys.time(), "UTC")
+  now$year <- now$year + 1900
+  ydays <- as.POSIXlt(activePeople$joinDate)$yday - now$yday
+  daysToNext <- min(ydays[ydays > 0])
+  daysSinceLast <- max(ydays[ydays < 0])
+  nextPerson <- activePeople$name[ydays == daysToNext]
+  lastPerson <- activePeople$name[ydays == daysSinceLast]
+  nextDate <- format(activePeople$joinDate[activePeople$name == nextPerson], "%m-%d")
+  lastDate <- format(activePeople$joinDate[activePeople$name == lastPerson], "%m-%d")
+  
+  print(paste("Last server birthday was ", 
+              lastPerson, " ", abs(daysSinceLast), " day(s) ago", 
+              " on ", now$year, "-", lastDate, sep=""))
+  
+  print(paste("Next server birthday is ", 
+              nextPerson, " in ", daysToNext, 
+              " days on ", now$year, "-", nextDate, sep=""))
+}
