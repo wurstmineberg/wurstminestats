@@ -323,10 +323,6 @@ getPlayerSessions <- function(sessions){
         }
       }
     }
-
-    playerSessions$date <- format(playerSessions$joinTime, "%F")
-    playerSessions$date <- as.POSIXct(playerSessions$date, origin="1970-01-01", tz="UTC")
-
     return(playerSessions)
 }
 
@@ -351,6 +347,9 @@ splitSessionsByDay <- function(playerSessions){
       noOverlaps <- join(noOverlaps, temp1, type="full")
       rm(temp1)
     }
+    
+    playerSessions$date <- format(playerSessions$joinTime, "%F")
+    playerSessions$date <- as.POSIXct(playerSessions$date, origin="1970-01-01", tz="UTC")
     
     playerSessions <- arrange(noOverlaps, joinTime, person)
     playerSessions <- playerSessions[c("person", "date", "joinTime", "leaveTime")]
