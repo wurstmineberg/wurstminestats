@@ -72,12 +72,7 @@ rm(achievements, entities)
 ##########################
 
 ## Get items.json from our website for names/ids ##
-itemData        <- fromJSON("http://wurstmineberg.de/static/json/items.json")
-itemData$numID  <- names(itemData$id)
-itemData$ID     <- unlist(itemData$id, use.names=F)
-itemData$ID     <- sub(":",".", itemData$ID)
-itemData$name   <- unlist(itemData$name, use.names=F)
-itemData        <- subset(itemData, select=c("numID","ID","name"))
+itemData        <- getItemData()
 
 ## Get table of item actions and readable names ##
 itemActions     <- data.frame(id    = c("mineBlock", "craftItem"   , "useItem" , "breakItem"), 
@@ -110,12 +105,11 @@ xLable    <- xlab("Player")
 
 # Define colour scale to keep status/people colours static
 statusColours         <- brewer.pal(9,"Set1")
-names(statusColours)  <- levels(activePeople$joinStatus)
-statusFillScale       <- scale_fill_manual(name = "Join Status", values = statusColours)
-statusColourScale     <- scale_colour_manual(name = "Join Status", values = statusColours)
+statusFillScale       <- scale_fill_manual(   name = "Join Status", values = statusColours)
+statusColourScale     <- scale_colour_manual( name = "Join Status", values = statusColours)
 
-peopleColours         <- activePeople$color
-paletteColours        <- c(brewer.pal(12,"Set3"), rev(brewer.pal(9, "Set1")), brewer.pal(8,"Set2"))
-peopleColours[is.na(peopleColours)] <- head(paletteColours, length(peopleColours[is.na(peopleColours)]))
-activePeople$color    <- peopleColours
-legendPeople          <- scale_fill_manual(name = "People", values = peopleColours)
+# Quick fix overrides
+activePeople$color[activePeople$name == "Farthen"] <- "#800080"
+activePeople          <- fixPeopleColors(activePeople)
+
+legendPeople          <- scale_fill_manual(name = "People", values = activePeople$color)
