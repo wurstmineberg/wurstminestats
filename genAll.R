@@ -10,4 +10,4 @@ source("achievements.R")    #
 source("generalStats.R")    # 
 source("entityStats.R")     # Adds killFriendly and killHostile columns to playerstats
 source("itemStats.R")       # 
-source("sessions.R")        # 
+source("sessions.R")        # Does not interfere or rely on playerstats dataframe, only needs activePeople
