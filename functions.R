@@ -365,13 +365,13 @@ colDiff <- function(col.i, col.j){
   return(absDiff)
 }
 
-colErrors <- function(peopleTemp){
+colErrors <- function(peopleTemp, simLimit = 0.9){
   peopleTemp$colConflict <- 0
   for(i in 1:nrow(peopleTemp)){
     for(j in nrow(peopleTemp):1){
       if(peopleTemp$name[i] == peopleTemp$name[j]){next}
       
-      if(colSimilarity(peopleTemp$color[i], peopleTemp$color[j]) > 0.9){
+      if(colSimilarity(peopleTemp$color[i], peopleTemp$color[j]) > simLimit){
         peopleTemp$colConflict[i] <- peopleTemp$colConflict[i] + 1
       }
     }
@@ -392,7 +392,7 @@ randCol <- function(){
   return(col)
 }
 
-fixPeopleColors <- function(peopleTemp){
+fixPeopleColors <- function(peopleTemp, simLimit){
     peopleTemp$colFixed <- !is.na(peopleTemp$color)
     peopleTemp$colConflict <- 1
     while(sum(peopleTemp$colConflict) > 5){
@@ -400,14 +400,14 @@ fixPeopleColors <- function(peopleTemp){
 
         if(peopleTemp$colConflict[i] > 0){
           if(!peopleTemp$colFixed[i]){
-            peopleTemp$color[i] <- randCol()
+            peopleTemp$color[i] <- sample(colors(), 1)
           } else if(is.na(peopleTemp$color[i])){
-            peopleTemp$color[i] <- randCol()
+            peopleTemp$color[i] <- sample(colors(), 1)
           }
         }
 
       }
-      peopleTemp <- colErrors(peopleTemp)
+      peopleTemp <- colErrors(peopleTemp, simLimit)
     }
     peopleTemp <- peopleTemp[, !names(peopleTemp) %in% c("colFixed", "colConflict")]
     return(peopleTemp)
@@ -418,7 +418,11 @@ colSimilarity <- function(col.i, col.j){
   col.j     <- as.vector(col2rgb(col.j))
   scalProd  <- col.i %*% col.j
   normProd  <- sqrt(sum(col.i * col.i)) * sqrt(sum(col.j * col.j))
-  colSim    <- scalProd / normProd
+  if(normProd == 0){
+    colSim  <- 1
+  } else {
+    colSim  <- scalProd / normProd 
+  }
   
   return(colSim)
 }
