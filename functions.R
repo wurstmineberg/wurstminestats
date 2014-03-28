@@ -126,13 +126,7 @@ getActivePeople <- function(){
     people$numID[people$id != "dinnerbone"] <- 1:nrow(people[people$id != "dinnerbone", ])
     
     ## Handle favColours
-    for(col in c("red", "green", "blue")){
-      people$favColor[, col] <- as.hexmode(people$favColor[, col])
-    }
-    people$color <- paste("#",  people$favColor[, "red"], 
-                                people$favColor[, "green"], 
-                                people$favColor[, "blue"], sep="")
-    people$color[people$color == "#NANANA"] <- NA
+    people$color[!is.na(people$favColor[1])] <- rgb(people$favColor[!is.na(people$favColor[1]), c("red", "green", "blue")], maxColorValue=255)
 
     ## Start to construct activePeople, which is like people.json, but useful ##
     
@@ -365,7 +359,7 @@ colDiff <- function(col.i, col.j){
   return(absDiff)
 }
 
-colErrors <- function(peopleTemp, simLimit = 0.9){
+colErrors <- function(peopleTemp, simLimit = 0.92){
   peopleTemp$colConflict <- 0
   for(i in 1:nrow(peopleTemp)){
     for(j in nrow(peopleTemp):1){
@@ -380,15 +374,7 @@ colErrors <- function(peopleTemp, simLimit = 0.9){
 }
 
 randCol <- function(){
-  c1 <- as.character(as.hexmode(round(runif(1, 0, 255))))
-  c2 <- as.character(as.hexmode(round(runif(1, 0, 255))))
-  c3 <- as.character(as.hexmode(round(runif(1, 0, 255))))
-
-  if(nchar(c1) < 2){c1 <- paste("0", c1, sep="")}
-  if(nchar(c2) < 2){c2 <- paste("0", c2, sep="")}
-  if(nchar(c3) < 2){c3 <- paste("0", c3, sep="")}
-
-  col <- paste("#", c1, c2, c3, sep="")
+  col <- rgb(runif(1, 0, 1), runif(1, 0, 1), runif(1, 0, 1))
   return(col)
 }
 
@@ -400,9 +386,9 @@ fixPeopleColors <- function(peopleTemp, simLimit){
 
         if(peopleTemp$colConflict[i] > 0){
           if(!peopleTemp$colFixed[i]){
-            peopleTemp$color[i] <- sample(colors(), 1)
+            peopleTemp$color[i] <- randCol()
           } else if(is.na(peopleTemp$color[i])){
-            peopleTemp$color[i] <- sample(colors(), 1)
+            peopleTemp$color[i] <- randCol()
           }
         }
 
