@@ -371,7 +371,7 @@ colErrors <- function(peopleTemp){
     for(j in nrow(peopleTemp):1){
       if(peopleTemp$name[i] == peopleTemp$name[j]){next}
       
-      if(colDiff(peopleTemp$color[i], peopleTemp$color[j]) < 50){
+      if(colSimilarity(peopleTemp$color[i], peopleTemp$color[j]) > 0.9){
         peopleTemp$colConflict[i] <- peopleTemp$colConflict[i] + 1
       }
     }
@@ -381,11 +381,13 @@ colErrors <- function(peopleTemp){
 
 randCol <- function(){
   c1 <- as.character(as.hexmode(round(runif(1, 0, 255))))
-  if(nchar(c1) < 2){c1 <- paste("0", c1, sep="")}
   c2 <- as.character(as.hexmode(round(runif(1, 0, 255))))
-  if(nchar(c2) < 2){c2 <- paste("0", c2, sep="")}
   c3 <- as.character(as.hexmode(round(runif(1, 0, 255))))
+
+  if(nchar(c1) < 2){c1 <- paste("0", c1, sep="")}
+  if(nchar(c2) < 2){c2 <- paste("0", c2, sep="")}
   if(nchar(c3) < 2){c3 <- paste("0", c3, sep="")}
+
   col <- paste("#", c1, c2, c3, sep="")
   return(col)
 }
@@ -393,7 +395,7 @@ randCol <- function(){
 fixPeopleColors <- function(peopleTemp){
     peopleTemp$colFixed <- !is.na(peopleTemp$color)
     peopleTemp$colConflict <- 1
-    while(sum(peopleTemp$colConflict) > 0){
+    while(sum(peopleTemp$colConflict) > 5){
       for(i in 1:nrow(peopleTemp)){
 
         if(peopleTemp$colConflict[i] > 0){
@@ -409,6 +411,16 @@ fixPeopleColors <- function(peopleTemp){
     }
     peopleTemp <- peopleTemp[, !names(peopleTemp) %in% c("colFixed", "colConflict")]
     return(peopleTemp)
+}
+
+colSimilarity <- function(col.i, col.j){
+  col.i     <- as.vector(col2rgb(col.i))
+  col.j     <- as.vector(col2rgb(col.j))
+  scalProd  <- col.i %*% col.j
+  normProd  <- sqrt(sum(col.i * col.i)) * sqrt(sum(col.j * col.j))
+  colSim    <- scalProd / normProd
+  
+  return(colSim)
 }
 
 #########################
