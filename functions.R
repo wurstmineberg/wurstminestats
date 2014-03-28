@@ -348,10 +348,9 @@ splitSessionsByDay <- function(playerSessions){
       rm(temp1)
     }
     
+    playerSessions <- arrange(noOverlaps, joinTime, person)
     playerSessions$date <- format(playerSessions$joinTime, "%F")
     playerSessions$date <- as.POSIXct(playerSessions$date, origin="1970-01-01", tz="UTC")
-    
-    playerSessions <- arrange(noOverlaps, joinTime, person)
     playerSessions <- playerSessions[c("person", "date", "joinTime", "leaveTime")]
     
     return(playerSessions)
@@ -372,12 +371,23 @@ colErrors <- function(peopleTemp){
     for(j in nrow(peopleTemp):1){
       if(peopleTemp$name[i] == peopleTemp$name[j]){next}
       
-      if(colDiff(peopleTemp$color[i], peopleTemp$color[j]) < 80){
+      if(colDiff(peopleTemp$color[i], peopleTemp$color[j]) < 50){
         peopleTemp$colConflict[i] <- peopleTemp$colConflict[i] + 1
       }
     }
   }
   return(peopleTemp)
+}
+
+randCol <- function(){
+  c1 <- as.character(as.hexmode(round(runif(1, 0, 255))))
+  if(nchar(c1) < 2){c1 <- paste("0", c1, sep="")}
+  c2 <- as.character(as.hexmode(round(runif(1, 0, 255))))
+  if(nchar(c2) < 2){c2 <- paste("0", c2, sep="")}
+  c3 <- as.character(as.hexmode(round(runif(1, 0, 255))))
+  if(nchar(c3) < 2){c3 <- paste("0", c3, sep="")}
+  col <- paste("#", c1, c2, c3, sep="")
+  return(col)
 }
 
 fixPeopleColors <- function(peopleTemp){
@@ -388,9 +398,9 @@ fixPeopleColors <- function(peopleTemp){
 
         if(peopleTemp$colConflict[i] > 0){
           if(!peopleTemp$colFixed[i]){
-            peopleTemp$color[i] <- sample(colours(), 1)
+            peopleTemp$color[i] <- randCol()
           } else if(is.na(peopleTemp$color[i])){
-            peopleTemp$color[i] <- sample(colours(), 1)
+            peopleTemp$color[i] <- randCol()
           }
         }
 
@@ -406,15 +416,15 @@ fixPeopleColors <- function(peopleTemp){
 #########################
 
 serverBirthday <- function(activePeople){
-  now <- as.POSIXlt(Sys.time(), "UTC")
-  now$year <- now$year + 1900
-  ydays <- as.POSIXlt(activePeople$joinDate)$yday - now$yday
-  daysToNext <- min(ydays[ydays > 0])
+  now           <- as.POSIXlt(Sys.time(), "UTC")
+  now$year      <- now$year + 1900
+  ydays         <- as.POSIXlt(activePeople$joinDate)$yday - now$yday
+  daysToNext    <- min(ydays[ydays > 0])
   daysSinceLast <- max(ydays[ydays < 0])
-  nextPerson <- activePeople$name[ydays == daysToNext]
-  lastPerson <- activePeople$name[ydays == daysSinceLast]
-  nextDate <- format(activePeople$joinDate[activePeople$name == nextPerson], "%m-%d")
-  lastDate <- format(activePeople$joinDate[activePeople$name == lastPerson], "%m-%d")
+  nextPerson    <- activePeople$name[ydays == daysToNext]
+  lastPerson    <- activePeople$name[ydays == daysSinceLast]
+  nextDate      <- format(activePeople$joinDate[activePeople$name == nextPerson], "%m-%d")
+  lastDate      <- format(activePeople$joinDate[activePeople$name == lastPerson], "%m-%d")
   
   print(paste("Last server birthday was ", 
               lastPerson, " ", abs(daysSinceLast), " day(s) ago", 
