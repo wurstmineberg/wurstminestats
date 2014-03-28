@@ -2,12 +2,6 @@
 
 refreshData()
 
-## Get a vector of the age gaps starting from player[1]
-inviteGaps <- c(0, round(as.numeric(difftime(
-                                          activePeople$joinDate[2:nrow(activePeople)], 
-                                          activePeople$joinDate[1:(nrow(activePeople)-1)], 
-                                          units="days"))))
-
 # current server age total
 wurstminebergAge <- round(as.numeric(difftime(Sys.time(),
                                             activePeople$joinDate[1], 
