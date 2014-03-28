@@ -10,7 +10,7 @@ library(grid)         # for unit() in ggplot theme() functions
 library(plyr)         # To join() dataframes
 library(RColorBrewer) # Because colours
 library(httr)         # For direct web access stuff, apparently
-library(gdata)        # For some reorder() stuff. Factor levels are hell, people.
+suppressMessages(library(gdata))        # For some reorder() stuff. Factor levels are hell, people.
 
 source("functions.R")
 
