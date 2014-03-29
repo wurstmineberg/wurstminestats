@@ -8,10 +8,6 @@ playerSessions  <- getPlayerSessions(sessions)
 # Ideally sessions should be separated per day, I guess?
 playerSessions  <- splitSessionsByDay(playerSessions)
 
-# Add duration column
-playerSessions$playedMinutes <- as.numeric(difftime(playerSessions$leaveTime, 
-                                                    playerSessions$joinTime, unit="mins"))
-
 ########################################
 ## We want play time per day, sooooo… ##
 ########################################

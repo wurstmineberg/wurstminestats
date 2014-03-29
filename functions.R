@@ -317,6 +317,11 @@ getPlayerSessions <- function(sessions){
         }
       }
     }
+    
+    # Add duration column
+    playerSessions$playedMinutes <- as.numeric(difftime(playerSessions$leaveTime, 
+                                                        playerSessions$joinTime, unit="mins"))
+    
     return(playerSessions)
 }
 
