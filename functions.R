@@ -16,7 +16,7 @@ writePlayerstatsLog <- function(){
 
     # Join new data with saved data and order by joinDate, player, then timestamp
     playerstatsFull <- join(playerstats, playerstatsOld, type="full", match="all")
-    playerstatsFull <- arrange(playerstatsFull, as.Date(joinDate), player, timestamp)
+    playerstatsFull <- arrange(playerstatsFull, joinDate, player, timestamp)
 
     # Write dataset to file for ze easy access
     write.csv(playerstatsFull, "data/playerstats.csv")
@@ -354,11 +354,6 @@ splitSessionsByDay <- function(playerSessions){
 ### Handling the clusterfuck that is colors ###
 ###############################################
 
-colDiff <- function(col.i, col.j){
-  absDiff <- sum(abs(col2rgb(col.i) - col2rgb(col.j)))
-  return(absDiff)
-}
-
 colErrors <- function(peopleTemp, simLimit = 0.92){
   peopleTemp$colConflict <- 0
   for(i in 1:nrow(peopleTemp)){
@@ -373,12 +368,15 @@ colErrors <- function(peopleTemp, simLimit = 0.92){
   return(peopleTemp)
 }
 
-randCol <- function(){
-  col <- rgb(runif(1, 0, 1), runif(1, 0, 1), runif(1, 0, 1))
+randCol <- function(n = 1){
+  col <- character(0)
+  for(i in 1:n){
+    col[i] <- rgb(runif(1, 0, 1), runif(1, 0, 1), runif(1, 0, 1))
+  }
   return(col)
 }
 
-fixPeopleColors <- function(peopleTemp, simLimit){
+fixPeopleColors <- function(peopleTemp, simLimit = 0.92){
     peopleTemp$colFixed <- !is.na(peopleTemp$color)
     peopleTemp$colConflict <- 1
     while(sum(peopleTemp$colConflict) > 5){
@@ -404,9 +402,11 @@ colSimilarity <- function(col.i, col.j){
   col.j     <- as.vector(col2rgb(col.j))
   scalProd  <- col.i %*% col.j
   normProd  <- sqrt(sum(col.i * col.i)) * sqrt(sum(col.j * col.j))
-  if(normProd == 0){
-    colSim  <- 1
-  } else {
+  if(normProd == 0 & scalProd > 0){
+    colSim  <- 0
+  } else if(normProd == 0 & scalProd == 0){
+    colSim <- 0
+    } else {
     colSim  <- scalProd / normProd 
   }
   
