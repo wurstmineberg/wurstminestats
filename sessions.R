@@ -12,39 +12,14 @@ playerSessions  <- splitSessionsByDay(playerSessions)
 ## We want play time per day, sooooo… ##
 ########################################
 
-loggedDays    <- unique(playerSessions$date)
-playedPerDay  <- data.frame(date=unique(playerSessions$date),
-                           timePlayed=numeric(length(loggedDays)))
-
-for(i in 1:length(loggedDays)){
-  playedPerDay$timePlayed[i] <- sum(playerSessions$playedMinutes[playerSessions$date == loggedDays[i]])
-}; rm(i)
+playedPerDay  <- ddply(playerSessions, .(date), summarize, timePlayed = sum(playedMinutes))
 
 ##########################################################
 ## We also want play time per day per person, so, well… ##
 ##########################################################
 
-playedPerPerson <- data.frame(date=character(0),
-                              timePlayed=numeric(0),
-                              person=character(0))
-
-for(i in 1:length(loggedDays)){
-  daySet    <- playerSessions[playerSessions$date == loggedDays[i], ]
-  dayPeople <- as.character(unique(daySet$person))
-  
-  for(person in dayPeople){
-    sumPerson   <- sum(daySet$playedMinutes[daySet$person == person])
-    row         <- data.frame(date=as.character(loggedDays[i]), 
-                              timePlayed=sumPerson, 
-                              person=as.character(person))
-
-    playedPerPerson <- join(playedPerPerson, row, type="full")
-  }
-}; rm(i, person, sumPerson, row, daySet, dayPeople, loggedDays)
-
-playedPerPerson$date    <- as.POSIXct(playedPerPerson$date, origin="1970-01-01", tz="UTC")
-playedPerPerson         <- arrange(playedPerPerson, date, person)
-playedPerPerson$person  <- as.character(playedPerPerson$person)
+playedPerPerson <- ddply(playerSessions, .(date, person), summarize, timePlayed = sum(playedMinutes))
+playedPerPerson <- arrange(playedPerPerson, date, person)
 
 for(i in playedPerPerson$person){
   playedPerPerson$person[playedPerPerson$person == i] <- activePeople$name[activePeople$id == i]
