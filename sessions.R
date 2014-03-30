@@ -26,7 +26,7 @@ for(i in playedPerPerson$person){
 }; rm(i)
 
 playedPerPerson$person <- as.factor(playedPerPerson$person)
-playedPerPerson$person <- reorder(playedPerPerson$person, new.order=activePeople$name[activePeople$name %in% unique(playedPerPerson$person)])
+playedPerPerson$person <- reorder(playedPerPerson$person, new.order=activePeople$name)
 
 #########################
 ## Plotting the things ##

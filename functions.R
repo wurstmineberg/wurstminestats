@@ -411,7 +411,7 @@ colSimilarity <- function(col.i, col.j){
   scalProd  <- col.i %*% col.j
   normProd  <- sqrt(sum(col.i * col.i)) * sqrt(sum(col.j * col.j))
   if(normProd == 0 & scalProd > 0){
-    colSim  <- 0
+    colSim  <- 1
   } else if(normProd == 0 & scalProd == 0){
     colSim <- 0
     } else {
@@ -437,7 +437,7 @@ serverBirthday <- function(activePeople){
   lastDate      <- format(activePeople$joinDate[activePeople$name == lastPerson], "%m-%d")
   
   print(paste("Last server birthday was ", 
-              lastPerson, " ", abs(daysSinceLast), " day(s) ago", 
+              lastPerson, " ", abs(daysSinceLast), " days ago", 
               " on ", now$year, "-", lastDate, sep=""))
   
   print(paste("Next server birthday is ", 

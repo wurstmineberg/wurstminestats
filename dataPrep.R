@@ -1,7 +1,7 @@
 ## Datapreparations
 
 # Loading all necessary libraries
-library(RCurl)
+suppressMessages(library(RCurl))
 library(jsonlite)
 library(ggplot2)
 library(scales)       # For datetime scales on plots
