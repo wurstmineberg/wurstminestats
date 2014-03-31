@@ -269,28 +269,34 @@ getSessions <- function(){
     sessions$uptimes.endTime    <- as.POSIXct(sessions$uptimes.endTime, tz="UTC")
 
     ## Fill playerSessions with data from sessions$uptimes.sessions in an ugly way because fuck JSON handling in R
-    numSessions <- length(sessions$uptimes.sessions)
+    numSessions <- nrow(sessions)
 
     # If the latest session is NA, we'll just and it RIGHT NOW
     if(is.na(sessions$uptimes.endTime[numSessions])){
-      sessions$uptimes.endTime[numSessions] <- Sys.time()  
+      sessions$uptimes.endTime[numSessions] <- as.POSIXct(as.POSIXlt(Sys.time(), tz="UTC"))
     }
-
+    
+    if("leaveTime" %in% names(sessions$uptimes.sessions[[numSessions]]) == FALSE){
+      sessions$uptimes.sessions[[numSessions]]$leaveTime <- as.character(as.POSIXlt(Sys.time(), tz="UTC"))
+    }   
+    
+    # This uses session endTimes as leaveTime in case the session ended in a non-standard way
+    for(i in 1:numSessions){
+      if(is.null(sessions$uptimes.sessions[[i]])){next} # Skip empty sessions
+      NAcond <- is.na(sessions$uptimes.sessions[[i]]["leaveTime"])
+      sessions$uptimes.sessions[[i]][NAcond, "leaveTime"] <- as.character(sessions$uptimes.endTime[i])
+    }
+    
     return(sessions)
 }
 
 getPlayerSessions <- function(sessions){
-    # This uses session endTimes as leaveTime in case the session ended in a non-standard way
-    for(i in 1:nrow(sessions)){
-      if(is.null(sessions$uptimes.sessions[[i]])){next}
-      NAcond <- is.na(sessions$uptimes.sessions[[i]]["leaveTime"])
-      sessions$uptimes.sessions[[i]][NAcond, "leaveTime"] <- as.character(sessions$uptimes.endTime[i])
-    }; rm(i)
 
     # Now we can use the sessions set as a dataframe of player sessions
     playerSessions <- ldply(sessions$uptimes.sessions, as.data.frame)
     playerSessions <- arrange(playerSessions, joinTime, leaveTime)
-
+    
+    
     # Now we reformat shit because time is a fucking mess
     playerSessions$joinTime  <- as.POSIXct(playerSessions$joinTime, tz="UTC")
     playerSessions$leaveTime <- as.POSIXct(playerSessions$leaveTime, tz="UTC")
