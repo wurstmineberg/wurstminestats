@@ -1,6 +1,9 @@
 # Lets look at sessions foo
 
 refreshData()
+if(!exists("activePeople")){
+  activePeople <- getActivePeople()
+}
 
 sessions        <- getSessions()
 playerSessions  <- getPlayerSessions(sessions)
