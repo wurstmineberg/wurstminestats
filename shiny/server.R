@@ -10,14 +10,21 @@ shinyServer(function(input, output) {
     peopleDate <- activePeople[activePeople$joinDate > date1 & activePeople$joinDate < date2, ]
     return(peopleDate)
   })
-
+  
+  filterCol <- reactive({
+    peopleCol <- filterDate()
+    if(input$onlycol){
+      peopleCol <- peopleCol[!is.na(peopleCol$color),]
+    } 
+    return(peopleCol)
+  })
   output$birthdays <- renderText({
     paste("The next server birthday is ", birthdays$nextPerson, "'s on ", birthdays$nextDate, sep='')
   })
     
   output$table1 <- renderDataTable({
-    people <- filterDate()
-    people[c("name", "joinDate", "joinStatus", "serverAge", "color", "invitedBy")]
+    people <- filterCol()
+    people[input$columnSelect]
   })
   
 })

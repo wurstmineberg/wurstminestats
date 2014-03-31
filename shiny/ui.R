@@ -1,7 +1,7 @@
 library(shiny)
-
+columns <- names(activePeople)
 shinyUI(fluidPage(
-  titlePanel("Wurstminedata", p("Where data goes to rot")),
+  titlePanel("Wurstminedata", "Where data goes to rot"),
   
   sidebarLayout(
     sidebarPanel(
@@ -10,9 +10,16 @@ shinyUI(fluidPage(
       helpText("You can choose the whitelisting period with the sliders below."),
     
       dateRangeInput("dates", 
-        "Date range",
+        h3("Date range"),
         start = "2012-10-30", 
-        end = as.character(Sys.Date()))#,
+        end = as.character(Sys.Date())),
+      
+      checkboxInput("onlycol", label = "Show only those with fav color set", value = FALSE),
+      
+      checkboxGroupInput("columnSelect", 
+                         label = h3("Select Colums"), 
+                         choices = columns,
+                         selected = c("name", "joinDate", "joinStatus", "serverAge", "color", "invitedBy"))
    
     #  actionButton("get", "Nothing yet")
       
@@ -21,9 +28,7 @@ shinyUI(fluidPage(
     mainPanel(
       h3(textOutput("birthdays")), br(),
       tabsetPanel(
-        tabPanel("People", dataTableOutput("table1")), 
-        tabPanel("Sessions", "NYI"), 
-        tabPanel("Deaths", "NYI")
+        tabPanel("People", dataTableOutput("table1"))
       )
       
     )
