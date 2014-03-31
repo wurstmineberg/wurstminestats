@@ -280,32 +280,18 @@ getSessions <- function(){
 }
 
 getPlayerSessions <- function(sessions){
-    # Initialize an empty data frame for player sessions and name
-    playerSessions <- data.frame(minecraftNick = character(0),
-                                 joinTime = character(0),
-                                 leaveTime = character(0),
-                                 person = character(0))
-
     # This uses session endTimes as leaveTime in case the session ended in a non-standard way
-    for(i in 1:(nrow(sessions)-1)){
-      temp1 <- as.data.frame(sessions$uptimes.sessions[i])
-      temp2 <- as.data.frame(sessions$uptimes.sessions[i+1])
-      
-      if(NA %in% temp1$leaveTime){
-        temp1$leaveTime[is.na(temp1$leaveTime)] <- as.character(sessions$uptimes.endTime[i])
-      }
-      if(NA %in% temp2$leaveTime){
-        temp2$leaveTime[is.na(temp2$leaveTime)] <- as.character(sessions$uptimes.endTime[i+1])
-      }
-      
-      tempMerge <- join(temp1, temp2, type="full")
-      rm(temp1, temp2)
-      playerSessions <- join(tempMerge, playerSessions, type="full")
-    }; rm(i, tempMerge)
+    for(i in 1:nrow(sessions)){
+      if(is.null(sessions$uptimes.sessions[[i]])){next}
+      NAcond <- is.na(sessions$uptimes.sessions[[i]]["leaveTime"])
+      sessions$uptimes.sessions[[i]][NAcond, "leaveTime"] <- as.character(sessions$uptimes.endTime[i])
+    }; rm(i)
 
+    # Now we can use the sessions set as a dataframe of player sessions
+    playerSessions <- ldply(sessions$uptimes.sessions, as.data.frame)
     playerSessions <- arrange(playerSessions, joinTime, leaveTime)
 
-    # Now we reformat shit
+    # Now we reformat shit because time is a fucking mess
     playerSessions$joinTime  <- as.POSIXct(playerSessions$joinTime, tz="UTC")
     playerSessions$leaveTime <- as.POSIXct(playerSessions$leaveTime, tz="UTC")
 
@@ -347,10 +333,10 @@ splitSessionsByDay <- function(playerSessions){
       rm(temp1)
     }
     
-    playerSessions <- arrange(noOverlaps, joinTime, person)
+    playerSessions      <- arrange(noOverlaps, joinTime, person)
     playerSessions$date <- format(playerSessions$joinTime, "%F")
     playerSessions$date <- as.POSIXct(playerSessions$date, origin="1970-01-01", tz="UTC")
-    playerSessions <- playerSessions[c("person", "date", "joinTime", "leaveTime")]
+    playerSessions      <- playerSessions[c("person", "date", "joinTime", "leaveTime")]
     # Add duration column
     playerSessions$playedMinutes <- as.numeric(difftime(playerSessions$leaveTime, 
                                                         playerSessions$joinTime, unit="mins"))
