@@ -423,11 +423,7 @@ serverBirthday <- function(activePeople){
   nextDate      <- format(activePeople$joinDate[activePeople$name == nextPerson], "%m-%d")
   lastDate      <- format(activePeople$joinDate[activePeople$name == lastPerson], "%m-%d")
   
-  print(paste("Last server birthday was ", 
-              lastPerson, " ", abs(daysSinceLast), " days ago", 
-              " on ", now$year, "-", lastDate, sep=""))
-  
-  print(paste("Next server birthday is ", 
-              nextPerson, " in ", daysToNext, 
-              " days on ", now$year, "-", nextDate, sep=""))
+  birthdays <- data.frame(nextPerson = nextPerson, nextDate = nextDate,
+                          lastPerson = lastPerson, lastDate = lastDate)
+  return(birthdays)
 }
