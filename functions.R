@@ -337,7 +337,8 @@ splitSessionsByDay <- function(playerSessions){
     playerSessions$date <- format(playerSessions$joinTime, "%F")
     playerSessions$date <- as.POSIXct(playerSessions$date, origin="1970-01-01", tz="UTC")
     playerSessions      <- playerSessions[c("person", "date", "joinTime", "leaveTime")]
-    # Add duration column
+
+    # Update duration column
     playerSessions$playedMinutes <- as.numeric(difftime(playerSessions$leaveTime, 
                                                         playerSessions$joinTime, unit="mins"))
     
