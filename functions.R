@@ -36,14 +36,20 @@ refreshData <- function(force=FALSE){
 
 getStrings <- function(){
     if("strings" %in% ls() == F){
-        strings <- fromJSON("http://wurstmineberg.de/static/json/strings.json")
+        strings <- fromJSON("http://assets.wurstmineberg.de/json/strings.json")
     }
     return(strings)
 }
 
+## Get achievement descriptions from website and append IDs as extra column
+getAchievementStrings <- function(){
+  achievementStrings    <- fromJSON("http://assets.wurstmineberg.de/json/achievements.json")
+  achievementStrings$id <- names(achievementStrings[,1])
+}
+
 getItemData <- function(){
     ## Get items.json from our website for names/ids ##
-    itemData        <- fromJSON("http://wurstmineberg.de/static/json/items.json")
+    itemData        <- fromJSON("http://assets.wurstmineberg.de/json/items.json")
     itemData$numID  <- names(itemData$id)
     itemData$ID     <- unlist(itemData$id, use.names=F)
     itemData$ID     <- sub(":",".", itemData$ID)
