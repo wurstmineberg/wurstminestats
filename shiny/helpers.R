@@ -33,3 +33,22 @@ for(i in playedPerPerson$person){
 
 playedPerPerson$person <- as.factor(playedPerPerson$person)
 playedPerPerson$person <- reorder(playedPerPerson$person, new.order=activePeople$name)
+
+######################################################
+## Define some variables for plot layout and labels ##
+######################################################
+
+playerTheme <- theme(legend.position  = "right",
+                    legend.key.size   = unit(.4, "cm"),
+                    legend.text       = element_text(size = rel(.8)))
+
+# Define default barchart settings
+barChart  <- geom_bar(colour="black", width=.7, stat="identity")
+
+# Define colour scale to keep status/people colours static
+statusColours         <- brewer.pal(9,"Set1")
+statusFillScale       <- scale_fill_manual(   name = "Join Status", values = statusColours)
+statusColourScale     <- scale_colour_manual( name = "Join Status", values = statusColours)
+
+#activePeople          <- fixPeopleColors(activePeople, 0.95)
+legendPeople          <- scale_fill_manual(name = "People", values = activePeople$color)
