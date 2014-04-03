@@ -1,6 +1,7 @@
 # server.R
 
 source("helpers.R")
+require(rCharts)
 
 shinyServer(function(input, output) {
   
@@ -54,6 +55,13 @@ shinyServer(function(input, output) {
     p <- p + labs(y="Played Hours", x="Day", title=element_blank())
     p <- p + scale_fill_manual(name="People", values=fillColours)
     print(p)
+  })
+  
+  output$sessionPlot2 <- renderChart({
+    playTimes <- rPlot(x = list(var = "date", sort = "date"), y = "timePlayed", 
+                       color = 'person', data = playedPerPerson, type = 'line')
+    playTimes$addParams(dom = 'sessionPlot2')
+    return(playTimes)
   })
   
 })

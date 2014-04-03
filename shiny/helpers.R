@@ -12,6 +12,7 @@ library(plyr)         # To join() dataframes
 library(RColorBrewer) # Because colours
 library(httr)         # For direct web access stuff, apparently
 suppressMessages(library(gdata)) 
+library(rCharts)      # For interactive jsified plotting glory (http://ramnathv.github.io/rCharts/)
 
 source("functions.R")
 
