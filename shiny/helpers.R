@@ -18,6 +18,7 @@ source("functions.R")
 activePeople    <- getActivePeople()
 birthdays       <- serverBirthday(activePeople)
 
+#### Getting sessions stuff
 sessions        <- getSessions()
 playerSessions  <- getPlayerSessions(sessions)
 playerSessions  <- splitSessionsByDay(playerSessions)

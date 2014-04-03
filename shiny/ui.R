@@ -1,43 +1,52 @@
 library(shiny)
-columns <- names(activePeople)
+
+columns       <- names(activePeople)
+columnsPreset <- c("name", "joinDate", "joinStatus", "color", "invitedBy")
+
 shinyUI(navbarPage("Wurstminedata",
   tabPanel("Data",
     fluidPage(
       sidebarLayout(
+
         sidebarPanel(
-          helpText("This is a demo displaying server members"),
-          br(),
+          h3("People filters"),
           helpText("You can choose the whitelisting period with the sliders below."),
         
           dateRangeInput("dates", 
-            h3("Date range"),
+            h4("Whitelisting Period"),
             start = "2012-10-30", 
             end = as.character(Sys.Date())),
           
           checkboxInput("onlycol", label = "Show only those with fav color set", value = FALSE),
           
           checkboxGroupInput("columnSelect", 
-                             label = h3("Select Colums"), 
+                             label = h4("Colums to Display"), 
                              choices = columns,
-                             selected = c("name", "joinDate", "joinStatus", "serverAge", "color", "invitedBy"))
+                             selected = columnsPreset)
        
         #  actionButton("get", "Nothing yet")
           
         ), # closes sidebarPanel
         
         mainPanel(
-          h3(textOutput("birthdays")), br(),
+          h3("For your consideration:"),
+            p(textOutput("birthdays")), br(),
           tabsetPanel(
-            tabPanel("People", dataTableOutput("table1"))
-          )
-        )
-      ) # Closes sidebarLayout
-    ) # Closes fluidPage
-  ),
+            tabPanel("People", dataTableOutput("tablePeople")),
+            tabPanel("Sessions", dataTableOutput("tableSessions"))
+        ))
+  ))),
+
+    tabPanel("Plots",
+      fluidPage(sidebarLayout(
+        sidebarPanel(
+          h3("Plot controls")),
+        mainPanel()
+    ))),
 
     tabPanel("About", 
       fluidPage(
-          p("I should buy a goat")
+          includeMarkdown("about.md")
         )
     )
 

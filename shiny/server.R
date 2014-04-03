@@ -22,9 +22,13 @@ shinyServer(function(input, output) {
     paste("The next server birthday is ", birthdays$nextPerson, "'s on ", birthdays$nextDate, sep='')
   })
     
-  output$table1 <- renderDataTable({
+  output$tablePeople <- renderDataTable({
     people <- filterCol()
     people[input$columnSelect]
+  })
+  
+  output$tableSessions <- renderDataTable({
+    playedPerPerson
   })
   
 })
