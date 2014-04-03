@@ -1,4 +1,7 @@
 library(shiny)
+require(rCharts)
+require(RCurl)
+options(RCHART_LIB = 'polycharts')
 
 columns       <- names(activePeople)
 columnsPreset <- c("name", "joinDate", "joinStatus", "color", "invitedBy")
@@ -35,8 +38,8 @@ shinyUI(navbarPage("Wurstminedata",
           tabsetPanel(
             tabPanel("People", dataTableOutput("tablePeople")),
             tabPanel("Sessions", dataTableOutput("tableSessions"))
-        ))
-  ))),
+        )))
+    )),
 
     tabPanel("Plots",
       fluidPage(sidebarLayout(
@@ -52,13 +55,13 @@ shinyUI(navbarPage("Wurstminedata",
                              selected = activePeople$name[activePeople$name %in% playedPerPerson$person])
           ),
         mainPanel(tabsetPanel(
-          tabPanel("Played Time", plotOutput("sessionPlot"))))
-    ))),
+          tabPanel("Played Time – ggplot2 legacy)", plotOutput("sessionPlot")),
+          tabPanel("Played Time – rCharts (Test)", showOutput("sessionPlot2", "polycharts")))
+    )))),
 
     tabPanel("About", 
       fluidPage(
           includeMarkdown("about.md")
         )
     )
-
 ))
