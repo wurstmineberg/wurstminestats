@@ -40,8 +40,18 @@ shinyUI(navbarPage("Wurstminedata",
     tabPanel("Plots",
       fluidPage(sidebarLayout(
         sidebarPanel(
-          h3("Plot controls")),
-        mainPanel()
+          h3("Plot controls"),
+          dateRangeInput("datesPlot", 
+               h4("Select Time Period"),
+               start = "2014-02-19", 
+               end = as.character(Sys.Date())),
+          checkboxGroupInput("columnSelectPlot", 
+                             label = h4("People to Display (NYI)"), 
+                             choices = activePeople$name[activePeople$name %in% playedPerPerson$person],
+                             selected = activePeople$name[activePeople$name %in% playedPerPerson$person])
+          ),
+        mainPanel(tabsetPanel(
+          tabPanel("Played Time", plotOutput("sessionPlot"))))
     ))),
 
     tabPanel("About", 
