@@ -2,9 +2,7 @@
 
 refreshData()
 
-## Get achievement descriptions from website and append IDs as extra column
-achievementStrings    <- fromJSON("http://wurstmineberg.de/static/json/achievements.json")
-achievementStrings$id <- names(achievementStrings[,1])
+achievementStrings    <- getAchievementStrings()
 
 ###############################################
 ## Generate basic plots for all achievements ##
@@ -21,9 +19,9 @@ for(i in 1:nrow(achievementStrings)){
   filename <- paste("Plots/achievements/", ID,".png", sep="")
   
   p <- ggplot(data=playerstats)
-  p <- p + aes(fill=joinStatus, x=reorder(player, playerstats[ , ID], mean, order=T), 
+  p <- p + aes(fill=joinStatus, x=reorder(player, playerstats[ , ID], mean, order = T), 
                                 y=playerstats[ , ID]) 
-  p <- p + barChart + statusFillScale + coord_flip() + scale_y_discrete(breaks= pretty_breaks())
+  p <- p + barChart + statusFillScale + coord_flip() + scale_y_discrete(breaks = pretty_breaks())
   p <- p + xLable + ylab("Times Achieved")
       if(nchar(description, type="width") > 44){
         p <- p + theme(plot.title = element_text(size=12))
