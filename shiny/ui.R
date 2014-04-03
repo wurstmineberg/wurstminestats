@@ -6,6 +6,11 @@ columnsPreset <- c("name", "joinDate", "joinStatus", "color", "invitedBy")
 shinyUI(navbarPage("Wurstminedata",
   tabPanel("Data",
     fluidPage(
+      ## Debug only
+      h1("Warning: Early dev shit"),
+      p("This is as early as can be, nothing is cleaned up yet and most shit is dysfunctional."),
+      p("It's only online for the 'hey, $function now works, look' and 'any hints as to how to make $stuff less sucky?' things."),
+      ## /Debug only
       sidebarLayout(
 
         sidebarPanel(
@@ -22,11 +27,7 @@ shinyUI(navbarPage("Wurstminedata",
           checkboxGroupInput("columnSelect", 
                              label = h4("Colums to Display"), 
                              choices = columns,
-                             selected = columnsPreset)
-       
-        #  actionButton("get", "Nothing yet")
-          
-        ), # closes sidebarPanel
+                             selected = columnsPreset)), # closes sidebarPanel
         
         mainPanel(
           h3("For your consideration:"),
