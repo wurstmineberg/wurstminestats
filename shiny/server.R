@@ -40,9 +40,18 @@ shinyServer(function(input, output) {
     playedPerPersonDate <- playedPerPerson[playedPerPerson$date > date1plot & playedPerPerson$date < date2plot, ]
     return(playedPerPersonDate)
   })
+
+  filterPlotPeople <- reactive({
+    playedPerPerson <- filterDatePlot()
+    tempPeople <- input$columnSelectPlot
+    selectedRows <- playedPerPerson$person %in% tempPeople
+    playedPerPersonPeople <- playedPerPerson[selectedRows, ]
+    return(playedPerPersonPeople)
+    })
   
   output$sessionPlot <- renderPlot({
-    playedPerPerson <- filterDatePlot()
+    
+    playedPerPerson <- filterPlotPeople()
     
     fillColours <- activePeople$color[activePeople$name %in% playedPerPerson$person]
     
