@@ -21,15 +21,7 @@ playedPerDay  <- ddply(playerSessions, .(date), summarize, timePlayed = sum(play
 ## We also want play time per day per person, so, well… ##
 ##########################################################
 
-playedPerPerson <- ddply(playerSessions, .(date, person), summarize, timePlayed = sum(playedMinutes))
-playedPerPerson <- arrange(playedPerPerson, date, person)
-
-for(i in playedPerPerson$person){
-  playedPerPerson$person[playedPerPerson$person == i] <- activePeople$name[activePeople$id == i]
-}; rm(i)
-
-playedPerPerson$person <- as.factor(playedPerPerson$person)
-playedPerPerson$person <- reorder(playedPerPerson$person, new.order=activePeople$name)
+playedPerPerson <- getPlayedPerPerson(playerSessions)
 
 #########################
 ## Plotting the things ##

@@ -2,9 +2,6 @@
 
 refreshData()
 
-# Get strings.json for some… strings. (Mob IDs, display names)
-strings <- getStrings()
-
 # Get columns for killEntity and KilledBy categories respectively
 killEntity      <- grep("killEntity", names(playerstats))
 killedByEntity  <- grep("entityKilledBy", names(playerstats))

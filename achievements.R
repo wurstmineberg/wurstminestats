@@ -2,8 +2,6 @@
 
 refreshData()
 
-achievementStrings    <- getAchievementStrings()
-
 ###############################################
 ## Generate basic plots for all achievements ##
 ###############################################

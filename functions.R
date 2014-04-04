@@ -45,6 +45,8 @@ getStrings <- function(){
 getAchievementStrings <- function(){
   achievementStrings    <- fromJSON("http://assets.wurstmineberg.de/json/achievements.json")
   achievementStrings$id <- names(achievementStrings[,1])
+
+  return(achievementStrings)
 }
 
 getItemData <- function(){
@@ -55,6 +57,8 @@ getItemData <- function(){
     itemData$ID     <- sub(":",".", itemData$ID)
     itemData$name   <- unlist(itemData$name, use.names=F)
     itemData        <- subset(itemData, select=c("numID","ID","name"))
+
+    return(itemData)
 }
 
 sortLevels <- function(factors, reference, sortFunction = mean){
@@ -355,6 +359,20 @@ splitSessionsByDay <- function(playerSessions){
                                                         playerSessions$joinTime, unit="mins"))
     
     return(playerSessions)
+}
+
+getPlayedPerPerson <- function(PlayerSessions){
+  playedPerPerson <- ddply(playerSessions, .(date, person), summarize, timePlayed = sum(playedMinutes))
+  playedPerPerson <- arrange(playedPerPerson, date, person)
+
+  for(i in playedPerPerson$person){
+    playedPerPerson$person[playedPerPerson$person == i] <- activePeople$name[activePeople$id == i]
+  }; rm(i)
+
+  playedPerPerson$person <- as.factor(playedPerPerson$person)
+  playedPerPerson$person <- reorder(playedPerPerson$person, new.order=activePeople$name)
+
+  return(playedPerPerson)
 }
 
 ###############################################

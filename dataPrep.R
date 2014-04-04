@@ -23,6 +23,11 @@ achievements  <- fromJSON("http://api.wurstmineberg.de/server/playerstats/achiev
 entities      <- fromJSON("http://api.wurstmineberg.de/server/playerstats/entity.json")
 items         <- fromJSON("http://api.wurstmineberg.de/server/playerstats/item.json")
 
+## Get strings for better descriptions and names
+achievementStrings    <- getAchievementStrings()
+# Get strings.json for some… strings. (Mob IDs, display names)
+strings <- getStrings()
+
 ####################################################################################
 #### This is where imported datasets get cleaned up so we can actually use them ####
 ####################################################################################
@@ -91,9 +96,9 @@ rm(items)
 # Sooner or later, I want a giant logfile.
 writePlayerstatsLog()
 
-######################################################
-## Define some variables for plot layout and labels ##
-######################################################
+#########################################################
+## Define some variables for ggplot2 layout and labels ##
+#########################################################
 
 playerTheme <- theme(legend.position  = "right",
                     legend.key.size   = unit(.4, "cm"),
