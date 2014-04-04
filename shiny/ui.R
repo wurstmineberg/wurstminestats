@@ -6,9 +6,9 @@ options(RCHART_LIB = 'polycharts')
 columns       <- names(activePeople)
 columnsPreset <- c("name", "joinDate", "joinStatus", "color", "invitedBy")
 
-shinyUI(navbarPage("Wurstminedata",
-  tabPanel("Data",
-    fluidPage(
+shinyUI(navbarPage(title="Wurstminedata", id="nav", inverse=TRUE,
+  tabPanel(title="Data", value="data",
+      fluidPage(
       ## Debug only
       h1("Warning: Early dev shit"),
       p("This is as early as can be, nothing is cleaned up yet and most shit is dysfunctional."),
@@ -35,13 +35,13 @@ shinyUI(navbarPage("Wurstminedata",
         mainPanel(
           h3("For your consideration:"),
             p(textOutput("birthdays")), br(),
-          tabsetPanel(
-            tabPanel("People", dataTableOutput("tablePeople")),
-            tabPanel("Sessions", dataTableOutput("tableSessions"))
+          tabsetPanel(id="dataTab",
+            tabPanel("People", value="dataPeople", dataTableOutput("tablePeople")),
+            tabPanel("Sessions", value="dataSessions", dataTableOutput("tableSessions"))
         )))
     )),
 
-    tabPanel("Plots",
+    tabPanel("Plots", value="plots",
       fluidPage(sidebarLayout(
         sidebarPanel(
           h3("Plot controls"),
@@ -59,7 +59,7 @@ shinyUI(navbarPage("Wurstminedata",
           tabPanel("Played Time – rCharts (Test)", showOutput("sessionPlot2", "polycharts")))
     )))),
 
-    tabPanel("About", 
+    tabPanel("About", value="about",
       fluidPage(
           includeMarkdown("about.md")
         )
