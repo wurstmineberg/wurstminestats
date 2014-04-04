@@ -5,6 +5,7 @@ options(RCHART_LIB = 'polycharts')
 
 columns       <- names(activePeople)
 columnsPreset <- c("name", "joinDate", "joinStatus", "color", "invitedBy")
+sessionsPeople <- activePeople$name[activePeople$name %in% playedPerPerson$person]
 
 shinyUI(navbarPage(title="Wurstminedata", id="nav", inverse=TRUE,
   tabPanel(title="Data", value="data",
@@ -36,8 +37,8 @@ shinyUI(navbarPage(title="Wurstminedata", id="nav", inverse=TRUE,
           h3("For your consideration:"),
             p(textOutput("birthdays")), br(),
           tabsetPanel(id="dataTab",
-            tabPanel("People", value="dataPeople", dataTableOutput("tablePeople")),
-            tabPanel("Sessions", value="dataSessions", dataTableOutput("tableSessions"))
+            tabPanel("People",    value="dataPeople",   dataTableOutput("tablePeople")),
+            tabPanel("Sessions",  value="dataSessions", dataTableOutput("tableSessions"))
         )))
     )),
 
@@ -50,13 +51,13 @@ shinyUI(navbarPage(title="Wurstminedata", id="nav", inverse=TRUE,
                start = "2014-02-19", 
                end = as.character(Sys.Date())),
           checkboxGroupInput("columnSelectPlot", 
-                             label = h4("People to Display (NYI)"), 
-                             choices = activePeople$name[activePeople$name %in% playedPerPerson$person],
-                             selected = activePeople$name[activePeople$name %in% playedPerPerson$person])
+                             label    = h4("People to Display"), 
+                             choices  = sessionsPeople,
+                             selected = sessionsPeople)
           ),
         mainPanel(tabsetPanel(
-          tabPanel("Played Time – ggplot2 legacy)", plotOutput("sessionPlot")),
-          tabPanel("Played Time – rCharts (Test)", showOutput("sessionPlot2", "polycharts")))
+          tabPanel("Played Time – ggplot2", plotOutput("sessionPlot")),
+          tabPanel("Played Time – rCharts (NYI)", showOutput("sessionPlot2", "polycharts")))
     )))),
 
     tabPanel("About", value="about",
