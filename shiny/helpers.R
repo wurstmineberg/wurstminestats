@@ -25,15 +25,7 @@ playerSessions  <- getPlayerSessions(sessions)
 playerSessions  <- splitSessionsByDay(playerSessions)
 playedPerDay    <- ddply(playerSessions, .(date), summarize, timePlayed = sum(playedMinutes))
 
-playedPerPerson <- ddply(playerSessions, .(date, person), summarize, timePlayed = sum(playedMinutes))
-playedPerPerson <- arrange(playedPerPerson, date, person)
-
-for(i in playedPerPerson$person){
-  playedPerPerson$person[playedPerPerson$person == i] <- activePeople$name[activePeople$id == i]
-}; rm(i)
-
-playedPerPerson$person <- as.factor(playedPerPerson$person)
-playedPerPerson$person <- reorder(playedPerPerson$person, new.order=activePeople$name)
+playedPerPerson <- getPlayedPerPerson(playerSessions)
 
 ######################################################
 ## Define some variables for plot layout and labels ##
