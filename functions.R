@@ -287,7 +287,7 @@ getSessions <- function(){
     }
     
     if("leaveTime" %in% names(sessions$uptimes.sessions[[numSessions]]) == FALSE){
-      sessions$uptimes.sessions[[numSessions]]$leaveTime <- as.character(as.POSIXlt(Sys.time(), tz="UTC"))
+      sessions$uptimes.sessions[[numSessions]]$leaveTime <- as.character(sessions$uptimes.endTime[numSessions])
     }   
     
     # This uses session endTimes as leaveTime in case the session ended in a non-standard way
