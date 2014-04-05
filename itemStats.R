@@ -41,6 +41,3 @@ for(action in itemActions$name){
   ggsave(plot=p, file=paste("Plots/items/top_", action, ".png", sep=""), height=plotHeight, width=plotWidth)
   
 }; rm(action, itemStatsPerAction)
-
-# Write that stuff to disk. 
-write.csv(itemStats,    "data/itemStats.csv")

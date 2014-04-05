@@ -71,13 +71,13 @@ playerstats <- playerstats[c(generalColumns, setdiff(names(playerstats), general
 rm(generalColumns)
 
 ## Join playerstats with achievements and entities dataframes. ##
-generalstats <- playerstats
-playerstats <- join(playerstats, achievements)
-playerstats <- join(playerstats, entities)
+generalstats  <- playerstats
+playerstats   <- join(playerstats, achievements)
+playerstats   <- join(playerstats, entities)
 
 ## Leave stat-specific datasets be and polish them up a little for the shiny displays
-achievements <- achievements[c("player", setdiff(names(achievements), "player")) ]
-entities <- entities[c("player", setdiff(names(entities), "player")) ]
+achievements  <- achievements[c("player", setdiff(names(achievements), "player")) ]
+entities      <- entities[c("player", setdiff(names(entities), "player")) ]
 
 ##########################
 ## Handle items dataset ##
@@ -100,9 +100,6 @@ itemStats <- getItemStats(items, itemActions, itemData)
 playerstats <- join(playerstats, items, type="full")
 rm(items)
 
-# Sooner or later, I want a giant logfile.
-#writePlayerstatsLog()
-
 ###################################################
 ## Getting sessions from /sessions/overview.json ##
 ###################################################
@@ -113,10 +110,10 @@ playerSessions  <- getPlayerSessions(sessions)
 # Ideally sessions should be separated per day, I guess?
 playerSessions  <- splitSessionsByDay(playerSessions)
 
-## We want play time per day, sooooo… ##
+# We want play time per day, sooooo… ##
 playedPerDay  <- ddply(playerSessions, .(date), summarize, timePlayed = sum(playedMinutes))
 
-## We also want play time per day per person, so, well… ##
+# We also want play time per day per person, so, well… ##
 playedPerPerson <- getPlayedPerPerson(playerSessions)
 
 #########################################################

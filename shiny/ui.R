@@ -6,6 +6,9 @@ columns        <- names(activePeople)
 columnsPreset  <- c("name", "joinDate", "joinStatus", "color", "invitedBy")
 sessionsPeople <- activePeople$name[activePeople$name %in% playedPerPerson$person]
 
+# current server age total
+wurstminebergAge <- round(as.numeric(difftime(Sys.time(), activePeople$joinDate[1], units ="days")))
+
 shinyUI(navbarPage(title="Wurstminedata", id="nav", inverse=TRUE,
   tabPanel(title="Data", value="data",
       fluidPage(
