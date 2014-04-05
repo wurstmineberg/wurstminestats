@@ -10,6 +10,7 @@ wurstminedata.html
 wurstminedata.md
 cache
 figure
-Plots/*
-data/*
+Plots/*.png
+Plots/*/*.png
+data/*.csv
 shiny/www
