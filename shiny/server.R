@@ -1,6 +1,7 @@
 # server.R
 
-source("helpers.R")
+#source("helpers.R")
+source("../dataPrep.R")
 require(rCharts)
 
 shinyServer(function(input, output) {
@@ -31,6 +32,22 @@ shinyServer(function(input, output) {
   
   output$tableSessions <- renderDataTable({
     playedPerPerson
+  })
+
+  output$tableItemStats <- renderDataTable({
+    itemStats
+  })
+
+  output$tableGeneralStats <- renderDataTable({
+    generalstats
+  })
+
+  output$tableAchievements <- renderDataTable({
+   achievements
+  })
+
+  output$tableEntities <- renderDataTable({
+   entities
   })
   
   #### Plot stuff ####

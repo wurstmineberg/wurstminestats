@@ -4,13 +4,15 @@
 suppressMessages(library(RCurl))
 library(jsonlite)
 library(ggplot2)
-library(scales)       # For datetime scales on plots
-library(grid)         # for unit() in ggplot theme() functions
-#library(gridExtra)   # For annotations outside of plot ## TODO
-library(plyr)         # To join() dataframes
-library(RColorBrewer) # Because colours
-library(httr)         # For direct web access stuff, apparently
-suppressMessages(library(gdata))        # For some reorder() stuff. Factor levels are hell, people.
+library(scales)                     # For datetime scales on plots
+library(grid)                       # for unit() in ggplot theme() functions
+#library(gridExtra)                 # For annotations outside of plot ## TODO
+library(plyr)                       # To join() dataframes
+library(RColorBrewer)               # Because colours
+library(httr)                       # For direct web access stuff, apparently
+suppressMessages(library(gdata))    # For some reorder() stuff. Factor levels are hell, people.
+library(rCharts)                    # For interactive jsified plotting glory (http://ramnathv.github.io/rCharts/)
+
 
 source("functions.R")
 
@@ -33,7 +35,8 @@ strings <- getStrings()
 ####################################################################################
 
 ## Getting a people dataset from people.json ##
-activePeople <- getActivePeople()
+activePeople  <- getActivePeople()
+birthdays     <- serverBirthday(activePeople)
 
 ## Reformat stat datasets ##
 playerstats   <- prettyShitUp(playerstats)
@@ -68,9 +71,13 @@ playerstats <- playerstats[c(generalColumns, setdiff(names(playerstats), general
 rm(generalColumns)
 
 ## Join playerstats with achievements and entities dataframes. ##
+generalstats <- playerstats
 playerstats <- join(playerstats, achievements)
 playerstats <- join(playerstats, entities)
-rm(achievements, entities)
+
+## Leave stat-specific datasets be and polish them up a little for the shiny displays
+achievements <- achievements[c("player", setdiff(names(achievements), "player")) ]
+entities <- entities[c("player", setdiff(names(entities), "player")) ]
 
 ##########################
 ## Handle items dataset ##
@@ -94,7 +101,7 @@ playerstats <- join(playerstats, items, type="full")
 rm(items)
 
 # Sooner or later, I want a giant logfile.
-writePlayerstatsLog()
+#writePlayerstatsLog()
 
 ###################################################
 ## Getting sessions from /sessions/overview.json ##

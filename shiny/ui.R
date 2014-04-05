@@ -1,10 +1,9 @@
 library(shiny)
 require(rCharts)
-require(RCurl)
 options(RCHART_LIB = 'polycharts')
 
-columns       <- names(activePeople)
-columnsPreset <- c("name", "joinDate", "joinStatus", "color", "invitedBy")
+columns        <- names(activePeople)
+columnsPreset  <- c("name", "joinDate", "joinStatus", "color", "invitedBy")
 sessionsPeople <- activePeople$name[activePeople$name %in% playedPerPerson$person]
 
 shinyUI(navbarPage(title="Wurstminedata", id="nav", inverse=TRUE,
@@ -15,51 +14,60 @@ shinyUI(navbarPage(title="Wurstminedata", id="nav", inverse=TRUE,
       p("This is as early as can be, nothing is cleaned up yet and most shit is dysfunctional."),
       p("It's only online for the 'hey, $function now works, look' and 'any hints as to how to make $stuff less sucky?' things."),
       ## /Debug only
-      sidebarLayout(
-
-        sidebarPanel(
-          h3("People filters"),
-          helpText("You can choose the whitelisting period with the sliders below."),
-        
-          dateRangeInput("dates", 
-            h4("Whitelisting Period"),
-            start = "2012-10-30", 
-            end = as.character(Sys.Date())),
+        sidebarLayout(
+          sidebarPanel(
+            h3("People filters"),
+            helpText("You can choose the whitelisting period with the sliders below."),
           
-          checkboxInput("onlycol", label = "Show only those with fav color set", value = FALSE),
+            dateRangeInput("dates", 
+              h4("Whitelisting Period"),
+              start = "2012-10-30", 
+              end = as.character(Sys.Date())),
+            
+            checkboxInput("onlycol", label = "Show only those with fav color set", value = FALSE),
+            
+            checkboxGroupInput("columnSelect", 
+                               label = h4("Colums to Display"), 
+                               choices = columns,
+                               selected = columnsPreset)), # closes sidebarPanel
           
-          checkboxGroupInput("columnSelect", 
-                             label = h4("Colums to Display"), 
-                             choices = columns,
-                             selected = columnsPreset)), # closes sidebarPanel
-        
-        mainPanel(
-          h3("For your consideration:"),
-            p(textOutput("birthdays")), br(),
-          tabsetPanel(id="dataTab",
-            tabPanel("People",    value="dataPeople",   dataTableOutput("tablePeople")),
-            tabPanel("Sessions",  value="dataSessions", dataTableOutput("tableSessions"))
-        )))
-    )),
+          mainPanel(
+            h3("For your consideration:"),
+              p(textOutput("birthdays")), br(),
+            tabsetPanel(id="dataTab",
+              tabPanel("People",                value="dataPeople",           dataTableOutput("tablePeople")),
+              tabPanel("Sessions",              value="dataSessions",         dataTableOutput("tableSessions")),
+              tabPanel("Item Stats (overview)", value="dataItemStats",        dataTableOutput("tableItemStats")),
+              tabPanel("General Stats",         value="dataGeneralStats",     dataTableOutput("tableGeneralStats")),
+              tabPanel("Achievements",          value="dataAchievements",     dataTableOutput("tableAchievements")),
+              tabPanel("Entities",              value="dataEntities",         dataTableOutput("tableEntities"))
 
-    tabPanel("Plots", value="plots",
-      fluidPage(sidebarLayout(
-        sidebarPanel(
-          h3("Plot controls"),
-          dateRangeInput("datesPlot", 
-               h4("Select Time Period"),
-               start = "2014-02-19", 
-               end = as.character(Sys.Date())),
-          selectInput("line.or.bar", "Chart type", choices =c("Line", "Bar"), selected = "Bar"),
-          checkboxGroupInput("columnSelectPlot", 
-                             label    = h4("People to Display"), 
-                             choices  = sessionsPeople,
-                             selected = sessionsPeople)
-          ),
-        mainPanel(tabsetPanel(
-          tabPanel("Played Time – ggplot2", plotOutput("sessionPlot")),
-          tabPanel("Played Time – rCharts (NYI)", showOutput("sessionPlot2", "polycharts")))
-    )))),
+              )
+          )
+        )
+      )
+  ),
+
+  tabPanel("Plots", value="plots",
+    fluidPage(sidebarLayout(
+      sidebarPanel(
+        h3("Plot controls"),
+        dateRangeInput("datesPlot", 
+             h4("Select Time Period"),
+             start = "2014-02-19", 
+             end = as.character(Sys.Date())),
+        selectInput("line.or.bar", "Chart type", choices =c("Line", "Bar"), selected = "Bar"),
+        checkboxGroupInput("columnSelectPlot", 
+                           label    = h4("People to Display"), 
+                           choices  = sessionsPeople,
+                           selected = sessionsPeople)
+        ),
+      mainPanel(tabsetPanel(
+        tabPanel("Played Time – ggplot2", plotOutput("sessionPlot")),
+        tabPanel("Played Time – rCharts (NYI)", showOutput("sessionPlot2", "polycharts")))
+      )
+    ))
+  ),
 
     tabPanel("About", value="about",
       fluidPage(
