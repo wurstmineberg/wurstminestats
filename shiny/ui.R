@@ -36,7 +36,9 @@ shinyUI(navbarPage(title="Wurstminedata", id="nav", inverse=TRUE,
           
           mainPanel(
             h3("For your consideration:"),
-              p(textOutput("birthdays")), br(),
+              p(textOutput("birthdays")),
+              p(paste("The server is currently ", wurstminebergAge, " days old.", sep="")),
+              br(),
             tabsetPanel(id="dataTab",
               tabPanel("People",                value="dataPeople",           dataTableOutput("tablePeople")),
               tabPanel("Sessions",              value="dataSessions",         dataTableOutput("tableSessions")),
