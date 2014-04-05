@@ -5,24 +5,6 @@ if(!exists("activePeople")){
   activePeople <- getActivePeople()
 }
 
-sessions        <- getSessions()
-playerSessions  <- getPlayerSessions(sessions)
-
-# Ideally sessions should be separated per day, I guess?
-playerSessions  <- splitSessionsByDay(playerSessions)
-
-########################################
-## We want play time per day, sooooo… ##
-########################################
-
-playedPerDay  <- ddply(playerSessions, .(date), summarize, timePlayed = sum(playedMinutes))
-
-##########################################################
-## We also want play time per day per person, so, well… ##
-##########################################################
-
-playedPerPerson <- getPlayedPerPerson(playerSessions)
-
 #########################
 ## Plotting the things ##
 #########################
