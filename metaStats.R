@@ -2,13 +2,6 @@
 
 refreshData()
 
-# current server age total
-wurstminebergAge <- round(as.numeric(difftime(Sys.time(),
-                                            activePeople$joinDate[1], 
-                                            units ="days")))
-
-serverBirthday(activePeople)
-
 # Online hours relative to age on server
 p <- ggplot(data=playerstats)
 p <- p + aes(fill=joinStatus, x=sortLevels(player, playOneHour/activePeople$serverAge), 

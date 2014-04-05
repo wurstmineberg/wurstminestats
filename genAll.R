@@ -11,3 +11,7 @@ source("generalStats.R")    #
 source("entityStats.R")     # Adds killFriendly and killHostile columns to playerstats
 source("itemStats.R")       # 
 source("sessions.R")        # Does not interfere or rely on playerstats dataframe, only needs activePeople
+
+# Sooner or later, I want a giant logfile.
+writePlayerstatsLog()
+write.csv(itemStats, "data/itemStats.csv")
