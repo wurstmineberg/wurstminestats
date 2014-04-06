@@ -62,8 +62,8 @@ fillColours <- activePeople$color[activePeople$name %in% playedPerWeekday$person
 p <- ggplot(data=playedPerWeekday)
 p <- p + aes(x=date, y=timePlayed/60, fill=person)
 p <- p + geom_bar(position="stack", stat="identity", colour="black")
-p <- p + geom_hline(yintercept = mean(playedPerWeekday$timePlayed/60), alpha=.5)
-p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+#p <- p + geom_hline(yintercept = mean(playedPerWeekday$timePlayed/60), alpha=.5)
+#p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
 p <- p + scale_y_continuous(breaks=pretty_breaks()) + playerTheme
 p <- p + labs(y="Played Hours", x="Weekdays", title="Total Time Played per Day of Week")
 p <- p + scale_fill_manual(name="People", values=fillColours)
