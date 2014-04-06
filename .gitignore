@@ -5,7 +5,14 @@ notepad.R
 wurstmineberg.Rproj
 brewer-palettes.pdf
 updatepush.sh
-Plots/**
-**/*.png
+wurstminedata.Rmd
+wurstminedata.html
+wurstminedata.md
+cache
+figure
+Plots/*.png
+Plots/*/*.png
+Plots
 data/*.csv
+data
 shiny/www
