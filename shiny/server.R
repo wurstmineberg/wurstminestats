@@ -59,10 +59,12 @@ shinyServer(function(input, output) {
   })
 
   filterPlotPeople <- reactive({
-    playedPerPerson <- filterDatePlot()
-    tempPeople <- input$columnSelectPlot
-    selectedRows <- playedPerPerson$person %in% tempPeople
+    
+    playedPerPerson       <- filterDatePlot()
+    tempPeople            <- input$columnSelectPlot
+    selectedRows          <- playedPerPerson$person %in% tempPeople
     playedPerPersonPeople <- playedPerPerson[selectedRows, ]
+    
     return(playedPerPersonPeople)
     })
   
