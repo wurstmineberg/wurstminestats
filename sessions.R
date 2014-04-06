@@ -35,9 +35,3 @@ p <- p + labs(y="Played Hours", x="Day", title="Total Time Played per Day")
 p <- p + scale_fill_manual(name="People", values=fillColours)
 ggsave(p, file="Plots/playTime_perPerson.png", height=6, width=12)
 rm(p, fillColours)
-
-###################################################
-## Write playerSessions to disk in case whatever ##
-###################################################
-
-write.csv(playerSessions, "data/playerSessions.csv")

@@ -15,3 +15,4 @@ source("sessions.R")        # Does not interfere or rely on playerstats datafram
 # Sooner or later, I want a giant logfile.
 writePlayerstatsLog()
 write.csv(itemStats, "data/itemStats.csv")
+write.csv(playerSessions, "data/playerSessions.csv")
