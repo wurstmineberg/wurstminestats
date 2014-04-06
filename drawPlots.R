@@ -52,6 +52,24 @@ p <- p + scale_y_continuous(breaks=pretty_breaks())
 p <- p + labs(y="Played Hours", x="Day", title="Total Time Played per Day")
 ggsave(p, file="Plots/playTime.png", height=6, width=12)
 
+# Testing "played per weekday"
+playedPerWeekday <- playedPerPerson
+playedPerWeekday$date <- weekdays(playedPerPerson$date)
+playedPerWeekday$date <- factor(playedPerWeekday$date, levels=c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
+playedPerWeekday <- ddply(playedPerWeekday, .(date, person), summarize, timePlayed=sum(timePlayed))
+fillColours <- activePeople$color[activePeople$name %in% playedPerWeekday$person]
+
+p <- ggplot(data=playedPerWeekday)
+p <- p + aes(x=date, y=timePlayed/60, fill=person)
+p <- p + geom_bar(position="stack", stat="identity", colour="black")
+p <- p + geom_hline(yintercept = mean(playedPerWeekday$timePlayed/60), alpha=.5)
+p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+p <- p + scale_y_continuous(breaks=pretty_breaks()) + playerTheme
+p <- p + labs(y="Played Hours", x="Weekdays", title="Total Time Played per Day of Week")
+p <- p + scale_fill_manual(name="People", values=fillColours)
+ggsave(p, file="Plots/playTime_weekdays.png", height=6, width=12)
+
+
 # Plotting playedPerPerson 
 fillColours <- activePeople$color[activePeople$name %in% playedPerPerson$person]
 
