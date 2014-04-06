@@ -69,6 +69,7 @@ rm(p, fillColours)
 #-------------------------------------------------------------------------------#
 #### General stats barcharts and versions scaled by online time // Statspage ####
 #-------------------------------------------------------------------------------#
+statNum <- ncol(strings$general)
 
 for(i in 1:statNum){
 
@@ -101,7 +102,7 @@ for(i in 1:statNum){
   
   ggsave(plot=p, file=filename, height=plotHeight, width=plotWidth)
   
-}; rm(i, filename, p, stat, statScale, statUnit, statName)
+}; rm(i, filename, p, stat, statScale, statUnit, statName, statNum)
 
 # Distance Traveled Total
 p <- ggplot(data=playerstats)
@@ -180,7 +181,7 @@ for(i in 1:length(itemStats$stat)){
     p <- p + labs(x="Player", y=paste("Times", action), title=title)
     ggsave(plot=p, file=filename, height=plotHeight, width=plotWidth)
 
-}; rm(p, i, title, filename, stat, action)
+}; rm(p, i, title, filename, stat, action, itemName)
 
 ## Now to look at the different item actions ##
 
