@@ -1,7 +1,5 @@
 # I wonder if the entity statistics are interesting.
 
-refreshData()
-
 # Get columns for killEntity and KilledBy categories respectively
 killEntity      <- grep("killEntity", names(playerstats))
 killedByEntity  <- grep("entityKilledBy", names(playerstats))
