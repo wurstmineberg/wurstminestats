@@ -34,6 +34,10 @@ shinyServer(function(input, output) {
     playedPerPerson
   })
 
+  output$tableDeaths <- renderDataTable({
+    deaths
+  })
+
   output$tableItemStats <- renderDataTable({
     itemStats
   })
