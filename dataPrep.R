@@ -125,11 +125,11 @@ generalStats$id     <- names(playerstats[names(strings$general)])
 generalStats$name   <- unlist(strings$general[2,], use.names=F)
 generalStats$unit   <- c("Animals", "km", "km", "km", "Hearts (thousands)", "Hearts (thousands)", "Deathcount", "km", "Items", "km", "Fish", "km", "km", "Jumps (thousands)", "Junk", "Quits", "km", "Mobs", "m", "Hours (real life)", "Kills", "km", "km", "Hours (real life)", "Treasure", "km")
 generalStats$scale  <- c(1,         10^5, 10^5, 10^5, 10*2*10^3,            10*2*10^3,             1,           10^5,  1,      10^5,  1,     10^5,  10^5, 1000,                1,      1,      10^5,  1,    1000,  20*60*60,           1,       10^5, 10^5,  20*60*60,           1,          10^5)
+rm(statNum)
 
-
-#########################################################
-## Define some variables for ggplot2 layout and labels ##
-#########################################################
+##############################################################
+##### Define some variables for ggplot2 layout and labels ####
+##############################################################
 
 playerTheme <- theme(legend.position  = "right",
                     legend.key.size   = unit(.4, "cm"),
