@@ -75,9 +75,7 @@ shinyServer(function(input, output) {
   output$sessionPlot <- renderPlot({
     
     playedPerPerson <- filterPlotPeople()
-    
-    fillColours <- activePeople$color[activePeople$name %in% playedPerPerson$person]
-    
+        
     if(input$date.scope == "Daily"){
       fillColours <- activePeople$color[activePeople$name %in% playedPerPerson$person]
       p <- ggplot(data=playedPerPerson, aes(x=date, y=timePlayed/60))
@@ -90,7 +88,10 @@ shinyServer(function(input, output) {
       p <- p + geom_hline(yintercept = avgPerWeekday/60, alpha=.5)
     }
     if(input$line.or.bar == "Line"){
-      p <- p + geom_point(position="stack", color=person) + geom_path(position="stack")
+      p <- ggplot(data=playedPerDay)
+      p <- p + aes(x=date, y=timePlayed/60)
+      p <- p + geom_area(alpha=0.7) + geom_point() + geom_path(alpha=.8)
+      p <- p + geom_hline(yintercept = mean(playedPerDay$timePlayed/60), alpha=.5)
     } else if(input$line.or.bar == "Bar"){
       p <- p + geom_bar(position="stack", stat="identity", colour="black", aes(fill=person))
       p <- p + playerTheme
