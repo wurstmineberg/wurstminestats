@@ -116,6 +116,13 @@ playedPerDay  <- ddply(playerSessions, .(date), summarize, timePlayed = sum(play
 # We also want play time per day per person, so, well… ##
 playedPerPerson <- getPlayedPerPerson(playerSessions)
 
+# Getting per weekday stuff
+playedPerWeekday      <- playedPerPerson
+playedPerWeekday$date <- weekdays(playedPerPerson$date)
+playedPerWeekday$date <- factor(playedPerWeekday$date, levels=c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
+playedPerWeekday      <- ddply(playedPerWeekday, .(date, person), summarize, timePlayed=sum(timePlayed))
+avgPerWeekday         <- mean(ddply(playedPerWeekday, .(date), summarize, timePlayed=sum(timePlayed))$timePlayed)
+
 
 #### Getting some strings together ####
 # Get general statistics from playerstats, define metadata (scale, units)

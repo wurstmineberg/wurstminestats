@@ -1,6 +1,6 @@
 # server.R
 
-#source("helpers.R")
+require(shiny)
 source("../dataPrep.R")
 require(rCharts)
 
@@ -78,16 +78,23 @@ shinyServer(function(input, output) {
     
     fillColours <- activePeople$color[activePeople$name %in% playedPerPerson$person]
     
-    p <- ggplot(data=playedPerPerson, aes(x=date, y=timePlayed/60))
+    if(input$date.scope == "Daily"){
+      fillColours <- activePeople$color[activePeople$name %in% playedPerPerson$person]
+      p <- ggplot(data=playedPerPerson, aes(x=date, y=timePlayed/60))
+      p <- p + scale_x_datetime(labels = date_format("%y-%m-%d"), breaks = date_breaks("days"))
+      p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+    } else if (input$date.scope == "Weekdays"){
+      fillColours <- activePeople$color[activePeople$name %in% playedPerWeekday$person]
+      p <- ggplot(data=playedPerWeekday)
+      p <- p + aes(x=date, y=timePlayed/60, fill=person)
+      p <- p + geom_hline(yintercept = avgPerWeekday/60, alpha=.5)
+    }
     if(input$line.or.bar == "Line"){
       p <- p + geom_point(position="stack", color=person) + geom_path(position="stack")
     } else if(input$line.or.bar == "Bar"){
       p <- p + geom_bar(position="stack", stat="identity", colour="black", aes(fill=person))
       p <- p + playerTheme
     }
-    p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
-    p <- p + scale_x_datetime(labels = date_format("%y-%m-%d"),
-                              breaks = date_breaks("days"))
     p <- p + scale_y_continuous(breaks=pretty_breaks())
     p <- p + labs(y="Played Hours", x="Day", title=element_blank())
     p <- p + scale_fill_manual(name="People", values=fillColours)
@@ -102,5 +109,4 @@ shinyServer(function(input, output) {
     playTimes$addParams(dom = 'sessionPlot2')
     return(playTimes)
   })
-  
 })

@@ -53,12 +53,7 @@ p <- p + labs(y="Played Hours", x="Day", title="Total Time Played per Day")
 ggsave(p, file="Plots/playTime.png", height=6, width=12)
 
 # Testing "played per weekday"
-playedPerWeekday <- playedPerPerson
-playedPerWeekday$date <- weekdays(playedPerPerson$date)
-playedPerWeekday$date <- factor(playedPerWeekday$date, levels=c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
-playedPerWeekday <- ddply(playedPerWeekday, .(date, person), summarize, timePlayed=sum(timePlayed))
-fillColours <- activePeople$color[activePeople$name %in% playedPerWeekday$person]
-avgPerWeekday <- mean(ddply(playedPerWeekday, .(date), summarize, timePlayed=sum(timePlayed))$timePlayed)
+fillColours   <- activePeople$color[activePeople$name %in% playedPerWeekday$person]
 
 p <- ggplot(data=playedPerWeekday)
 p <- p + aes(x=date, y=timePlayed/60, fill=person)
