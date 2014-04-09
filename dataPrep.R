@@ -23,7 +23,7 @@ if(grepl("shiny$", getwd())){
 dataTime <- format(Sys.time(), "%s")
 
 ## Get player stats from wurstmineberg API ##
-playerstats   <- fromJSON("http://api.wurstmineberg.de/server/playerstats/general.json")
+generalstats  <- fromJSON("http://api.wurstmineberg.de/server/playerstats/general.json")
 achievements  <- fromJSON("http://api.wurstmineberg.de/server/playerstats/achievement.json")
 entities      <- fromJSON("http://api.wurstmineberg.de/server/playerstats/entity.json")
 items         <- fromJSON("http://api.wurstmineberg.de/server/playerstats/item.json")
@@ -43,7 +43,7 @@ birthdays     <- serverBirthday(activePeople)
 deaths        <- getDeathStats()
 
 ## Reformat stat datasets ##
-playerstats   <- prettyShitUp(playerstats)
+generalstats  <- prettyShitUp(generalstats)
 achievements  <- prettyShitUp(achievements)
 entities      <- prettyShitUp(entities)
 items         <- prettyShitUp(items)
@@ -52,19 +52,28 @@ items         <- prettyShitUp(items)
 ## Enhancing playerstats with some useful shit ##
 #################################################
 
+## Convert play time to real time hours as separate column ##
+generalstats$playOneHour <- (generalstats$playOneMinute/20/60/60)
+
+## Get total distance column by summing up all *OneCm rows per player ##
+generalstats$distanceTraveled <- 0
+for(i in 1:nrow(generalstats)){
+  generalstats$distanceTraveled[i] <- sum(generalstats[i, grep("OneCm", colnames(generalstats))])
+}; rm(i);
+
+## Leave stat-specific datasets be and polish them up a little for the shiny displays
+achievements  <- achievements[c("player", setdiff(names(achievements), "player")) ]
+entities      <- entities[c("player", setdiff(names(entities), "player")) ]
+generalstats  <- generalstats[c("player", setdiff(names(generalstats), "player")) ]
+
+## Resort columns to get interesting stuff first. ##
+
+playerstats   <- join(generalstats, achievements)
+playerstats   <- join(playerstats, entities)
+
 playerstats$joinStatus  <- activePeople$joinStatus
 playerstats$joinDate    <- activePeople$joinDate
 
-## Convert play time to real time hours as separate column ##
-playerstats$playOneHour <- (playerstats$playOneMinute/20/60/60)
-
-## Get total distance column by summing up all *OneCm rows per player ##
-playerstats$distanceTraveled <- 0
-for(i in 1:nrow(playerstats)){
-  playerstats$distanceTraveled[i] <- sum(playerstats[i, grep("OneCm", colnames(playerstats))])
-}; rm(i);
-
-## Resort columns to get interesting stuff first. ##
 playerstats$timestamp <- dataTime
 
 generalColumns <- c("timestamp", "player", "joinDate", "joinStatus", "leaveGame",
@@ -74,14 +83,6 @@ generalColumns <- c("timestamp", "player", "joinDate", "joinStatus", "leaveGame"
 playerstats <- playerstats[c(generalColumns, setdiff(names(playerstats), generalColumns))]
 rm(generalColumns)
 
-## Join playerstats with achievements and entities dataframes. ##
-generalstats  <- playerstats
-playerstats   <- join(playerstats, achievements)
-playerstats   <- join(playerstats, entities)
-
-## Leave stat-specific datasets be and polish them up a little for the shiny displays
-achievements  <- achievements[c("player", setdiff(names(achievements), "player")) ]
-entities      <- entities[c("player", setdiff(names(entities), "player")) ]
 
 ##########################
 ## Handle items dataset ##
@@ -122,8 +123,15 @@ playedPerPerson <- getPlayedPerPerson(playerSessions)
 
 # Getting per weekday stuff
 playedPerWeekday      <- playedPerPerson
-playedPerWeekday      <- ddply(playedPerPerson, .(wday, date, person), summarize, timePlayed=sum(timePlayed))
-avgPerWeekday         <- mean(ddply(playedPerWeekday, .(date), summarize, timePlayed=sum(timePlayed))$timePlayed)
+playedPerWeekday      <- ddply(playedPerPerson, .(wday, person), summarize, timePlayed=sum(timePlayed))
+avgPerWeekday         <- mean(ddply(playedPerWeekday, .(wday), summarize, timePlayed=sum(timePlayed))$timePlayed)
+
+# Let's do a monthly one
+playedPerMonth       <- playedPerPerson
+playedPerMonth$month <- factor(months(playedPerPerson$date), levels=c("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"))
+playedPerMonth       <- ddply(playedPerMonth, .(month, person), summarize, timePlayed=sum(timePlayed))
+avgPerMonth          <- mean(ddply(playedPerMonth, .(month), summarize, timePlayed=sum(timePlayed))$timePlayed)
+
 
 #### Getting some strings together ####
 # Get general statistics from playerstats, define metadata (scale, units)

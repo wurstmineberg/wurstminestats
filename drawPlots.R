@@ -77,6 +77,18 @@ p <- p + scale_fill_manual(name="People", values=fillColours)
 ggsave(p, file="Plots/playTime_perPerson.png", height=6, width=12)
 rm(p, fillColours)
 
+# Plotting playedPerMonth 
+fillColours   <- activePeople$color[activePeople$name %in% playedPerMonth$person]
+
+p <- ggplot(data=playedPerMonth)
+p <- p + aes(x=month, y=timePlayed/60, fill=person)
+p <- p + geom_bar(position="stack", stat="identity", colour="black")
+p <- p + geom_hline(yintercept = avgPerMonth/60, alpha=.5)
+p <- p + labs(y="Played Hours", x="Months", title="Total Time Played per Month")
+p <- p + scale_fill_manual(name="People", values=fillColours) + playerTheme
+ggsave(p, file="Plots/playTime_months.png", height=6, width=12)
+rm(p, fillColours)
+
 #-------------------------------------------------------------------------------#
 #### General stats barcharts and versions scaled by online time // Statspage ####
 #-------------------------------------------------------------------------------#
