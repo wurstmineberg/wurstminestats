@@ -13,8 +13,11 @@ library(httr)                       # For direct web access stuff, apparently
 suppressMessages(library(gdata))    # For some reorder() stuff. Factor levels are hell, people.
 library(rCharts)                    # For interactive jsified plotting glory (http://ramnathv.github.io/rCharts/)
 
-
-source("functions.R")
+if(grepl("shiny$", getwd())){
+  source("../functions.R")
+} else {
+  source("functions.R")
+}
 
 # Get a close enough timestamp for the data age. Reimport via as.POSIXct(x,origin="1970-01-01") should be sufficient, else handle as.numeric()
 dataTime <- format(Sys.time(), "%s")
@@ -112,18 +115,15 @@ playerSessions  <- getPlayerSessions(sessions)
 playerSessions  <- splitSessionsByDay(playerSessions)
 
 # We want play time per day, sooooo… ##
-playedPerDay  <- ddply(playerSessions, .(date), summarize, timePlayed = sum(playedMinutes))
+playedPerDay  <- ddply(playerSessions, .(date, wday), summarize, timePlayed = sum(playedMinutes))
 
 # We also want play time per day per person, so, well… ##
 playedPerPerson <- getPlayedPerPerson(playerSessions)
 
 # Getting per weekday stuff
 playedPerWeekday      <- playedPerPerson
-playedPerWeekday$date <- weekdays(playedPerPerson$date)
-playedPerWeekday$date <- factor(playedPerWeekday$date, levels=c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
-playedPerWeekday      <- ddply(playedPerWeekday, .(date, person), summarize, timePlayed=sum(timePlayed))
+playedPerWeekday      <- ddply(playedPerPerson, .(wday, date, person), summarize, timePlayed=sum(timePlayed))
 avgPerWeekday         <- mean(ddply(playedPerWeekday, .(date), summarize, timePlayed=sum(timePlayed))$timePlayed)
-
 
 #### Getting some strings together ####
 # Get general statistics from playerstats, define metadata (scale, units)

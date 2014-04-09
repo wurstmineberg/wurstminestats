@@ -327,7 +327,7 @@ getPlayerSessions <- function(sessions){
     # Add duration column
     playerSessions$playedMinutes <- as.numeric(difftime(playerSessions$leaveTime, 
                                                         playerSessions$joinTime, unit="mins"))
-    
+
     return(playerSessions)
 }
 
@@ -362,11 +362,14 @@ splitSessionsByDay <- function(playerSessions){
     playerSessions$playedMinutes <- as.numeric(difftime(playerSessions$leaveTime, 
                                                         playerSessions$joinTime, unit="mins"))
     
+    playerSessions$wday <- factor(weekdays(playerSessions$date), 
+                                  levels=c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
+    
     return(playerSessions)
 }
 
 getPlayedPerPerson <- function(PlayerSessions){
-  playedPerPerson <- ddply(playerSessions, .(date, person), summarize, timePlayed = sum(playedMinutes))
+  playedPerPerson <- ddply(playerSessions, .(date, person, wday), summarize, timePlayed = sum(playedMinutes))
   playedPerPerson <- arrange(playedPerPerson, date, person)
 
   for(i in playedPerPerson$person){
