@@ -10,7 +10,7 @@ shinyServer(function(input, output) {
   filterDate <- reactive({
     date2 <- as.POSIXct(input$dates[2], tz="UTC")
     date1 <- as.POSIXct(input$dates[1], tz="UTC")
-    peopleDate <- activePeople[activePeople$joinDate > date1 & activePeople$joinDate < date2, ]
+    peopleDate <- activePeople[activePeople$joinDate >= date1 & activePeople$joinDate <= date2, ]
     return(peopleDate)
   })
   
@@ -31,7 +31,9 @@ shinyServer(function(input, output) {
   }, options = list(bPaginate = FALSE))
   
   output$tableSessions <- renderDataTable({
-    playedPerPerson
+    date2 <- as.POSIXct(input$sessionDates[2], tz="UTC")
+    date1 <- as.POSIXct(input$sessionDates[1], tz="UTC")
+    playedPerPerson[playedPerPerson$date >= date1 & playedPerPerson$date <= date2, ]
   })
 
   output$tableDeaths <- renderDataTable({
@@ -55,12 +57,6 @@ shinyServer(function(input, output) {
   })
   
   #### Plot stuff ####
-  filterDatePlot <- reactive({
-    date2plot <- as.POSIXct(input$datesPlot[2], tz="UTC")
-    date1plot <- as.POSIXct(input$datesPlot[1], tz="UTC")
-    playedPerPersonDate <- playedPerPerson[playedPerPerson$date > date1plot & playedPerPerson$date < date2plot, ]
-    return(playedPerPersonDate)
-  })
 
   filterPlotPeople <- reactive({
     
@@ -73,9 +69,12 @@ shinyServer(function(input, output) {
     })
   
   output$sessionPlot <- renderPlot({
-    
-    playedPerPerson <- filterPlotPeople()
-        
+    date2plot <- as.POSIXct(input$datesPlot[2], tz="UTC")
+    date1plot <- as.POSIXct(input$datesPlot[1], tz="UTC")
+
+    playedPerPerson <- playedPerPerson[playedPerPerson$date >= date1plot & playedPerPerson$date <= date2plot, ]
+    playedPerDay    <- playedPerDay[playedPerDay$date >= date1plot & playedPerDay$date <= date2plot, ]
+
     if(input$date.scope == "Daily"){
 
       fillColours <- activePeople$color[activePeople$name %in% playedPerPerson$person]
@@ -90,8 +89,7 @@ shinyServer(function(input, output) {
     }
     if(input$line.or.bar == "Line"){
 
-      p <- ggplot(data=playedPerDay)
-      p <- p + aes(x=date, y=timePlayed/60)
+      p <- ggplot(data=playedPerDay, aes(x=date, y=timePlayed/60))
       p <- p + geom_area(alpha=0.7) + geom_point() + geom_path(alpha=.8)
       p <- p + geom_hline(yintercept = mean(playedPerDay$timePlayed/60), alpha=.5)
 
