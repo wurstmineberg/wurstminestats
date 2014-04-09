@@ -11,15 +11,14 @@ wurstminebergAge <- round(as.numeric(difftime(Sys.time(), activePeople$joinDate[
 
 shinyUI(navbarPage(title="Wurstminedata", id="nav", inverse=TRUE,
   tabPanel(title="Data", value="data",
-      fluidPage(
-      ## Debug only
-      h1("Warning: Early dev shit"),
-      p("This is as early as can be, nothing is cleaned up yet and most shit is dysfunctional."),
-      p("It's only online for the 'hey, $function now works, look' and 'any hints as to how to make $stuff less sucky?' things."),
-      ## /Debug only
-        sidebarLayout(
-          sidebarPanel(
-            h3("People filters"),
+      pageWithSidebar(
+
+        headerPanel("Warning: Early dev shit"),
+
+        sidebarPanel(
+          conditionalPanel(
+            condition="input.dataTab == 'dataPeople'",
+            h3("People Filters"),
             helpText("You can choose the whitelisting period with the sliders below."),
           
             dateRangeInput("dates", 
@@ -32,36 +31,46 @@ shinyUI(navbarPage(title="Wurstminedata", id="nav", inverse=TRUE,
             checkboxGroupInput("columnSelect", 
                                label = h4("Colums to Display"), 
                                choices = columns,
-                               selected = columnsPreset)), # closes sidebarPanel
-          
-          mainPanel(
-            h3("For your consideration:"),
-              p(textOutput("birthdays")),
-              p(paste("The server is currently ", wurstminebergAge, " days old.", sep="")),
-              br(),
-            tabsetPanel(id="dataTab",
-              tabPanel("People",                value="dataPeople",           dataTableOutput("tablePeople")),
-              tabPanel("Sessions",              value="dataSessions",         dataTableOutput("tableSessions")),
-              tabPanel("Deaths",                value="dataDeaths",           dataTableOutput("tableDeaths")),
-              tabPanel("Item Stats (overview)", value="dataItemStats",        dataTableOutput("tableItemStats")),
-              tabPanel("General Stats",         value="dataGeneralStats",     dataTableOutput("tableGeneralStats")),
-              tabPanel("Achievements",          value="dataAchievements",     dataTableOutput("tableAchievements")),
-              tabPanel("Entities",              value="dataEntities",         dataTableOutput("tableEntities"))
-
+                               selected = columnsPreset)
+            ),
+          conditionalPanel(
+            condition="input.dataTab == 'dataSessions'",
+            h3("Session Filters"),
+              dateRangeInput("sessionDates", h4("Date range"),
+                start = "2014-02-19", 
+                end = as.character(Sys.Date())
               )
           )
+        ), # closes sidebarPanel
+        
+        mainPanel(
+          h3("For your consideration:"),
+            p(textOutput("birthdays")),
+            p(paste("The server is currently ", wurstminebergAge, " days old.", sep="")),
+            br(),
+          tabsetPanel(id="dataTab",
+            tabPanel("People",                value="dataPeople",           dataTableOutput("tablePeople")),
+            tabPanel("Sessions",              value="dataSessions",         dataTableOutput("tableSessions")),
+            tabPanel("Deaths",                value="dataDeaths",           dataTableOutput("tableDeaths")),
+            tabPanel("Item Stats (overview)", value="dataItemStats",        dataTableOutput("tableItemStats")),
+            tabPanel("General Stats",         value="dataGeneralStats",     dataTableOutput("tableGeneralStats")),
+            tabPanel("Achievements",          value="dataAchievements",     dataTableOutput("tableAchievements")),
+            tabPanel("Entities",              value="dataEntities",         dataTableOutput("tableEntities"))
+
+            )
         )
       )
   ),
 
   tabPanel("Plots", value="plots",
-    fluidPage(sidebarLayout(
+    pageWithSidebar(
+      headerPanel("These are plots. They are mostly broken as of now, sorry."),
       sidebarPanel(
         h3("Plot controls"),
-        dateRangeInput("datesPlot", 
-             h4("Select Time Period"),
+        dateRangeInput("datesPlot", h4("Select Time Period"),
              start = as.character(Sys.Date()-14), 
-             end = as.character(Sys.Date())),
+             end   = as.character(Sys.Date())
+        ),
         selectInput("line.or.bar", "Chart type", choices =c("Line", "Bar"), selected = "Bar"),
         selectInput("date.scope", "Date scope", choices =c("Daily", "Weekdays"), selected = "Daily"),
         checkboxGroupInput("columnSelectPlot", 
@@ -71,9 +80,9 @@ shinyUI(navbarPage(title="Wurstminedata", id="nav", inverse=TRUE,
         ),
       mainPanel(tabsetPanel(
         tabPanel("Played Time – ggplot2", plotOutput("sessionPlot")),
-        tabPanel("Played Time – rCharts (NYI)", showOutput("sessionPlot2", "polycharts")))
-      )
-    ))
+        tabPanel("Played Time – rCharts (NYI)", showOutput("sessionPlot2", "polycharts"))
+      ))
+    )
   ),
 
     tabPanel("About", value="about",
