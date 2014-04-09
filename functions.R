@@ -286,6 +286,10 @@ getSessions <- function(){
       sessions$uptimes.endTime[numSessions] <- as.POSIXct(as.POSIXlt(Sys.time(), tz="UTC"))
     }
     
+    # If current session is empty, change indexing bound to let it go
+    if(is.null(sessions$uptimes.sessions[[numSessions]])){
+      numSessions <- numSessions - 1}
+    
     if("leaveTime" %in% names(sessions$uptimes.sessions[[numSessions]]) == FALSE){
       sessions$uptimes.sessions[[numSessions]]$leaveTime <- as.character(sessions$uptimes.endTime[numSessions])
     }   
@@ -297,7 +301,7 @@ getSessions <- function(){
       sessions$uptimes.sessions[[i]][NAcond, "leaveTime"] <- as.character(sessions$uptimes.endTime[i])
     }
     
-    return(sessions)
+    return(sessions[1:numSessions,])
 }
 
 getPlayerSessions <- function(sessions){
