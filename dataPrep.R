@@ -34,9 +34,10 @@ strings <- getStrings()
 #### This is where imported datasets get cleaned up so we can actually use them ####
 ####################################################################################
 
-## Getting a people dataset from people.json ##
+## Getting a people dataset from people.json ## (Also, deaths)
 activePeople  <- getActivePeople()
 birthdays     <- serverBirthday(activePeople)
+deaths        <- getDeathStats()
 
 ## Reformat stat datasets ##
 playerstats   <- prettyShitUp(playerstats)
