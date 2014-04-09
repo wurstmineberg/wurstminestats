@@ -84,7 +84,7 @@ shinyServer(function(input, output) {
 
     } else if (input$date.scope == "Weekdays"){
       fillColours <- activePeople$color[activePeople$name %in% playedPerWeekday$person]
-      p <- ggplot(data=playedPerWeekday, aes(x=date, y=timePlayed/60, fill=person))
+      p <- ggplot(data=playedPerWeekday, aes(x=wday, y=timePlayed/60, fill=person))
       p <- p + geom_hline(yintercept = avgPerWeekday/60, alpha=.5)
     }
     if(input$line.or.bar == "Line"){
