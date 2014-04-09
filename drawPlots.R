@@ -28,7 +28,6 @@ p <- p + scale_y_discrete(breaks=pretty_breaks())
 ggsave(p, file="Plots/WhitelistGrowth.png", height=6, width=12)
 
 ### Death stats ###
-deaths <- getDeathStats()
 
 p <- ggplot(data=deaths)
 p <- p + aes(fill=joinStatus, x=reorder(player, desc(daysSince), mean, order=T), y=daysSince)
