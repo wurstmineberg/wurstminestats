@@ -92,11 +92,14 @@ rm(p, fillColours)
 # Join time hours histogram
 fillColours   <- activePeople$color[activePeople$name %in% playerSessions$person]
 
-p <- ggplot(data=playerSessions, aes(x=hour(playerSessions$joinTime), fill=person))
-p <- p + geom_histogram(colour="black", binwidth=1)
+p <- ggplot(data=playerSessions)
+p <- p + aes(x=hour(playerSessions$joinTime), fill=person)
+p <- p + geom_histogram(colour="black", binwidth=.7)
 p <- p + labs(y="Frequency", x="Hour of Day")
 p <- p + scale_fill_manual(name="People", values=fillColours) + playerTheme
-p <- p + scale_x_discrete(limits=seq(0, to=23, by=2))
+p <- p + scale_x_discrete(limits=seq(0, 23, by=1))
+p <- p + scale_y_continuous(breaks=pretty_breaks())
+
 ggsave(p, file="Plots/joinTime_hours.png", height=6, width=12)
 
 #-------------------------------------------------------------------------------#
