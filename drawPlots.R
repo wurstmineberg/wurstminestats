@@ -89,6 +89,16 @@ p <- p + scale_fill_manual(name="People", values=fillColours) + playerTheme
 ggsave(p, file="Plots/playTime_months.png", height=6, width=12)
 rm(p, fillColours)
 
+# Join time hours histogram
+fillColours   <- activePeople$color[activePeople$name %in% playerSessions$person]
+
+p <- ggplot(data=playerSessions, aes(x=hour(playerSessions$joinTime), fill=person))
+p <- p + geom_histogram(colour="black", binwidth=1)
+p <- p + labs(y="Frequency", x="Hour of Day")
+p <- p + scale_fill_manual(name="People", values=fillColours) + playerTheme
+p <- p + scale_x_discrete(limits=seq(0, to=23, by=2))
+ggsave(p, file="Plots/joinTime_hours.png", height=6, width=12)
+
 #-------------------------------------------------------------------------------#
 #### General stats barcharts and versions scaled by online time // Statspage ####
 #-------------------------------------------------------------------------------#

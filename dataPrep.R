@@ -12,6 +12,7 @@ library(RColorBrewer)               # Because colours
 library(httr)                       # For direct web access stuff, apparently
 suppressMessages(library(gdata))    # For some reorder() stuff. Factor levels are hell, people.
 library(rCharts)                    # For interactive jsified plotting glory (http://ramnathv.github.io/rCharts/)
+library(lubridate)                  # Nice date/time stuff http://www.r-statistics.com/2012/03/do-more-with-dates-and-times-in-r-with-lubridate-1-1-0/
 
 if(grepl("shiny$", getwd())){
   source("../functions.R")
@@ -132,6 +133,13 @@ playedPerMonth$month <- factor(months(playedPerPerson$date), levels=c("January",
 playedPerMonth       <- ddply(playedPerMonth, .(month, person), summarize, timePlayed=sum(timePlayed))
 avgPerMonth          <- mean(ddply(playedPerMonth, .(month), summarize, timePlayed=sum(timePlayed))$timePlayed)
 
+# Fix playerSession person names
+for(i in playerSessions$person){
+  playerSessions$person[playerSessions$person == i] <- activePeople$name[activePeople$id == i]
+}; rm(i)
+
+playerSessions$person <- as.factor(playerSessions$person)
+playerSessions$person <- reorder(playerSessions$person, new.order=activePeople$name)
 
 #### Getting some strings together ####
 # Get general statistics from playerstats, define metadata (scale, units)
