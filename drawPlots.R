@@ -89,7 +89,7 @@ p <- p + scale_fill_manual(name="People", values=fillColours) + playerTheme
 ggsave(p, file="Plots/playTime_months.png", height=6, width=12)
 rm(p, fillColours)
 
-# Join time hours histogram
+# JoinTime hours histogram
 fillColours   <- activePeople$color[activePeople$name %in% playerSessions$person]
 
 p <- ggplot(data=playerSessions)
@@ -99,9 +99,18 @@ p <- p + labs(y="Frequency", x="Hour of Day", title="Join Time Frequencies")
 p <- p + scale_fill_manual(name="People", values=fillColours) + playerTheme
 p <- p + scale_x_discrete(limits=seq(0, 23, by=1))
 p <- p + scale_y_continuous(breaks=pretty_breaks())
-
 ggsave(p, file="Plots/joinTime_hours.png", height=6, width=12)
 
+# LeaveTime hours histogram because it's only right
+p <- ggplot(data=playerSessions)
+p <- p + aes(x=hour(playerSessions$leaveTime), fill=person)
+p <- p + geom_histogram(colour="black", binwidth=.7)
+p <- p + labs(y="Frequency", x="Hour of Day", title="Leave Time Frequencies")
+p <- p + scale_fill_manual(name="People", values=fillColours) + playerTheme
+p <- p + scale_x_discrete(limits=seq(0, 23, by=1))
+p <- p + scale_y_continuous(breaks=pretty_breaks())
+ggsave(p, file="Plots/leaveTime_hours.png", height=6, width=12)
+rm(fillColours)
 #-------------------------------------------------------------------------------#
 #### General stats barcharts and versions scaled by online time // Statspage ####
 #-------------------------------------------------------------------------------#
