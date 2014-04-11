@@ -363,7 +363,8 @@ splitSessionsByDay <- function(playerSessions){
                                                         playerSessions$joinTime, unit="mins"))
     
     playerSessions$wday <- factor(weekdays(playerSessions$date), 
-                                  levels=c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
+                                  levels = as.character(wday(c(2:7,1), T, F)),
+                                  ordered = T)
     
     return(playerSessions)
 }

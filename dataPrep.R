@@ -131,7 +131,7 @@ avgPerWeekday         <- mean(ddply(playedPerWeekday, .(wday), summarize, timePl
 
 # Let's do a monthly one
 playedPerMonth       <- playedPerPerson
-playedPerMonth$month <- factor(months(playedPerPerson$date), levels=c("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"))
+playedPerMonth$month <- factor(months(playedPerPerson$date), levels=months(seq(from = as.Date("14-01-01", "%F"), to = as.Date("14-12-01","%F"), by = "month")))
 playedPerMonth       <- ddply(playedPerMonth, .(month, person), summarize, timePlayed=sum(timePlayed))
 avgPerMonth          <- mean(ddply(playedPerMonth, .(month), summarize, timePlayed=sum(timePlayed))$timePlayed)
 
