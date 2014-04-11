@@ -36,14 +36,14 @@ refreshData <- function(force=FALSE){
 
 getStrings <- function(){
     if("strings" %in% ls() == F){
-        strings <- fromJSON("http://assets.wurstmineberg.de/json/strings.json")
+        strings <- fromJSON(getOption("url.strings.general"))
     }
     return(strings)
 }
 
 ## Get achievement descriptions from website and append IDs as extra column
 getAchievementStrings <- function(){
-  achievementStrings    <- fromJSON("http://assets.wurstmineberg.de/json/achievements.json")
+  achievementStrings    <- fromJSON(getOption("url.strings.achievements"))
   achievementStrings$id <- names(achievementStrings[,1])
 
   return(achievementStrings)
@@ -51,7 +51,7 @@ getAchievementStrings <- function(){
 
 getItemData <- function(){
     ## Get items.json from our website for names/ids ##
-    itemData        <- fromJSON("http://assets.wurstmineberg.de/json/items.json")
+    itemData        <- fromJSON(getOption("url.strings.items"))
     itemData$numID  <- names(itemData$id)
     itemData$ID     <- unlist(itemData$id, use.names=F)
     itemData$ID     <- sub(":",".", itemData$ID)
@@ -72,7 +72,7 @@ prettyShitUp <- function(data){
     ## Removing "stat." and "achievement." prefixes from columns
     names(data) <- sub("stat.","",names(data))
     names(data) <- sub("achievement.","",names(data))
-    # Fix for exploreAllBiomes shit
+    # Fix for exploreAllBiomes shit ("Fix" = Ignore this shit)
     if("exploreAllBiomes" %in% names(data)){
         data <- subset(data, select=-exploreAllBiomes)
     }
@@ -105,7 +105,7 @@ prettyShitUp <- function(data){
 }
 
 getDeathStats <- function(){
-    latestdeaths <- fromJSON("http://api.wurstmineberg.de/server/deaths/latest.json")
+    latestdeaths <- fromJSON(getOption("url.general.deaths.latest"))
 
     deaths <- data.frame(player = names(latestdeaths$deaths[,1]))
     deaths$timestamp    <- unlist(latestdeaths$deaths[,1], use.names=F)
@@ -128,7 +128,7 @@ getDeathStats <- function(){
 
 getActivePeople <- function(){
     ## Get people.json for player id and join dates
-    people <- fromJSON("http://wurstmineberg.de/assets/serverstatus/people.json")
+    people <- fromJSON(getOption("url.strings.people"))
     people <- as.data.frame(people[1])
     names(people) <- sub("people.","",names(people))
     # Add category to people$status for easier matching, give numIDs excluding Dinnerbone
@@ -272,7 +272,7 @@ getItemStats <- function(items, itemActions, itemData){
 ################################
 
 getSessions <- function(){
-    sessions <- fromJSON("http://api.wurstmineberg.de/server/sessions/overview.json")
+    sessions <- fromJSON(getOption("url.general.sessions"))
     sessions <- as.data.frame(sessions)
 
     sessions$uptimes.startTime  <- as.POSIXct(sessions$uptimes.startTime, tz="UTC")

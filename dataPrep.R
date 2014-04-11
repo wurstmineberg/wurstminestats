@@ -15,8 +15,10 @@ library(rCharts)                    # For interactive jsified plotting glory (ht
 library(lubridate)                  # Nice date/time stuff http://www.r-statistics.com/2012/03/do-more-with-dates-and-times-in-r-with-lubridate-1-1-0/
 
 if(grepl("shiny$", getwd())){
+  source("../options.R")
   source("../functions.R")
 } else {
+  source("options.R")
   source("functions.R")
 }
 
@@ -24,10 +26,10 @@ if(grepl("shiny$", getwd())){
 dataTime <- format(Sys.time(), "%s")
 
 ## Get player stats from wurstmineberg API ##
-generalstats  <- fromJSON("http://api.wurstmineberg.de/server/playerstats/general.json")
-achievements  <- fromJSON("http://api.wurstmineberg.de/server/playerstats/achievement.json")
-entities      <- fromJSON("http://api.wurstmineberg.de/server/playerstats/entity.json")
-items         <- fromJSON("http://api.wurstmineberg.de/server/playerstats/item.json")
+generalstats  <- fromJSON(getOption("url.stats.general"))
+achievements  <- fromJSON(getOption("url.stats.achievements"))
+entities      <- fromJSON(getOption("url.stats.entities"))
+items         <- fromJSON(getOption("url.stats.items"))
 
 ## Get strings for better descriptions and names
 achievementStrings    <- getAchievementStrings()
