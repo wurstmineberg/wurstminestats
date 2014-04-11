@@ -49,7 +49,7 @@ p <- p + scale_x_datetime(labels = date_format("%y-%m-%d"),
                           breaks = date_breaks("days"))
 p <- p + scale_y_continuous(breaks=pretty_breaks())
 p <- p + labs(y="Played Hours", x="Day", title="Total Time Played per Day")
-ggsave(p, file="Plots/playTime.png", height=6, width=12)
+ggsave(p, file="Plots/sessions/playTime.png", height=6, width=12)
 
 # Testing "played per weekday"
 fillColours   <- activePeople$color[activePeople$name %in% playedPerWeekday$person]
@@ -60,7 +60,7 @@ p <- p + geom_bar(position="stack", stat="identity", colour="black")
 p <- p + geom_hline(yintercept = avgPerWeekday/60, alpha=.5)
 p <- p + labs(y="Played Hours", x="Weekdays", title="Total Time Played per Day of Week")
 p <- p + scale_fill_manual(name="People", values=fillColours) + playerTheme
-ggsave(p, file="Plots/playTime_weekdays.png", height=6, width=12)
+ggsave(p, file="Plots/sessions/playTime_weekdays.png", height=6, width=12)
 rm(avgPerWeekday)
 
 # Plotting playedPerPerson 
@@ -74,7 +74,7 @@ p <- p + scale_x_datetime(labels = date_format("%y-%m-%d"),
 p <- p + scale_y_continuous(breaks=pretty_breaks()) + playerTheme
 p <- p + labs(y="Played Hours", x="Day", title="Total Time Played per Day")
 p <- p + scale_fill_manual(name="People", values=fillColours)
-ggsave(p, file="Plots/playTime_perPerson.png", height=6, width=12)
+ggsave(p, file="Plots/sessions/playTime_perPerson.png", height=6, width=12)
 rm(p, fillColours)
 
 # Plotting playedPerMonth 
@@ -86,7 +86,7 @@ p <- p + geom_bar(position="stack", stat="identity", colour="black")
 p <- p + geom_hline(yintercept = avgPerMonth/60, alpha=.5)
 p <- p + labs(y="Played Hours", x="Months", title="Total Time Played per Month")
 p <- p + scale_fill_manual(name="People", values=fillColours) + playerTheme
-ggsave(p, file="Plots/playTime_months.png", height=6, width=12)
+ggsave(p, file="Plots/sessions/playTime_months.png", height=6, width=12)
 rm(p, fillColours)
 
 # JoinTime hours histogram
@@ -99,7 +99,7 @@ p <- p + labs(y="Frequency", x="Hour of Day", title="Join Time Frequencies")
 p <- p + scale_fill_manual(name="People", values=fillColours) + playerTheme
 p <- p + scale_x_discrete(limits=seq(0, 23, by=1))
 p <- p + scale_y_continuous(breaks=pretty_breaks())
-ggsave(p, file="Plots/joinTime_hours.png", height=6, width=12)
+ggsave(p, file="Plots/sessions/joinTime_hours.png", height=6, width=12)
 
 # LeaveTime hours histogram because it's only right
 p <- ggplot(data=playerSessions)
@@ -109,7 +109,7 @@ p <- p + labs(y="Frequency", x="Hour of Day", title="Leave Time Frequencies")
 p <- p + scale_fill_manual(name="People", values=fillColours) + playerTheme
 p <- p + scale_x_discrete(limits=seq(0, 23, by=1))
 p <- p + scale_y_continuous(breaks=pretty_breaks())
-ggsave(p, file="Plots/leaveTime_hours.png", height=6, width=12)
+ggsave(p, file="Plots/sessions/leaveTime_hours.png", height=6, width=12)
 rm(fillColours)
 #-------------------------------------------------------------------------------#
 #### General stats barcharts and versions scaled by online time // Statspage ####
