@@ -458,8 +458,8 @@ serverBirthday <- function(activePeople){
   daysSinceLast <- max(ydays[ydays < 0])
   nextPerson    <- activePeople$name[ydays == daysToNext]
   lastPerson    <- activePeople$name[ydays == daysSinceLast]
-  nextDate      <- format(activePeople$joinDate[activePeople$name == nextPerson], "%m-%d")
-  lastDate      <- format(activePeople$joinDate[activePeople$name == lastPerson], "%m-%d")
+  nextDate      <- format(activePeople$joinDate[activePeople$name == nextPerson[1]], "%m-%d")
+  lastDate      <- format(activePeople$joinDate[activePeople$name == lastPerson[1]], "%m-%d")
   
   birthdays <- data.frame(nextPerson = nextPerson, nextDate = nextDate,
                           lastPerson = lastPerson, lastDate = lastDate)
