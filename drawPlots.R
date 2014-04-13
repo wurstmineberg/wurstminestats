@@ -1,5 +1,3 @@
-refreshData()
-
 #-----------------------------------------------#
 #### Meta stats (server stuff, death stats…) ####
 #-----------------------------------------------#
@@ -111,6 +109,7 @@ p <- p + scale_x_discrete(limits=seq(0, 23, by=1))
 p <- p + scale_y_continuous(breaks=pretty_breaks())
 ggsave(p, file="Plots/sessions/leaveTime_hours.png", height=6, width=12)
 rm(fillColours)
+
 #-------------------------------------------------------------------------------#
 #### General stats barcharts and versions scaled by online time // Statspage ####
 #-------------------------------------------------------------------------------#
