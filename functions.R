@@ -23,17 +23,6 @@ writePlayerstatsLog <- function(){
   }
 }
 
-# Refresh data if older than 6 hours (only if "dataTime" is defined)
-refreshData <- function(force=FALSE){
-   if("dataTime" %in% ls()){
-    if((as.numeric(format(Sys.time(), "%s")) - as.numeric(dataTime))/60/60 > 6){
-      source("dataPrep.R");
-    } else if (force == TRUE){
-        source("dataPrep.R")
-    }
-  }
-}
-
 getStrings <- function(){
     if("strings" %in% ls() == F){
         strings <- fromJSON(getOption("url.strings.general"))
