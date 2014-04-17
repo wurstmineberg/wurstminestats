@@ -1,5 +1,10 @@
 ## Defining some functions used by other scripts
 
+# First up, some convenience variables
+require(lubridate)
+list.months <- months(seq(from = as.Date("14-01-01", "%F"), to = as.Date("14-12-01","%F"), by = "month"))
+list.wdays  <- as.character(wday(c(2:7,1), T, F))
+
 #########################
 ### General functions ###
 #########################
@@ -88,9 +93,10 @@ prettyShitUp <- function(data){
 }
 
 getDeathStats <- function(){
+
     latestdeaths <- fromJSON(getOption("url.general.deaths.latest"))
 
-    deaths <- data.frame(player = names(latestdeaths$deaths[,1]))
+    deaths              <- data.frame(player = names(latestdeaths$deaths[,1]))
     deaths$timestamp    <- unlist(latestdeaths$deaths[,1], use.names=F)
     deaths$cause        <- unlist(latestdeaths$deaths[,2], use.names=F)
     deaths$timestamp    <- as.POSIXct(deaths$timestamp, tz="UTC")
@@ -346,14 +352,15 @@ splitSessionsByDay <- function(playerSessions){
                                                         playerSessions$joinTime, unit="mins"))
     
     playerSessions$wday <- factor(weekdays(playerSessions$date), 
-                                  levels = as.character(wday(c(2:7,1), T, F)),
-                                  ordered = T)
+                                  levels = list.wdays, ordered = T)
+    playerSessions$month <- factor(months(playerSessions$date), 
+                                  levels = list.months, ordered = T)
     
     return(playerSessions)
 }
 
 getPlayedPerPerson <- function(PlayerSessions){
-  playedPerPerson <- ddply(playerSessions, .(date, person, wday), summarize, timePlayed = sum(playedMinutes))
+  playedPerPerson <- ddply(playerSessions, .(date, person, wday, month), summarize, timePlayed = sum(playedMinutes))
   playedPerPerson <- arrange(playedPerPerson, date, person)
 
   for(i in playedPerPerson$person){

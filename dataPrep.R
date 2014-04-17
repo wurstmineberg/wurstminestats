@@ -14,6 +14,7 @@ library(httr)                       # For direct web access stuff, apparently
 suppressMessages(library(gdata))    # For some reorder() stuff. Factor levels are hell, people.
 library(rCharts)                    # For interactive jsified plotting glory (http://ramnathv.github.io/rCharts/), install via install_github("rCharts", "ramnathv")
 library(lubridate)                  # Nice date/time stuff http://www.r-statistics.com/2012/03/do-more-with-dates-and-times-in-r-with-lubridate-1-1-0/
+library(googleVis)
 
 if(grepl("shiny$", getwd())){
   source("../options.R")
@@ -100,7 +101,7 @@ itemActions     <- data.frame(id    = c("mineBlock", "craftItem"   , "useItem" ,
                               name  = c("mined"    , "crafted"     , "used"    , "broken"))
 
 ## Merge old and new item stat IDs and whate have you ##
-items <- mergeItemStats(items, itemActions, itemData)
+items     <- mergeItemStats(items, itemActions, itemData)
 
 ## Get a dataframe of item stat ID, item name and action ##
 itemStats <- getItemStats(items, itemActions, itemData)
@@ -131,9 +132,7 @@ playedPerWeekday      <- ddply(playedPerPerson, .(wday, person), summarize, time
 avgPerWeekday         <- mean(ddply(playedPerWeekday, .(wday), summarize, timePlayed=sum(timePlayed))$timePlayed)
 
 # Let's do a monthly one
-playedPerMonth       <- playedPerPerson
-playedPerMonth$month <- factor(months(playedPerPerson$date), levels=months(seq(from = as.Date("14-01-01", "%F"), to = as.Date("14-12-01","%F"), by = "month")))
-playedPerMonth       <- ddply(playedPerMonth, .(month, person), summarize, timePlayed=sum(timePlayed))
+playedPerMonth       <- ddply(playedPerPerson, .(month, person), summarize, timePlayed=sum(timePlayed))
 avgPerMonth          <- mean(ddply(playedPerMonth, .(month), summarize, timePlayed=sum(timePlayed))$timePlayed)
 
 # Fix playerSession person names
