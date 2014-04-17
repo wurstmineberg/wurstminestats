@@ -50,12 +50,6 @@ getItemData <- function(){
     return(itemData)
 }
 
-sortLevels <- function(factors, reference, sortFunction = mean){
-  sortedLevels <- reorder(factors, reference, sortFunction, order=T)
-  
-  return(sortedLevels)
-}
-
 # Define function to transform JSON from playerstats API to nice dataframe
 prettyShitUp <- function(data){
     ## Removing "stat." and "achievement." prefixes from columns
@@ -338,7 +332,7 @@ splitSessionsByDay <- function(playerSessions){
       temp1$leaveTime[1] <- overlaps$leaveDate[i]
       temp1$joinTime[2]  <- overlaps$leaveDate[i]
       
-      noOverlaps <- join(noOverlaps, temp1, type="full")
+      noOverlaps <- rbind(noOverlaps, temp1)
       rm(temp1)
     }
     
@@ -453,4 +447,34 @@ serverBirthday <- function(activePeople){
   birthdays <- data.frame(nextPerson = nextPerson, nextDate = nextDate,
                           lastPerson = lastPerson, lastDate = lastDate)
   return(birthdays)
+}
+
+##############################
+### Generally useful stuff ###
+##############################
+
+# Via http://stackoverflow.com/a/18339562/409362
+moveCol <- function(data, tomove, where = "last", ba = NULL) {
+  temp <- setdiff(names(data), tomove)
+  x <- switch(
+    where,
+    first = data[c(tomove, temp)],
+    last = data[c(temp, tomove)],
+    before = {
+      if (is.null(ba)) stop("must specify ba column")
+      if (length(ba) > 1) stop("ba must be a single character string")
+      data[append(temp, values = tomove, after = (match(ba, temp)-1))]
+    },
+    after = {
+      if (is.null(ba)) stop("must specify ba column")
+      if (length(ba) > 1) stop("ba must be a single character string")
+      data[append(temp, values = tomove, after = (match(ba, temp)))]
+    })
+  return(x)
+}
+
+sortLevels <- function(factors, reference, sortFunction = mean){
+  require(gdata)
+  sortedLevels <- reorder(factors, reference, sortFunction, order=T)
+  return(sortedLevels)
 }
