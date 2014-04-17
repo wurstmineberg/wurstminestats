@@ -64,16 +64,17 @@ rm(avgPerWeekday)
 # Plotting playedPerPerson 
 fillColours <- activePeople$color[activePeople$name %in% playedPerPerson$person]
 
-p <- ggplot(data=playedPerPerson, aes(x=date, y=timePlayed/60, fill=person))
+p <- ggplot(data=playedPerPerson, aes(x=format(date, "%d"), y=timePlayed/60, fill=person))
 p <- p + geom_bar(position="stack", stat="identity", colour="black")
 p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
-p <- p + scale_x_datetime(labels = date_format("%y-%m-%d"),
-                          breaks = date_breaks("days"))
+#p <- p + scale_x_datetime(labels = date_format("%y-%m-%d"),
+#                          breaks = date_breaks("days"))
 p <- p + scale_y_continuous(breaks=pretty_breaks()) + playerTheme
-p <- p + labs(y="Played Hours", x="Day", title="Total Time Played per Day")
+p <- p + labs(y="Played Hours", x="Day of Month", title="Time Played per Day: 2014")
 p <- p + scale_fill_manual(name="People", values=fillColours)
+p <- p + facet_grid(month ~ .)
 ggsave(p, file="Plots/sessions/playTime_perPerson.png", height=6, width=12)
-rm(p, fillColours)
+rm(p, fillColours, labels)
 
 # Plotting playedPerMonth 
 fillColours   <- activePeople$color[activePeople$name %in% playedPerMonth$person]
