@@ -61,10 +61,7 @@ items         <- prettyShitUp(items)
 generalstats$playOneHour <- (generalstats$playOneMinute/20/60/60)
 
 ## Get total distance column by summing up all *OneCm rows per player ##
-generalstats$distanceTraveled <- 0
-for(i in 1:nrow(generalstats)){
-  generalstats$distanceTraveled[i] <- sum(generalstats[i, grep("OneCm", colnames(generalstats))])
-}; rm(i);
+generalstats$distanceTraveled <- rowSums(generalstats[, grep("OneCm", colnames(generalstats))])
 
 ## Leave stat-specific datasets be and polish them up a little for the shiny displays
 achievements  <- achievements[c("player", setdiff(names(achievements), "player")) ]
