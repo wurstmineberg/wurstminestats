@@ -1,7 +1,7 @@
 #-----------------------------------------------#
 #### Meta stats (server stuff, death stats…) ####
 #-----------------------------------------------#
-cat("Generating meta stats plots")
+cat("Generating meta stats plots \n")
 # Online hours relative to age on server
 p <- ggplot(data=playerstats)
 p <- p + aes(fill=joinStatus, x=sortLevels(player, playOneHour/activePeople$serverAge), 
@@ -36,7 +36,7 @@ ggsave(p, file="Plots/LatestDeaths.png", height=plotHeight, width=plotWidth)
 #----------------#
 #### Sessions ####
 #----------------#
-cat("Generating session plots")
+cat("Generating session plots \n")
 
 # Plotting playedPerDay
 p <- ggplot(data=playedPerDay)
@@ -115,7 +115,7 @@ rm(fillColours)
 #-------------------------------------------------------------------------------#
 #### General stats barcharts and versions scaled by online time // Statspage ####
 #-------------------------------------------------------------------------------#
-cat("Generating general stats plots")
+cat("Generating general stats plots \n")
 
 statNum <- ncol(strings$general)
 
@@ -169,7 +169,7 @@ ggsave(plot=p, file="Plots/statspage/DistanceTraveled_scaled.png", height=plotHe
 #-------------------------#
 #### Achievement plots ####
 #-------------------------#
-cat("Generating achievement plots")
+cat("Generating achievement plots \n")
 
 for(i in 1:nrow(achievementStrings)){
 
@@ -215,7 +215,7 @@ rm(p, cowRatio)
 #----------------------------------------#
 #### Plotting item stats as they come ####
 #----------------------------------------#
-cat("Generating item stats plots")
+cat("Generating item stats plots \n")
 
 for(i in 1:length(itemStats$stat)){
 
@@ -252,7 +252,7 @@ for(action in itemActions$name){
 #------------------------------------------------------#
 #### Dealing with entitiy stats. Kind of a big one. ####
 #------------------------------------------------------#
-cat("Generating entity stat plots")
+cat("Generating entity stat plots \n")
 
 # Get columns for killEntity and KilledBy categories respectively
 killEntity      <- grep("killEntity", names(playerstats))
