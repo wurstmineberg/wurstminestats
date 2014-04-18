@@ -1,7 +1,7 @@
 #-----------------------------------------------#
 #### Meta stats (server stuff, death stats…) ####
 #-----------------------------------------------#
-
+cat("Generating meta stats plots")
 # Online hours relative to age on server
 p <- ggplot(data=playerstats)
 p <- p + aes(fill=joinStatus, x=sortLevels(player, playOneHour/activePeople$serverAge), 
@@ -36,6 +36,7 @@ ggsave(p, file="Plots/LatestDeaths.png", height=plotHeight, width=plotWidth)
 #----------------#
 #### Sessions ####
 #----------------#
+cat("Generating session plots")
 
 # Plotting playedPerDay
 p <- ggplot(data=playedPerDay)
@@ -74,7 +75,7 @@ p <- p + labs(y="Played Hours", x="Day of Month", title="Time Played per Day: 20
 p <- p + scale_fill_manual(name="People", values=fillColours)
 p <- p + facet_grid(month ~ .)
 ggsave(p, file="Plots/sessions/playTime_perPerson.png", height=6, width=12)
-rm(p, fillColours, labels)
+rm(p, fillColours)
 
 # Plotting playedPerMonth 
 fillColours   <- activePeople$color[activePeople$name %in% playedPerMonth$person]
@@ -114,6 +115,8 @@ rm(fillColours)
 #-------------------------------------------------------------------------------#
 #### General stats barcharts and versions scaled by online time // Statspage ####
 #-------------------------------------------------------------------------------#
+cat("Generating general stats plots")
+
 statNum <- ncol(strings$general)
 
 for(i in 1:statNum){
@@ -166,6 +169,7 @@ ggsave(plot=p, file="Plots/statspage/DistanceTraveled_scaled.png", height=plotHe
 #-------------------------#
 #### Achievement plots ####
 #-------------------------#
+cat("Generating achievement plots")
 
 for(i in 1:nrow(achievementStrings)){
 
@@ -211,6 +215,7 @@ rm(p, cowRatio)
 #----------------------------------------#
 #### Plotting item stats as they come ####
 #----------------------------------------#
+cat("Generating item stats plots")
 
 for(i in 1:length(itemStats$stat)){
 
@@ -247,6 +252,7 @@ for(action in itemActions$name){
 #------------------------------------------------------#
 #### Dealing with entitiy stats. Kind of a big one. ####
 #------------------------------------------------------#
+cat("Generating entity stat plots")
 
 # Get columns for killEntity and KilledBy categories respectively
 killEntity      <- grep("killEntity", names(playerstats))
