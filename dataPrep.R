@@ -1,20 +1,13 @@
 ## Datapreparations
 
-# Loading all necessary libraries
-suppressMessages(library(RCurl))
-library(jsonlite)
-library(ggplot2)
+# Loading ibraries
+
 library(scales)                     # For datetime scales on plots
 library(grid)                       # for unit() in ggplot theme() functions
-library(grDevices)                  # Needed for rgb() in getActivePeople()
 #library(gridExtra)                 # For annotations outside of plot ## TODO
 library(plyr)                       # To join() dataframes and other stuff. Required by jsonlite anyway.
-library(RColorBrewer)               # Because colours
-library(httr)                       # For direct web access stuff, apparently
-suppressMessages(library(gdata))    # For some reorder() stuff. Factor levels are hell, people.
 library(rCharts)                    # For interactive jsified plotting glory (http://ramnathv.github.io/rCharts/), install via install_github("rCharts", "ramnathv")
 library(lubridate)                  # Nice date/time stuff http://www.r-statistics.com/2012/03/do-more-with-dates-and-times-in-r-with-lubridate-1-1-0/
-library(googleVis)
 
 if(grepl("shiny$", getwd())){
   source("../options.R")
