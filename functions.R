@@ -72,23 +72,19 @@ prettyShitUp <- function(data){
     playerTemp <- names(data[,1])
 
     ## Getting rid of the nested list stuff
-    # This took me so long, please don't even ask me about it.
-    for(i in (1:(ncol(data)))) {
-      data[i] <- unlist(data[i], use.names=F)
-    }; rm(i);
-
+    data <- colwise(unlist, use.names=F)(data)
+    
     ## Getting rid of NAs and assuming 0
     data[data == NA] <- 0
 
     ## Numericizzle
-    data <- as.data.frame(mapply(as.numeric,data))
+    data <- colwise(as.numeric)(data)
 
     ## Sorting according to people.json, requires activePoeple to be generated from people.json
     data$player <- playerTemp
-    data <- data[match(activePeople$mc, data$player), ]
-
+    data        <- data[match(activePeople$mc, data$player), ]
     data$player <- factor(activePeople$name, levels=activePeople$name)
-    
+    data        <- data[c("player", setdiff(names(data), "player")) ]
     return(data)
 }
 
