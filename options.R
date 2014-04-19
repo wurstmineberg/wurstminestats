@@ -26,37 +26,45 @@ options(url.general.sessions        = "http://api.wurstmineberg.de/server/sessio
 update.packages(ask = F)
 
 # List of libraries required
-libraries <- c("jsonlite",
-              "ggplot2",
-              "scales",
-              "grid",
-              "plyr",
-              "dplyr",
-              "RColorBrewer",
-              "RCurl",
-              "httr",
-              "lubridate",
-              "shiny",
-              "httpuv",
-              "markdown",
-              "gdata",
-              "googleVis")
+libraries <- c("jsonlite", "ggplot2", "scales", "grid", "plyr", "dplyr", "RColorBrewer", 
+               "RCurl", "httr", "lubridate", "shiny", "httpuv", "markdown", "gdata", "googleVis")
 
+# Loading all the things manually
+library("ggplot2")
+library("scales")                     # For datetime scales on plots
+library("grid")                       # for unit() in ggplot theme() functions
+library("plyr")                       # To join() dataframes and other stuff. Required by jsonlite anyway.
+library("RColorBrewer")               # Because colours
+library("httr")                       # For direct web access stuff, apparently
+library("rCharts")                    # For interactive jsified plotting glory (http://ramnathv.github.io/rCharts/), install via install_github("rCharts", "ramnathv")
+library("lubridate") 
+library("jsonlite")
+library("dplyr")
+
+# Loading some other libraries but with suppressed messages because they're too noisy
+suppressPackageStartupMessages(library("RCurl"))
+suppressPackageStartupMessages(library("gdata"))
+suppressPackageStartupMessages(library("googleVis"))
+
+
+checkDependencies <- function(){
 # If dependencies are missing, install them
-for(dep in libraries){
-  if(!require(dep, character.only=T)){
-   # print(dep)
-    install.packages(dep)
-  }
+    for(dep in libraries){
+      if(!require(dep, character.only=T)){
+       # print(dep)
+        install.packages(dep)
+      }
+    }
+
+    if(!require("rCharts")){
+      if(!require("devtools")){
+      install.packages("devtools")
+      } 
+      require("devtools")
+      install_github("rCharts", "ramnathv")
+    }
 }
 
-if(!require("rCharts")){
-  if(!require("devtools")){
-  install.packages("devtools")
-  } 
-  require("devtools")
-  install_github("rCharts", "ramnathv")
-}
 
 #------------------------------------------------------------#
 ##### Define some variables for ggplot2 layout and labels ####

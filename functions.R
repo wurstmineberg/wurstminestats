@@ -40,7 +40,7 @@ getStrings <- function(){
 getAchievementStrings <- function(){
   require(jsonlite)
   achievementStrings    <- fromJSON(getOption("url.strings.achievements"))
-  achievementStrings$id <- names(achievementStrings)
+  achievementStrings$id <- names(achievementStrings[,1])
 
   return(achievementStrings)
 }
