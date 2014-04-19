@@ -29,6 +29,7 @@ writePlayerstatsLog <- function(){
 }
 
 getStrings <- function(){
+  require(jsonlite)
     if("strings" %in% ls() == F){
         strings <- fromJSON(getOption("url.strings.general"))
     }
@@ -37,13 +38,15 @@ getStrings <- function(){
 
 ## Get achievement descriptions from website and append IDs as extra column
 getAchievementStrings <- function(){
+  require(jsonlite)
   achievementStrings    <- fromJSON(getOption("url.strings.achievements"))
-  achievementStrings$id <- names(achievementStrings[,1])
+  achievementStrings$id <- names(achievementStrings)
 
   return(achievementStrings)
 }
 
 getItemData <- function(){
+  require(jsonlite)
     ## Get items.json from our website for names/ids ##
     itemData        <- fromJSON(getOption("url.strings.items"))
     itemData$numID  <- names(itemData$id)
@@ -89,6 +92,7 @@ prettyShitUp <- function(data){
 }
 
 getDeathStats <- function(){
+  require(jsonlite)
 
     latestdeaths <- fromJSON(getOption("url.general.deaths.latest"))
 
@@ -112,6 +116,7 @@ getDeathStats <- function(){
 }
 
 getActivePeople <- function(){
+  require(jsonlite)
     ## Get people.json for player id and join dates
     people <- fromJSON(getOption("url.strings.people"))
     people <- as.data.frame(people[1])
@@ -257,6 +262,7 @@ getItemStats <- function(items, itemActions, itemData){
 ################################
 
 getSessions <- function(){
+  require(jsonlite)
     sessions <- fromJSON(getOption("url.general.sessions"))
     sessions <- as.data.frame(sessions)
 
@@ -437,6 +443,7 @@ colSimilarity <- function(col.i, col.j){
 #########################
 
 serverBirthday <- function(activePeople){
+  require(lubridate)
   now           <- as.POSIXlt(Sys.time(), "UTC")
   now$year      <- now$year + 1900
   ydays         <- as.POSIXlt(activePeople$joinDate)$yday - now$yday
