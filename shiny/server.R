@@ -3,6 +3,7 @@
 require(shiny)
 source("../dataPrep.R")
 require(rCharts)
+sessionsPeople <- activePeople$name[activePeople$name %in% playedPerPerson$person]
 
 shinyServer(function(input, output) {
   
@@ -17,7 +18,7 @@ shinyServer(function(input, output) {
   filterCol <- reactive({
     peopleCol <- filterDate()
     if(input$onlycol){
-      peopleCol <- peopleCol[!is.na(peopleCol$color),]
+      peopleCol <- peopleCol[!is.na(peopleCol$color), ]
     } 
     return(peopleCol)
   })
@@ -60,7 +61,6 @@ shinyServer(function(input, output) {
 
   filterPlotPeople <- reactive({
     
-    playedPerPerson       <- filterDatePlot()
     tempPeople            <- input$columnSelectPlot
     selectedRows          <- playedPerPerson$person %in% tempPeople
     playedPerPersonPeople <- playedPerPerson[selectedRows, ]
@@ -71,7 +71,7 @@ shinyServer(function(input, output) {
   output$sessionPlot <- renderPlot({
     date2plot <- as.POSIXct(input$datesPlot[2], tz="UTC")
     date1plot <- as.POSIXct(input$datesPlot[1], tz="UTC")
-
+    playedPerPerson <- filterPlotPeople()
     playedPerPerson <- playedPerPerson[playedPerPerson$date >= date1plot & playedPerPerson$date <= date2plot, ]
     playedPerDay    <- playedPerDay[playedPerDay$date >= date1plot & playedPerDay$date <= date2plot, ]
 
@@ -106,9 +106,26 @@ shinyServer(function(input, output) {
   })
   
   output$sessionPlot2 <- renderChart({
-    playTimes <- rPlot(x = list(var = "date", sort = "date"), y = "timePlayed", 
+    playedPerPerson <- filterPlotPeople()
+    playTimes <- rPlot(x = list(var = "as.character(date)", sort = "date"), y = "timePlayed", 
                        color = 'person', data = playedPerPerson, type = 'line')
     playTimes$addParams(dom = 'sessionPlot2')
     return(playTimes)
   })
+  
+  output$plot.session.gvis <- renderGvis({
+    gvis.sessions <- gvisColumnChart(perPerson, xvar="date", yvar=sessionsPeople,
+                                    options=list(height=500, width=1100, isStacked=T))
+  })
+  
+  ## General stats plot ##
+  output$plot.generalStats <- renderChart({
+    statname <- input$selectGeneralStat
+    id <- generalStats$id[generalStats$name == statname]
+    
+    gstat <- nPlot(id ~ player, data = generalstats, 
+                   type = 'discreteBarChart')
+    return(gstat)
+  })
+  
 })

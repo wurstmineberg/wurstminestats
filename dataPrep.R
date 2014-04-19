@@ -120,6 +120,15 @@ for(i in playerSessions$person){
 playerSessions$person <- as.factor(playerSessions$person)
 playerSessions$person <- reorder(playerSessions$person, new.order=activePeople$name)
 
+## Experimental perPerson dataframe for googleVis
+perPerson <- data.frame(date = playedPerPerson$date)
+for(i in unique(playedPerPerson$person)){
+  tmp <- filter(playedPerPerson, person == i)
+  tmp <- select(tmp, date, timePlayed)
+  tmp <- rename(tmp, c("timePlayed" = i))
+  perPerson <- join(perPerson, tmp, type="full", match="all")
+}
+
 #### Getting some strings together ####
 # Get general statistics from playerstats, define metadata (scale, units)
 statNum             <- ncol(strings$general)
