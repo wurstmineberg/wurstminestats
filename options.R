@@ -22,12 +22,14 @@ options(url.general.deaths.latest   = "http://api.wurstmineberg.de/server/deaths
 options(url.general.sessions        = "http://api.wurstmineberg.de/server/sessions/overview.json")
 
 #### Dependencies ####
-# First up, check for updates
-update.packages(ask = F)
-
 # List of libraries required
 libraries <- c("jsonlite", "ggplot2", "scales", "grid", "plyr", "dplyr", "RColorBrewer", 
                "RCurl", "httr", "lubridate", "shiny", "httpuv", "markdown", "gdata", "googleVis")
+
+# Loading some libraries but with suppressed messages because they're too noisy
+suppressPackageStartupMessages(library("RCurl"))
+suppressPackageStartupMessages(library("gdata"))
+suppressPackageStartupMessages(library("googleVis"))
 
 # Loading all the things manually
 library("ggplot2")
@@ -41,13 +43,9 @@ library("lubridate")
 library("jsonlite")
 library("dplyr")
 
-# Loading some other libraries but with suppressed messages because they're too noisy
-suppressPackageStartupMessages(library("RCurl"))
-suppressPackageStartupMessages(library("gdata"))
-suppressPackageStartupMessages(library("googleVis"))
+checkDependencies <- function(update = F){
+    if(update) update.packages(ask = F)
 
-
-checkDependencies <- function(){
 # If dependencies are missing, install them
     for(dep in libraries){
       if(!require(dep, character.only=T)){
