@@ -124,7 +124,7 @@ playerSessions$person <- reorder(playerSessions$person, new.order=activePeople$n
 perPerson <- data.frame(date = playedPerPerson$date)
 for(i in unique(playedPerPerson$person)){
   tmp <- dplyr::filter(playedPerPerson, person == i)
-  tmp <- select(tmp, date, timePlayed)
+  tmp <- dplyr::select(tmp, date, timePlayed)
   tmp <- rename(tmp, c("timePlayed" = i))
   perPerson <- join(perPerson, tmp, type="full", match="all")
 }
