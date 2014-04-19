@@ -22,6 +22,9 @@ options(url.general.deaths.latest   = "http://api.wurstmineberg.de/server/deaths
 options(url.general.sessions        = "http://api.wurstmineberg.de/server/sessions/overview.json")
 
 #### Dependencies ####
+# First up, check for updates
+update.packages(ask = F)
+
 # List of libraries required
 libraries <- c("jsonlite",
               "ggplot2",
@@ -43,7 +46,7 @@ libraries <- c("jsonlite",
 for(dep in libraries){
   if(!require(dep, character.only=T)){
    # print(dep)
-    install.packages(dep, character.only=T)
+    install.packages(dep)
   }
 }
 
