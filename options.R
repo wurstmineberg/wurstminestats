@@ -24,7 +24,7 @@ options(url.general.sessions        = "http://api.wurstmineberg.de/server/sessio
 #### Dependencies ####
 # List of libraries required
 libraries <- c("jsonlite", "ggplot2", "scales", "grid", "plyr", "dplyr", "RColorBrewer", 
-               "RCurl", "httr", "lubridate", "shiny", "httpuv", "markdown", "gdata", "googleVis")
+               "RCurl", "httr", "lubridate", "shiny", "httpuv", "markdown", "gdata", "googleVis", "reshape2")
 
 # Loading some libraries but with suppressed messages because they're too noisy
 suppressPackageStartupMessages(library("RCurl"))
@@ -42,6 +42,7 @@ library("rCharts")                    # For interactive jsified plotting glory (
 library("lubridate") 
 library("jsonlite")
 library("dplyr")
+library("reshape2")
 
 checkDependencies <- function(update = F){
     if(update) update.packages(ask = F)
