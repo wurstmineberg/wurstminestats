@@ -39,10 +39,16 @@ getStrings <- function(){
 ## Get achievement descriptions from website and append IDs as extra column
 getAchievementStrings <- function(){
   require(jsonlite)
-  achievementStrings    <- fromJSON(getOption("url.strings.achievements"))
-  achievementStrings$id <- names(achievementStrings[,1])
+  
+  acs    <- fromJSON(getOption("url.strings.achievements"))
 
-  return(achievementStrings)
+  strings.achievements <- data.frame(id = names(acs))
+
+  for(x in names(acs)){
+    strings.achievements$name[strings.achievements$id == x] <- acs[[x]][[2]]
+    strings.achievements$description[strings.achievements$id == x] <- acs[[x]][[1]]
+  }
+  return(strings.achievements)
 }
 
 getItemData <- function(){
@@ -53,7 +59,7 @@ getItemData <- function(){
     itemData$ID     <- unlist(itemData$id, use.names=F)
     itemData$ID     <- sub(":",".", itemData$ID)
     itemData$name   <- unlist(itemData$name, use.names=F)
-    itemData        <- subset(itemData, select=c("numID","ID","name"))
+    itemData        <- dplyr::select(itemData, numID, ID, name)
 
     return(itemData)
 }
@@ -94,11 +100,15 @@ prettyShitUp <- function(data){
 getDeathStats <- function(){
   require(jsonlite)
 
-    latestdeaths <- fromJSON(getOption("url.general.deaths.latest"))
+    latestdeaths <- fromJSON(getOption("url.general.deaths.latest"), flatten = T)
 
-    deaths              <- data.frame(player = names(latestdeaths$deaths[,1]))
-    deaths$timestamp    <- unlist(latestdeaths$deaths[,1], use.names=F)
-    deaths$cause        <- unlist(latestdeaths$deaths[,2], use.names=F)
+    deaths              <- data.frame(player = names(latestdeaths$deaths))
+    for(x in deaths$player){
+      deaths$timestamp[deaths$player == x] <- latestdeaths$deaths[[x]]$timestamp
+      deaths$cause[deaths$player == x] <- latestdeaths$deaths[[x]]$cause
+    }
+   #deaths$timestamp    <- unlist(latestdeaths$deaths[,1], use.names=F)
+   #deaths$cause        <- unlist(latestdeaths$deaths[,2], use.names=F)
     deaths$timestamp    <- as.POSIXct(deaths$timestamp, tz="UTC")
     deaths$daysSince    <- as.numeric(round(difftime(Sys.time(),deaths$timestamp, units="days")))
 
@@ -347,7 +357,7 @@ splitSessionsByDay <- function(playerSessions){
     playerSessions      <- arrange(noOverlaps, joinTime, person)
     playerSessions$date <- format(playerSessions$joinTime, "%F")
     playerSessions$date <- as.POSIXct(playerSessions$date, origin="1970-01-01", tz="UTC")
-    playerSessions      <- playerSessions[c("person", "date", "joinTime", "leaveTime")]
+    playerSessions      <- select(playerSessions, -joinDate, -leaveDate)
 
     # Update duration column
     playerSessions$playedMinutes <- as.numeric(difftime(playerSessions$leaveTime, 
