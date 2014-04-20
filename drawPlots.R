@@ -171,11 +171,11 @@ ggsave(plot=p, file="Plots/statspage/DistanceTraveled_scaled.png", height=plotHe
 #-------------------------#
 cat("Generating achievement plots \n")
 
-for(i in 1:nrow(achievementStrings)){
+for(i in 1:nrow(strings.achievements)){
 
-  ID          <- achievementStrings$id[i]
-  name        <- achievementStrings$displayname[i]
-  description <- achievementStrings$description[i]
+  ID          <- strings.achievements$id[i]
+  name        <- strings.achievements$displayname[i]
+  description <- strings.achievements$description[i]
 
   if(ID == "exploreAllBiomes"){ next };
 
