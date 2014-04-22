@@ -2,12 +2,18 @@
 
 # First up, some convenience variables
 require(lubridate)
-list.months <- months(seq(from = as.Date("14-01-01", "%F"), to = as.Date("14-12-01","%F"), by = "month"))
+list.months <- months(seq(from = as.Date("14-01-01", "%F"), to = as.Date("14-12-01", "%F"), by = "month"))
 list.wdays  <- as.character(wday(c(2:7,1), T, F))
 
 #########################
 ### General functions ###
 #########################
+
+getListElement <- function(list_, level = 1){
+  # This is used to access a level of a nested list as a vector, helping with fromJSON imports
+  list2 <- unlist(lapply(list_, function(x) cbind(x[[level]])), use.names = F)
+  return(list2)
+}
 
 writePlayerstatsLog <- function(){
 
@@ -28,12 +34,20 @@ writePlayerstatsLog <- function(){
   }
 }
 
-getStrings <- function(){
+getStrings <- function(category = "general"){
   require(jsonlite)
-    if("strings" %in% ls() == F){
-        strings <- fromJSON(getOption("url.strings.general"))
-    }
-    return(strings)
+    strings                <- fromJSON(getOption("url.strings.general"))
+    strings                <- melt(strings$stats)
+    names(strings)         <- c("name", "id", "category")
+   if (category == "general"){
+       strings.general        <- dplyr::filter(strings, category == "general")
+       strings.general$unit   <- c("Animals", "km", "km", "km", "Hearts (thousands)", "Hearts (thousands)", "Deathcount", "km", "Items", "km", "Fish", "km", "km", "Jumps (thousands)", "Junk", "Quits", "km", "Mobs", "m", "Hours (real life)", "Kills", "km", "km", "Hours (real life)", "Treasure", "km")
+       strings.general$scale  <- c(1,         10^5, 10^5, 10^5, 10*2*10^3,            10*2*10^3,             1,           10^5,  1,      10^5,  1,     10^5,  10^5, 1000,                1,      1,      10^5,  1,    1000,  20*60*60,           1,       10^5, 10^5,  20*60*60,           1,          10^5)
+       return(strings.general)
+   } else if (category == "mobs"){
+       strings.mobs           <- dplyr::filter(strings, category == "mobs")
+     return(strings.mobs)
+   }
 }
 
 ## Get achievement descriptions from website and append IDs as extra column
@@ -42,24 +56,21 @@ getAchievementStrings <- function(){
   
   acs    <- fromJSON(getOption("url.strings.achievements"))
 
-  strings.achievements <- data.frame(id = names(acs))
+  strings.achievements             <- data.frame(id = names(acs))
+  strings.achievements$description <- unlist(lapply(acs, function(x) cbind(x[[1]])), use.names=F)
+  strings.achievements$name        <- unlist(lapply(acs, function(x) cbind(x[[2]])), use.names=F)
 
-  for(x in names(acs)){
-    strings.achievements$name[strings.achievements$id == x] <- acs[[x]][[2]]
-    strings.achievements$description[strings.achievements$id == x] <- acs[[x]][[1]]
-  }
   return(strings.achievements)
 }
 
 getItemData <- function(){
   require(jsonlite)
     ## Get items.json from our website for names/ids ##
-    itemData        <- fromJSON(getOption("url.strings.items"))
-    itemData$numID  <- names(itemData$id)
-    itemData$ID     <- unlist(itemData$id, use.names=F)
+    itemsJSON        <- fromJSON(getOption("url.strings.items"))
+    itemData        <- data.frame(numID = names(itemsJSON))
+    itemData$ID     <- getListElement(itemsJSON, "id")
     itemData$ID     <- sub(":",".", itemData$ID)
-    itemData$name   <- unlist(itemData$name, use.names=F)
-    itemData        <- dplyr::select(itemData, numID, ID, name)
+    itemData$name   <- getListElement(itemsJSON, "name")
 
     return(itemData)
 }
@@ -97,24 +108,55 @@ prettyShitUp <- function(data){
     return(data)
 }
 
+stats2df <- function(data, type = "default"){
+  # Spiritual successor to prettyShitUp()
+
+  # First we need to get the nested lists into a nice data.frame
+  # Achievements need to be handled separately because of the sublist
+  if (type == "achievements"){
+    AdventuringProgress <<- lapply(data, function(x){ 
+                                   rbind(x$achievement.exploreAllBiomes.progress)
+                             })
+    data.df <- ldply(data, function(player){
+                          stats <- names(player)
+                          data.frame(player[stats != "achievement.exploreAllBiomes"])
+                })
+    
+  } else {
+    # Everything else can be handled quite simply
+    data.df <- ldply(data, data.frame)
+  }
+  # .id is a leftover of ldply(), contains player names, i.e. elements of 'data'
+  data.df <- rename(data.df, replace=c(".id" = "player"))
+  # Nullifying NAs for plotting reasons
+  data.df[is.na(data.df)] <- 0
+  # Removing "stat." and "achievement." prefixes from column names
+  names(data.df) <- sub("stat.", "", names(data.df))
+  names(data.df) <- sub("achievement.", "", names(data.df))
+  # Sorting according to activePeople, reordering the rows and factor levels
+  data.df        <- data.df[match(activePeople$mc, data.df$player), ]
+  data.df$player <- factor(activePeople$name, levels = activePeople$name, ordered = T)
+  
+  return(data.df)
+  
+}
+
 getDeathStats <- function(){
   require(jsonlite)
-
-    latestdeaths <- fromJSON(getOption("url.general.deaths.latest"), flatten = T)
-
+   
+    latestdeaths <- fromJSON(getOption("url.general.deaths.latest"))
+    
     deaths              <- data.frame(player = names(latestdeaths$deaths))
-    for(x in deaths$player){
-      deaths$timestamp[deaths$player == x] <- latestdeaths$deaths[[x]]$timestamp
-      deaths$cause[deaths$player == x] <- latestdeaths$deaths[[x]]$cause
-    }
+    deaths$timestamp    <- getListElement(latestdeaths$deaths, "timestamp")
+    deaths$cause        <- getListElement(latestdeaths$deaths, "cause")
+    
    #deaths$timestamp    <- unlist(latestdeaths$deaths[,1], use.names=F)
    #deaths$cause        <- unlist(latestdeaths$deaths[,2], use.names=F)
     deaths$timestamp    <- as.POSIXct(deaths$timestamp, tz="UTC")
-    deaths$daysSince    <- as.numeric(round(difftime(Sys.time(),deaths$timestamp, units="days")))
+    deaths$daysSince    <- as.numeric(round(difftime(Sys.time(), deaths$timestamp, units="days")))
 
     # Match against activePeople and sort accordingly
-    deaths <- deaths[match(activePeople$id, deaths$player), ]
-
+    deaths              <- deaths[match(activePeople$id, deaths$player), ]
     deaths$player       <- activePeople$name
     deaths$joinStatus   <- activePeople$joinStatus
 
