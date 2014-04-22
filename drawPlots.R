@@ -117,15 +117,15 @@ rm(fillColours)
 #-------------------------------------------------------------------------------#
 cat("Generating general stats plots \n")
 
-statNum <- ncol(strings$general)
+statNum <- nrow(strings.general)
 
 for(i in 1:statNum){
 
-  filename  <- paste("Plots/statspage/", generalStats$id[i],".png", sep="")
-  stat      <- generalStats$id[i]
-  statScale <- generalStats$scale[i]
-  statName  <- generalStats$name[i]
-  statUnit  <- generalStats$unit[i]
+  filename  <- paste("Plots/statspage/", strings.general$id[i],".png", sep="")
+  stat      <- strings.general$id[i]
+  statScale <- strings.general$scale[i]
+  statName  <- strings.general$name[i]
+  statUnit  <- strings.general$unit[i]
 
   p <- ggplot(data=playerstats)
   p <- p + aes(fill=joinStatus, x=reorder(player, playerstats[, stat], mean, order=T), 
@@ -174,7 +174,7 @@ cat("Generating achievement plots \n")
 for(i in 1:nrow(strings.achievements)){
 
   ID          <- strings.achievements$id[i]
-  name        <- strings.achievements$displayname[i]
+  name        <- strings.achievements$name[i]
   description <- strings.achievements$description[i]
 
   if(ID == "exploreAllBiomes"){ next };
@@ -241,9 +241,9 @@ for(action in itemActions$name){
   itemStatsPerAction <- head(arrange(itemStatsPerAction, desc(total)), 20)
 
   p <- ggplot(data=itemStatsPerAction)
-  p <- p + aes(x=sortLevels(item, total), y=total)
+  p <- p + aes(x=sortLevels(item, total), y=total/1000)
   p <- p + barChart + coord_flip()
-  p <- p + labs(x="Item", y=paste("Times", action, sep=" "))
+  p <- p + labs(x="Item", y=paste("Times", action, "(in thousands)", sep=" "))
   p <- p + ggtitle(paste("Top", action, "items", sep=" "))
   ggsave(plot=p, file=paste("Plots/items/top_", action, ".png", sep=""), height=plotHeight, width=plotWidth)
   
@@ -263,16 +263,17 @@ killEntityMobs      <- sub("killEntity.", "", names(playerstats[killEntity]))
 killedByEntityMobs  <- sub("entityKilledBy.", "", names(playerstats[killedByEntity]))
 
 # Substitute mob names with more familiar names
-for(i in 1:ncol(strings$mobs)){
+for(i in 1:nrow(strings.mobs)){
   
-  killedByEntityMobs  <- sub(names(strings$mobs[2,])[i], strings$mobs[2,i], killedByEntityMobs)
-  killEntityMobs      <- sub(names(strings$mobs[2,])[i], strings$mobs[2,i], killEntityMobs)
+  killedByEntityMobs  <- sub(strings.mobs$id[i], strings.mobs$name[i], killedByEntityMobs)
+  killEntityMobs      <- sub(strings.mobs$id[i], strings.mobs$name[i], killEntityMobs)
 
 }; rm(i);
 
-##########################################
-## Generate graphs for killEntity stats ##
-##########################################
+#--------------------------------------------#
+#### Generate graphs for killEntity stats ####
+#--------------------------------------------#
+
 
 for(i in 1:length(killEntity)){
 
@@ -287,9 +288,9 @@ for(i in 1:length(killEntity)){
 
 }; rm(i, p, filename)
 
-##############################################
-## Generate graphs for entityKilledBy stats ##
-##############################################
+#------------------------------------------------#
+#### Generate graphs for entityKilledBy stats ####
+#------------------------------------------------#
 
 for(i in 1:length(killedByEntity)){
   
@@ -306,9 +307,10 @@ for(i in 1:length(killedByEntity)){
 }; rm(i, p, filename)
 
 
-############################################
-## Generate top killed / deaths by charts ##
-############################################
+#----------------------------------------------#
+#### Generate top killed / deaths by charts ####
+#----------------------------------------------#
+
 
 # Kills per mob #
 mobsKilled <- data.frame(killedMob =  killEntityMobs,
@@ -329,7 +331,7 @@ p <- p + barChart + coord_flip() + scale_y_discrete(breaks= pretty_breaks())
 p <- p + labs(x="Mobs", y="Kills", title="Killed Mobs (except Endermen)")
 ggsave(plot=p, file="Plots/mobs/Kills_byMob_except_Endermen.png", height=plotHeight, width=plotWidth)
 
-# Deaths by mob #
+#### Deaths by mob ####
 mobsKilledBy <- data.frame(killedByMob  = killedByEntityMobs,
                            nKilledBy    = unlist(colwise(sum)(playerstats[killedByEntity]), use.names=F))
 

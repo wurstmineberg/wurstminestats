@@ -67,6 +67,8 @@ generalColumns <- c("timestamp", "player", "joinDate", "joinStatus", "leaveGame"
 playerstats <- playerstats[c(generalColumns, setdiff(names(playerstats), generalColumns))]
 rm(generalColumns)
 
+# One last time to make sure
+playerstats[is.na(playerstats)] <- 0
 
 ##########################
 ## Handle items dataset ##

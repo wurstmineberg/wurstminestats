@@ -59,7 +59,7 @@ getAchievementStrings <- function(){
   strings.achievements             <- data.frame(id = names(acs))
   strings.achievements$description <- unlist(lapply(acs, function(x) cbind(x[[1]])), use.names=F)
   strings.achievements$name        <- unlist(lapply(acs, function(x) cbind(x[[2]])), use.names=F)
-
+  strings.achievements$id          <- as.character(strings.achievements$id) # defactorize
   return(strings.achievements)
 }
 
