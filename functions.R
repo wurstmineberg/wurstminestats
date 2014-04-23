@@ -36,9 +36,20 @@ writePlayerstatsLog <- function(){
 
 getStrings <- function(category = "general"){
   require(jsonlite)
+  
+  if (category %in% c("mobs", "general")){
     strings                <- fromJSON(getOption("url.strings.general"))
     strings                <- melt(strings$stats)
     names(strings)         <- c("name", "id", "category")
+  } else if (category == "achievements"){
+      acs                              <- fromJSON(getOption("url.strings.achievements"))
+      strings.achievements             <- data.frame(id = names(acs))
+      strings.achievements$description <- unlist(lapply(acs, function(x) cbind(x[[1]])), use.names=F)
+      strings.achievements$name        <- unlist(lapply(acs, function(x) cbind(x[[2]])), use.names=F)
+      strings.achievements$id          <- as.character(strings.achievements$id) # defactorize
+      return(strings.achievements)
+  }
+
    if (category == "general"){
        strings.general        <- dplyr::filter(strings, category == "general")
        strings.general$unit   <- c("Animals", "km", "km", "km", "Hearts (thousands)", "Hearts (thousands)", "Deathcount", "km", "Items", "km", "Fish", "km", "km", "Jumps (thousands)", "Junk", "Quits", "km", "Mobs", "m", "Hours (real life)", "Kills", "km", "km", "Hours (real life)", "Treasure", "km")
@@ -46,36 +57,23 @@ getStrings <- function(category = "general"){
        return(strings.general)
    } else if (category == "mobs"){
        strings.mobs           <- dplyr::filter(strings, category == "mobs")
-     return(strings.mobs)
+       return(strings.mobs)
    }
-}
-
-## Get achievement descriptions from website and append IDs as extra column
-getAchievementStrings <- function(){
-  require(jsonlite)
   
-  acs    <- fromJSON(getOption("url.strings.achievements"))
-
-  strings.achievements             <- data.frame(id = names(acs))
-  strings.achievements$description <- unlist(lapply(acs, function(x) cbind(x[[1]])), use.names=F)
-  strings.achievements$name        <- unlist(lapply(acs, function(x) cbind(x[[2]])), use.names=F)
-  strings.achievements$id          <- as.character(strings.achievements$id) # defactorize
-  return(strings.achievements)
-}
-
-getItemData <- function(){
-  require(jsonlite)
-    ## Get items.json from our website for names/ids ##
-    itemsJSON        <- fromJSON(getOption("url.strings.items"))
+  if (category == "items"){
+    itemsJSON       <- fromJSON(getOption("url.strings.items"))
     itemData        <- data.frame(numID = names(itemsJSON))
     itemData$ID     <- getListElement(itemsJSON, "id")
     itemData$ID     <- sub(":",".", itemData$ID)
     itemData$name   <- getListElement(itemsJSON, "name")
-
     return(itemData)
+  }
+  if (!(category %in% c("mobs", "general", "achievements", "items"))){
+    stop(category, " is not a recognized category")
+  }
 }
 
-# Define function to transform JSON from playerstats API to nice dataframe
+# Function to transform JSON from playerstats API to nice dataframe
 prettyShitUp <- function(data){
     ## Removing "stat." and "achievement." prefixes from columns
     names(data) <- sub("stat.","",names(data))
