@@ -121,7 +121,7 @@ shinyServer(function(input, output) {
   ## General stats plot ##
   output$plot.generalStats <- renderChart({
     statname <- input$selectGeneralStat
-    id       <- generalStats$id[generalStats$name == statname]
+    id       <- strings.general$id[strings.general$name == statname]
     
     gstat <- nPlot(player ~ id, data = generalstats, 
                    type = 'discreteBarChart')
