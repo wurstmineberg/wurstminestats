@@ -142,14 +142,10 @@ stats2df <- function(data, type = "default"){
 getDeathStats <- function(){
   require(jsonlite)
    
-    latestdeaths <- fromJSON(getOption("url.general.deaths.latest"))
+    latestdeaths        <- fromJSON(getOption("url.general.deaths.latest"))
     
-    deaths              <- data.frame(player = names(latestdeaths$deaths))
-    deaths$timestamp    <- getListElement(latestdeaths$deaths, "timestamp")
-    deaths$cause        <- getListElement(latestdeaths$deaths, "cause")
-    
-   #deaths$timestamp    <- unlist(latestdeaths$deaths[,1], use.names=F)
-   #deaths$cause        <- unlist(latestdeaths$deaths[,2], use.names=F)
+    deaths              <- ldply(latestdeaths$deaths, data.frame)
+    deaths              <- rename(deaths, replace=c(".id" = "player"))
     deaths$timestamp    <- as.POSIXct(deaths$timestamp, tz="UTC")
     deaths$daysSince    <- as.numeric(round(difftime(Sys.time(), deaths$timestamp, units="days")))
 
