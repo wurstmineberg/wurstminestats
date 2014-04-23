@@ -18,12 +18,11 @@ achievements  <- fromJSON(getOption("url.stats.achievements"))
 entities      <- fromJSON(getOption("url.stats.entities"))
 items         <- fromJSON(getOption("url.stats.items"))
 
-## Get strings for better descriptions and names
-strings.achievements    <- getAchievementStrings()
-
 # Get strings.json for some… strings. (Mob IDs, display names)
-strings.general <- getStrings(category = "general")
-strings.mobs    <- getStrings(category = "mobs")
+strings.general         <- getStrings(category = "general")
+strings.mobs            <- getStrings(category = "mobs")
+strings.achievements    <- getStrings(category = "achievements")
+strings.items           <- getStrings(category = "items")
 
 ####################################################################################
 #### This is where imported datasets get cleaned up so we can actually use them ####
@@ -74,22 +73,18 @@ playerstats[is.na(playerstats)] <- 0
 ## Handle items dataset ##
 ##########################
 
-## Get items.json from our website for names/ids ##
-itemData        <- getItemData()
-
 ## Get table of item actions and readable names ##
 itemActions     <- data.frame(id    = c("mineBlock", "craftItem"   , "useItem" , "breakItem"), 
                               name  = c("mined"    , "crafted"     , "used"    , "broken"))
 
 ## Merge old and new item stat IDs and whate have you ##
-items     <- mergeItemStats(items, itemActions, itemData)
+items     <- mergeItemStats(items, itemActions, strings.items)
 
 ## Get a dataframe of item stat ID, item name and action ##
-itemStats <- getItemStats(items, itemActions, itemData)
+itemStats <- getItemStats(items, itemActions, strings.items)
 
 ## Finally join the remaining datasets ## 
 playerstats <- join(playerstats, items, type="full")
-rm(items)
 
 ###################################################
 ## Getting sessions from /sessions/overview.json ##
