@@ -5,9 +5,9 @@ require(lubridate)
 list.months <- months(seq(from = as.Date("14-01-01", "%F"), to = as.Date("14-12-01", "%F"), by = "month"))
 list.wdays  <- as.character(wday(c(2:7,1), T, F))
 
-#########################
-### General functions ###
-#########################
+#-------------------------#
+#### General functions ####
+#-------------------------#
 
 getListElement <- function(list_, level = 1){
   # This is used to access a level of a nested list as a vector, helping with fromJSON imports
@@ -216,9 +216,9 @@ getActivePeople <- function(){
     return(activePeople)
 }
 
-#################################
-### Functions for itemStats.R ###
-#################################
+#---------------------------------#
+#### Functions for itemStats.R ####
+#---------------------------------#
 
 mergeItemStats <- function(items, itemActions, itemData){
     # Get list of num and new IDs actually existing in items dataset
@@ -303,19 +303,21 @@ getItemStats <- function(items, itemActions, itemData){
     return(itemStats)
 }
 
-################################
-### Functions for sessions.R ###
-################################
+#--------------------------------#
+#### Functions for sessions.R ####
+#--------------------------------#
 
 getSessions <- function(){
   require(jsonlite)
     sessions <- fromJSON(getOption("url.general.sessions"))
     sessions <- as.data.frame(sessions)
-
+    # Remove empty (NULL) sessions, because they make shit complicated
+    sessions <- sessions[!as.logical(lapply(sessions$uptimes.sessions, is.null)), ]
+    # Convert dates to POSIXct because it's always good to have POSIXct
     sessions$uptimes.startTime  <- as.POSIXct(sessions$uptimes.startTime, tz="UTC")
     sessions$uptimes.endTime    <- as.POSIXct(sessions$uptimes.endTime, tz="UTC")
 
-    ## Fill playerSessions with data from sessions$uptimes.sessions in an ugly way because fuck JSON handling in R
+    # Fill playerSessions with data from sessions$uptimes.sessions in an ugly way because fuck this
     numSessions <- nrow(sessions)
 
     # If the latest session is NA, we'll just and it RIGHT NOW
