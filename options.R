@@ -8,7 +8,7 @@
 options(url.strings.general         = "http://assets.wurstmineberg.de/json/strings.json")
 options(url.strings.achievements    = "http://assets.wurstmineberg.de/json/achievements.json")
 options(url.strings.items           = "http://assets.wurstmineberg.de/json/items.json")
-
+options(url.strings.biomes          = "http://assets.wurstmineberg.de/json/biomes.json")
 # In contrast to the above files, the next one is server specific, because people.
 options(url.strings.people          = "http://wurstmineberg.de/assets/serverstatus/people.json")
 
