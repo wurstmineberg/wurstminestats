@@ -12,17 +12,18 @@ if(grepl("shiny$", getwd())){
 # Get a close enough timestamp for the data age. Reimport via as.POSIXct(x,origin="1970-01-01") should be sufficient, else handle as.numeric()
 dataTime <- format(Sys.time(), "%s")
 
-#### Get player stats from wurstmineberg API ####
-generalstats            <- fromJSON(getOption("url.stats.general"))
-achievements            <- fromJSON(getOption("url.stats.achievements"))
-entities                <- fromJSON(getOption("url.stats.entities"))
-items                   <- fromJSON(getOption("url.stats.items"))
-
 #### Get strings.json for some… strings. (Mob IDs, display names) ####
 strings.general         <- getStrings(category = "general")
 strings.mobs            <- getStrings(category = "mobs")
 strings.achievements    <- getStrings(category = "achievements")
 strings.items           <- getStrings(category = "items")
+strings.biomes          <- getStrings(category = "biomes")
+
+#### Get player stats from wurstmineberg API ####
+generalstats            <- fromJSON(getOption("url.stats.general"))
+achievements            <- fromJSON(getOption("url.stats.achievements"))
+entities                <- fromJSON(getOption("url.stats.entities"))
+items                   <- fromJSON(getOption("url.stats.items"))
 
 #----------------------------------------------------------------------------------#
 #### This is where imported datasets get cleaned up so we can actually use them ####

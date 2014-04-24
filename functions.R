@@ -68,7 +68,12 @@ getStrings <- function(category = "general"){
     itemData$name   <- getListElement(itemsJSON, "name")
     return(itemData)
   }
-  if (!(category %in% c("mobs", "general", "achievements", "items"))){
+  if (category == "biomes"){
+    biomeJSON      <- fromJSON(getOption("url.strings.biomes"))
+    strings.biomes <- ldply(biomeJSON$biomes, data.frame, .id="id")
+    return(strings.biomes)
+  }
+  if (!(category %in% c("mobs", "general", "achievements", "items", "biomes"))){
     stop(category, " is not a recognized category")
   }
 }
@@ -108,23 +113,27 @@ prettyShitUp <- function(data){
 
 stats2df <- function(data, type = "default"){
   # Spiritual successor to prettyShitUp()
-
+  require(dplyr)
   # First we need to get the nested lists into a nice data.frame
   # Achievements need to be handled separately because of the sublist
   if (type == "achievements"){
-    AdventuringProgress        <<- ldply(data, function(x){
+    AdventuringProgress        <- ldply(data, function(x){
                                                 data.frame(x$achievement.exploreAllBiomes$progress)
                                                 }, .id = "player")
-    names(AdventuringProgress) <<- c("player", "biomes")
-    biomeCount                 <- summarize(group_by(AdventuringProgress, player), count=length(biomes))
-    AdventuringProgress        <<- join(AdventuringProgress, biomeCount)
+    names(AdventuringProgress) <- c("player", "biomes")
+    #biomeCount                 <- summarize(group_by(AdventuringProgress, player), count=length(biomes))
+    #AdventuringProgress        <- join(AdventuringProgress, biomeCount)
+    # Only include biomes relevant to Adventuring Time achievement
+    biomes.adv                 <- filter(strings.biomes, adventuringTime == T)
+    AdventuringProgress        <- AdventuringProgress[AdventuringProgress$biomes %in% biomes.adv$id, ]
+    AdventuringProgress        <- summarize(group_by(AdventuringProgress, player), count=length(biomes))
     
     data.df <- ldply(data, function(player){
                           stats <- names(player)
                           data.frame(player[stats != "achievement.exploreAllBiomes"])
                 }, .id = "player")
     
-    data.df$exploreAllBiomesProgress<- biomeCount$count
+    data.df$exploreAllBiomesProgress <- AdventuringProgress$count
     
   } else {
     # Everything else can be handled quite simply
