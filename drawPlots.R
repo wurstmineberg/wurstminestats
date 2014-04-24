@@ -209,7 +209,14 @@ p <- ggplot(data=playerstats, aes(fill=joinStatus, x=reorder(player, openInvento
 p <- p + barChart + statusFillScale + coord_flip() + scale_y_discrete(breaks= pretty_breaks())
 p <- p + xLable + labs(y="Inventories Opened per Hour", title="Inventories Opened weighted by Online Time")
 ggsave(p, file="Plots/achievements/openInventory_by_Time.png", height=plotHeight, width=plotWidth)
-rm(p, cowRatio)
+rm(cowRatio)
+
+# Adventuring time progress in number of biomes visited
+p <- ggplot(playerstats)
+p <- p + aes(fill=joinStatus, x=sortLevels(player, exploreAllBiomesProgress), y=exploreAllBiomesProgress)
+p <- p + barChart + coord_flip() + statusFillScale + xLable
+p <- p + labs(title="Number of biomes explored \n (Includes biomes not relevant to achievement)", y="Biomes")
+ggsave(p, file="Plots/achievements/exploreAllBiomesProgress.png", height=plotHeight, width=plotWidth)
 
 #----------------------------------------#
 #### Plotting item stats as they come ####

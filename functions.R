@@ -112,20 +112,24 @@ stats2df <- function(data, type = "default"){
   # First we need to get the nested lists into a nice data.frame
   # Achievements need to be handled separately because of the sublist
   if (type == "achievements"){
-    AdventuringProgress <<- lapply(data, function(x){ 
-                                   rbind(x$achievement.exploreAllBiomes.progress)
-                             })
+    AdventuringProgress        <<- ldply(data, function(x){
+                                                data.frame(x$achievement.exploreAllBiomes$progress)
+                                                }, .id = "player")
+    names(AdventuringProgress) <<- c("player", "biomes")
+    biomeCount                 <- summarize(group_by(AdventuringProgress, player), count=length(biomes))
+    AdventuringProgress        <<- join(AdventuringProgress, biomeCount)
+    
     data.df <- ldply(data, function(player){
                           stats <- names(player)
                           data.frame(player[stats != "achievement.exploreAllBiomes"])
-                })
+                }, .id = "player")
+    
+    data.df$exploreAllBiomesProgress<- biomeCount$count
     
   } else {
     # Everything else can be handled quite simply
-    data.df <- ldply(data, data.frame)
+    data.df <- ldply(data, data.frame, .id = "player")
   }
-  # .id is a leftover of ldply(), contains player names, i.e. elements of 'data'
-  data.df <- rename(data.df, replace=c(".id" = "player"))
   # Nullifying NAs for plotting reasons
   data.df[is.na(data.df)] <- 0
   # Removing "stat." and "achievement." prefixes from column names
@@ -144,8 +148,7 @@ getDeathStats <- function(){
    
     latestdeaths        <- fromJSON(getOption("url.general.deaths.latest"))
     
-    deaths              <- ldply(latestdeaths$deaths, data.frame)
-    deaths              <- rename(deaths, replace=c(".id" = "player"))
+    deaths              <- ldply(latestdeaths$deaths, data.frame, .id = "player")
     deaths$timestamp    <- as.POSIXct(deaths$timestamp, tz="UTC")
     deaths$daysSince    <- as.numeric(round(difftime(Sys.time(), deaths$timestamp, units="days")))
 
