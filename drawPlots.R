@@ -133,6 +133,7 @@ for(i in 1:statNum){
   p <- p + scale_y_discrete(breaks=pretty_breaks()) 
   p <- p + xLable + labs(y=statUnit, title=statName)
   
+  cat(paste("Saving", filename, "\n"))
   ggsave(plot=p, file=filename, height=plotHeight, width=plotWidth)
 
   ## Weighted by hours played ##
@@ -147,6 +148,7 @@ for(i in 1:statNum){
   p <- p + barChart + statusFillScale + coord_flip()
   p <- p + xLable + labs(y=paste(statUnit, "per hour"), title=paste(statName, "weighted by Online Time"))
   
+  cat(paste("Saving", filename, "\n"))
   ggsave(plot=p, file=filename, height=plotHeight, width=plotWidth)
   
 }; rm(i, filename, p, stat, statScale, statUnit, statName, statNum)
@@ -190,6 +192,7 @@ for(i in 1:nrow(strings.achievements)){
       }
   p <- p + ggtitle(paste("Achievement:", name, "\n", description))
   
+  cat(paste("Saving", filename, "\n"))
   ggsave(plot=p, file=filename, height=plotHeight, width=plotWidth)
 
 }; rm(i, p, filename, name, ID, description)
@@ -235,23 +238,29 @@ for(i in 1:length(itemStats$stat)){
     p <- p + aes(fill=joinStatus, x=reorder(player, playerstats[, stat], mean, order=T), y=playerstats[, stat])
     p <- p + barChart + statusFillScale + coord_flip() + scale_y_discrete(breaks= pretty_breaks())
     p <- p + labs(x="Player", y=paste("Times", action), title=title)
+    
+    cat(paste("Saving", filename, "\n"))
     ggsave(plot=p, file=filename, height=plotHeight, width=plotWidth)
 
 }; rm(p, i, title, filename, stat, action, itemName)
 
 ## Now to look at the different item actions ##
+cat("Generating item actions plots \n")
 
 # subset for each action, get top 20 items for each action, and plot them
 for(action in itemActions$name){
   itemStatsPerAction <- itemStats[itemStats$action == action,]
   itemStatsPerAction <- head(arrange(itemStatsPerAction, desc(total)), 20)
-
+  filename           <- paste("Plots/items/top_", action, ".png", sep="")
+  
   p <- ggplot(data=itemStatsPerAction)
   p <- p + aes(x=sortLevels(item, total), y=total/1000)
   p <- p + barChart + coord_flip()
   p <- p + labs(x="Item", y=paste("Times", action, "(in thousands)", sep=" "))
   p <- p + ggtitle(paste("Top", action, "items", sep=" "))
-  ggsave(plot=p, file=paste("Plots/items/top_", action, ".png", sep=""), height=plotHeight, width=plotWidth)
+  
+  cat(paste("Saving", filename, "\n"))
+  ggsave(plot=p, file=filename, height=plotHeight, width=plotWidth)
   
 }; rm(action, itemStatsPerAction)
 
@@ -290,6 +299,7 @@ for(i in 1:length(killEntity)){
   p <- p + barChart + statusFillScale + coord_flip() + scale_y_discrete(breaks= pretty_breaks())
   p <- p + xLable + labs(y="Kills", title=paste("Kills of:",killEntityMobs[i]))
   
+  cat(paste("Saving", filename, "\n"))
   ggsave(plot=p, file=filename, height=plotHeight, width=plotWidth)
 
 }; rm(i, p, filename)
@@ -308,6 +318,7 @@ for(i in 1:length(killedByEntity)){
   p <- p + barChart + statusFillScale + coord_flip() + scale_y_discrete(breaks= pretty_breaks())
   p <- p + xLable + labs(y="Deaths", title=paste("Killed by:",killedByEntityMobs[i]))
   
+  cat(paste("Saving", filename, "\n"))
   ggsave(plot=p, file=filename, height=plotHeight, width=plotWidth)
   
 }; rm(i, p, filename)
@@ -316,7 +327,6 @@ for(i in 1:length(killedByEntity)){
 #----------------------------------------------#
 #### Generate top killed / deaths by charts ####
 #----------------------------------------------#
-
 
 # Kills per mob #
 mobsKilled <- data.frame(killedMob =  killEntityMobs,
