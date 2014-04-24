@@ -46,6 +46,15 @@ Just some substitution-friendly strings to make achievements more human readable
 
 Similar to achievements.json, this provides names and classification for player stats, as well as some mob name substitutions.
 
+* http://assets.wurstmineberg.de/json/biomes.json
+
+You guessed it. Contains biome ID, name if necessary and for this project the most relevant: Is the biome relevant to the [Adventuring Time](http://minecraft.gamepedia.com/Adventuring_Time#List_of_achievements) achievement or not. Used as a filter for the total amount of visited biomes per player and then put in [this](http://i.wurstmineberg.de/wurstminestats/achievements/exploreAllBiomesProgress.png).
+
+* http://assets.wurstmineberg.de/json/items.json
+  * also see http://assets.wurstmineberg.de/json/items.json.description.txt  
+
+Like the other files, this is also used to substitute internal IDs with nicer names. More importantly, it contains both numeric and new IDs for each biome, which allows us to merge old, still numerically indexed item stats with current item stats. This will no longer be necessary when all the inactive players have finally logged in for once, but it's nice to be backwards compatible.
+
 ## Contribution
 * If you're familiar with R or [ggplot2](http://docs.ggplot2.org/), I appreciate any hints on how to do something better, cleaner, more efficient or just more visually pleasing. 
 * Requests for graphs are appreciated, and if I figure out how to make them happen, I will
