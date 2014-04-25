@@ -1,7 +1,6 @@
 library(shiny)
 require(rCharts)
 #options(RCHART_LIB = 'polycharts')
-
 columns        <- names(activePeople)
 columnsPreset  <- c("name", "joinDate", "joinStatus", "color", "invitedBy")
 sessionsPeople <- activePeople$name[activePeople$name %in% playedPerPerson$person]

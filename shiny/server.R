@@ -1,11 +1,10 @@
 # server.R
 
 require(shiny)
-source("../dataPrep.R")
 require(rCharts)
 sessionsPeople <- activePeople$name[activePeople$name %in% playedPerPerson$person]
 
-shinyServer(function(input, output) {
+shinyServer(function(input, output, session) {
   
   #### Handle table outouts ####
   filterDate <- reactive({
