@@ -13,6 +13,7 @@ if(grepl("shiny$", getwd())){
 dataTime <- format(Sys.time(), "%s")
 
 #### Get strings.json for some… strings. (Mob IDs, display names) ####
+# Note: strings.biomes is required for proper achievements dataset handling
 strings.general         <- getStrings(category = "general")
 strings.mobs            <- getStrings(category = "mobs")
 strings.achievements    <- getStrings(category = "achievements")
@@ -54,9 +55,10 @@ playerstats             <- join(playerstats, entities)
 ## Append other useful meta info 
 playerstats$joinStatus  <- activePeople$joinStatus
 playerstats$joinDate    <- activePeople$joinDate
+playerstats$player_id   <- activePeople$id
 playerstats$timestamp   <- dataTime
 ## Reordering columns
-generalColumns <- c("timestamp", "player", "joinDate", "joinStatus", "leaveGame",
+generalColumns <- c("timestamp", "player_id" , "player", "joinDate", "joinStatus", "leaveGame",
                     "deaths", "timeSinceDeath", "playerKills", "damageDealt", "damageTaken", "playOneMinute", 
                     "playOneHour", "jump", "animalsBred", "mobKills")
 playerstats <- playerstats[c(generalColumns, setdiff(names(playerstats), generalColumns))]
