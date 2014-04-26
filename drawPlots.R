@@ -45,7 +45,7 @@ p <- p + geom_area(alpha=0.7) + geom_point() + geom_path(alpha=.8)
 p <- p + geom_hline(yintercept = mean(playedPerDay$timePlayed/60), alpha=.5)
 p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
 p <- p + scale_x_datetime(labels = date_format("%y-%m-%d"),
-                          breaks = date_breaks("days"))
+                          breaks = date_breaks("weeks"))
 p <- p + scale_y_continuous(breaks=pretty_breaks())
 p <- p + labs(y="Played Hours", x="Day", title="Total Time Played per Day")
 ggsave(p, file="Plots/sessions/playTime.png", height=6, width=12)
