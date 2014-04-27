@@ -38,7 +38,7 @@ getStrings <- function(category = "general"){
   require(jsonlite)
   
   if (category %in% c("mobs", "general")){
-    strings                <- fromJSON(getOption("url.strings.general"))
+    strings                <- jsonlite::fromJSON(getOption("url.strings.general"))
     strings                <- melt(strings$stats)
     names(strings)         <- c("name", "id", "category")
   } else if (category == "achievements"){
@@ -52,7 +52,7 @@ getStrings <- function(category = "general"){
 
    if (category == "general"){
        strings.general        <- dplyr::filter(strings, category == "general")
-       strings.general$unit   <- c("Animals", "km", "km", "km", "Hearts (thousands)", "Hearts (thousands)", "Deathcount", "km", "Items", "km", "Fish", "km", "km", "Jumps (thousands)", "Junk", "Quits", "km", "Mobs", "m", "Hours (real life)", "Kills", "km", "km", "Hours (real life)", "Treasure", "km")
+       strings.general$unit   <- c("Animals", "km", "km", "km", "Hearts (thousands)", "Hearts (thousands)", "Deaths", "km", "Items", "km", "Fish", "km", "km", "Jumps (thousands)", "Junk", "Quits", "km", "Mobs", "m", "Hours (real life)", "Kills", "km", "km", "Hours (real life)", "Treasure", "km")
        strings.general$scale  <- c(1,         10^5, 10^5, 10^5, 10*2*10^3,            10*2*10^3,             1,           10^5,  1,      10^5,  1,     10^5,  10^5, 1000,                1,      1,      10^5,  1,    1000,  20*60*60,           1,       10^5, 10^5,  20*60*60,           1,          10^5)
        return(strings.general)
    } else if (category == "mobs"){
@@ -187,22 +187,16 @@ getActivePeople <- function(){
     people$color[!is.na(people$favColor[1])] <- rgb(people$favColor[!is.na(people$favColor[1]), c("red", "green", "blue")], maxColorValue=255)
 
     ## Start to construct activePeople, which is like people.json, but useful ##
-    
-    activePeople        <- data.frame(numID = people$numID[people$status != "former"])
-    activePeople$id     <- people$id[people$status != "former"]
-    activePeople$mc     <- people$minecraft[people$status != "former"]
-    activePeople$name   <- people$name[people$status != "former"]
-    activePeople$color  <- people$color[people$status != "former"]
+    activePeople           <- data.frame(numID = people$numID[people$status != "former"])
+    activePeople$id        <- people$id[people$status != "former"]
+    activePeople$mc        <- people$minecraft[people$status != "former"]
+    activePeople$name      <- people$name[people$status != "former"]
+    activePeople$color     <- people$color[people$status != "former"]
     activePeople$invitedBy <- people$invitedBy[people$status != "former"]
-
+    activePeople$joinDate  <- people$join_date[people$status != "former"]
+  
     # If people name not set, use ID instead
-    for(i in 1:length(activePeople$name)){
-      if(is.na(activePeople$name[i])){
-        activePeople$name[i] <- activePeople$id[i]
-      }
-    }
-
-    activePeople$joinDate <- people$join_date[people$status != "former"]
+    activePeople$name[is.na(activePeople$name)] <- activePeople$id[is.na(activePeople$name)]
     # In case of missing join date, apply NA / For invited but not yet joined players
     activePeople$joinDate[people$joinDate == 0] <- NA
     # Convert joinDate to POSIXct UTC because time
@@ -360,7 +354,6 @@ getPlayerSessions <- function(sessions){
     # Now we can use the sessions set as a dataframe of player sessions
     playerSessions <- ldply(sessions$uptimes.sessions, as.data.frame)
     playerSessions <- arrange(playerSessions, joinTime, leaveTime)
-    
     
     # Now we reformat shit because time is a fucking mess
     playerSessions$joinTime  <- as.POSIXct(playerSessions$joinTime, tz="UTC")
