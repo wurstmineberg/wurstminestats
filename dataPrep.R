@@ -12,7 +12,7 @@ if(grepl("shiny$", getwd())){
 # Get a close enough timestamp for the data age. Reimport via as.POSIXct(x,origin="1970-01-01") should be sufficient, else handle as.numeric()
 dataTime <- format(Sys.time(), "%s")
 
-#### Get strings.json for some… strings. (Mob IDs, display names) ####
+#### Get strings for some… strings. (Mob IDs, display names, biomes, achievements…) ####
 # Note: strings.biomes is required for proper achievements dataset handling
 strings.general         <- getStrings(category = "general")
 strings.mobs            <- getStrings(category = "mobs")
@@ -95,6 +95,15 @@ playerSessions  <- splitSessionsByDay(playerSessions)
 
 ## We want play time per day, sooooo… 
 playedPerDay  <- ddply(playerSessions, .(date, wday), summarize, timePlayed = sum(playedMinutes))
+# Fix for missing days (ugly, sry.)
+Sys.setenv(TZ = "UTC") # Don't ask
+temp            <- data.frame(date = seq.Date(as.Date(playedPerDay$date[1]), as.Date(playedPerDay$date[nrow(playedPerDay)]), by="day"))
+temp$wday       <- factor(wday(temp$date, T, F), levels=levels(playedPerDay$wday))
+temp$timePlayed <- 0
+temp$date       <- as.POSIXct(temp$date, tz = "UTC")
+temp$timePlayed[temp$date %in% playedPerDay$date] <- playedPerDay$timePlayed
+playedPerDay    <- temp
+
 # We also want play time per day per person, so, well… ##
 playedPerPerson <- getPlayedPerPerson(playerSessions)
 # Getting per weekday stuff
