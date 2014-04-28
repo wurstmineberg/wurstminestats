@@ -24,7 +24,7 @@ options(url.general.sessions        = "http://api.wurstmineberg.de/server/sessio
 #### Dependencies ####
 # List of libraries required
 libraries <- c("jsonlite", "ggplot2", "scales", "grid", "plyr", "dplyr", "RColorBrewer", 
-               "RCurl", "httr", "lubridate", "shiny", "httpuv", "markdown", "gdata", "googleVis", "reshape2")
+               "RCurl", "httr", "lubridate", "shiny", "httpuv", "markdown", "gdata", "googleVis", "reshape2", "twitteR")
 
 # Loading some libraries but with suppressed messages because they're too noisy
 suppressPackageStartupMessages(library("RCurl"))
@@ -40,9 +40,10 @@ library("RColorBrewer")               # Because colours
 library("httr")                       # For direct web access stuff, apparently
 library("rCharts")                    # For interactive jsified plotting glory (http://ramnathv.github.io/rCharts/), install via install_github("rCharts", "ramnathv")
 library("lubridate") 
-library("jsonlite")
 library("dplyr")
 library("reshape2")
+library("twitteR")
+library("jsonlite")
 
 checkDependencies <- function(update = F){
     if(update) update.packages(ask = F)
@@ -84,3 +85,9 @@ statusColourScale     <- scale_colour_manual( name = "Join Status", values = sta
 
 #activePeople          <- fixPeopleColors(activePeople, 0.95)
 legendPeople          <- scale_fill_manual(name = "People", values = activePeople$color)
+
+### Make twitteR work ####
+if(!exists("twitCred")){
+  load("cache/twitcred.RData")
+  print(ifelse(registerTwitterOAuth(twitCred), "Tweets should work", "Something broke"))
+}
