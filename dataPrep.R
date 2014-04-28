@@ -21,10 +21,10 @@ strings.items           <- getStrings(category = "items")
 strings.biomes          <- getStrings(category = "biomes")
 
 #### Get player stats from wurstmineberg API ####
-generalstats            <- fromJSON(getOption("url.stats.general"))
-achievements            <- fromJSON(getOption("url.stats.achievements"))
-entities                <- fromJSON(getOption("url.stats.entities"))
-items                   <- fromJSON(getOption("url.stats.items"))
+generalstats            <- jsonlite::fromJSON(getOption("url.stats.general"))
+achievements            <- jsonlite::fromJSON(getOption("url.stats.achievements"))
+entities                <- jsonlite::fromJSON(getOption("url.stats.entities"))
+items                   <- jsonlite::fromJSON(getOption("url.stats.items"))
 
 #----------------------------------------------------------------------------------#
 #### This is where imported datasets get cleaned up so we can actually use them ####
