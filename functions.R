@@ -538,6 +538,21 @@ statOfTheDay <- function(type = "general"){
   }
 }
 
+randomAchievement <- function(player = "random"){
+  r1       <- round(runif(1, 2, ncol(achievements)))
+  if (player == "random"){
+    rPlayer  <- activePeople$name[round(runif(1, 1, nrow(activePeople)))]
+  } else if (player %in% activePeople$name){
+    rPlayer <- player
+  } else {
+    stop("Player not found :(")
+  }
+  achValue <- achievements[achievements$player == rPlayer, r1]
+  achName  <- strings.achievements$name[strings.achievements$id == names(achievements[r1])]
+  msg      <- paste0(rPlayer, "'s achievement progress for “", achName, "” is ", achValue)
+  return(msg)
+}
+
 ##############################
 ### Generally useful stuff ###
 ##############################
