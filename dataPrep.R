@@ -103,6 +103,7 @@ temp$timePlayed <- 0
 temp$date       <- as.POSIXct(temp$date, tz = "UTC")
 temp$timePlayed[temp$date %in% playedPerDay$date] <- playedPerDay$timePlayed
 playedPerDay    <- temp
+rm(tmp)
 
 # We also want play time per day per person, so, well… ##
 playedPerPerson <- getPlayedPerPerson(playerSessions)
@@ -131,4 +132,16 @@ for(i in unique(playedPerPerson$person)){
   tmp <- dplyr::select(tmp, date, timePlayed)
   tmp <- rename(tmp, c("timePlayed" = i))
   perPerson <- join(perPerson, tmp, type="full", match="all")
-}
+}; rm(i, tmp)
+
+#### Cache some objects ####
+saveRDS(playerstats,          file = paste0("cache/", "playerstats", ".rds"))
+saveRDS(activePeople,         file = paste0("cache/", "activePeople", ".rds"))
+saveRDS(playerSessions,       file = paste0("cache/", "playerSessions", ".rds"))
+saveRDS(itemStats,            file = paste0("cache/", "itemStats", ".rds"))
+saveRDS(strings.general,      file = paste0("cache/", "strings.general", ".rds"))
+saveRDS(strings.achievements, file = paste0("cache/", "strings.achievements", ".rds"))
+saveRDS(strings.mobs,         file = paste0("cache/", "strings.mobs", ".rds"))
+saveRDS(strings.biomes,       file = paste0("cache/", "strings.biomes", ".rds"))
+saveRDS(strings.items,        file = paste0("cache/", "strings.items", ".rds"))
+
