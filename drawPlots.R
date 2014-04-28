@@ -1,6 +1,7 @@
 #### First of all, getting some tweets out ####
 tweet(statOfTheDay())
 tweet(statOfTheDay(type = "itemStats"))
+tweet(randomAchievement("random"))
 
 #-----------------------------------------------#
 #### Meta stats (server stuff, death stats…) ####
