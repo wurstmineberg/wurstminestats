@@ -522,7 +522,7 @@ statOfTheDay <- function(type = "general"){
     r2      <- round(runif(1, 2, ncol(statset)))
     stat    <- names(statset[r2])
     desc    <- as.character(strings.general$name[strings.general$id == stat])
-    number  <- statset[r1, r2] / strings.general$scale[strings.general$id == stat]
+    number  <- round(statset[r1, r2] / strings.general$scale[strings.general$id == stat], 2)
     unit    <- strings.general$unit[strings.general$id == stat]
     generalStatsMessage <- paste0("Random stat for ", person, ": ", number, " ", unit, " in category: ", desc)
     return(generalStatsMessage)
