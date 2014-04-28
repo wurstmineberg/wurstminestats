@@ -512,6 +512,32 @@ serverBirthday <- function(activePeople){
   return(birthdays)
 }
 
+statOfTheDay <- function(type = "general"){
+  require(twitteR)
+  
+  if(type == "general"){
+    statset <- generalstats[!(names(generalstats) %in% c("playOneHour", "distanceTraveled"))]
+    r1      <- round(runif(1, 1, nrow(activePeople)))
+    person  <- activePeople$name[r1]
+    r2      <- round(runif(1, 2, ncol(statset)))
+    stat    <- names(statset[r2])
+    desc    <- as.character(strings.general$name[strings.general$id == stat])
+    number  <- statset[r1, r2] / strings.general$scale[strings.general$id == stat]
+    unit    <- strings.general$unit[strings.general$id == stat]
+    generalStatsMessage <- paste0("Random stat for ", person, ": ", number, " ", unit, " in category: ", desc)
+    return(generalStatsMessage)
+  } else if (type == "itemStats"){
+    r1         <- round(runif(1, 1, nrow(itemStats)))
+    item       <- itemStats$item[r1]
+    action     <- itemStats$action[r1]
+    number     <- itemStats$total[r1]
+    leadPlayer <- itemStats$leadingPlayer[r1]
+    playerMax  <- itemStats$playerMax[r1]
+    itemMessage <- paste0('The item “', item, '” was ', action, ' ', number, ' times in total, with ', leadPlayer, ' leading with ', playerMax, ' — Accounting for ', round((playerMax/number)*100, 2), '%')
+    return(itemMessage)
+  }
+}
+
 ##############################
 ### Generally useful stuff ###
 ##############################

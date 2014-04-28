@@ -1,3 +1,7 @@
+#### First of all, getting some tweets out ####
+tweet(statOfTheDay())
+tweet(statOfTheDay(type = "itemStats"))
+
 #-----------------------------------------------#
 #### Meta stats (server stuff, death stats…) ####
 #-----------------------------------------------#
