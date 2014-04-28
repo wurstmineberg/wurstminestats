@@ -10,7 +10,7 @@ list.wdays  <- as.character(wday(c(2:7,1), T, F))
 #-------------------------#
 
 getListElement <- function(list_, level = 1){
-  # This is used to access a level of a nested list as a vector, helping with fromJSON imports
+  # This is used to access a level of a nested list as a vector, helping with jsonlite::fromJSON imports
   list2 <- unlist(lapply(list_, function(x) cbind(x[[level]])), use.names = F)
   return(list2)
 }
@@ -42,7 +42,7 @@ getStrings <- function(category = "general"){
     strings                <- melt(strings$stats)
     names(strings)         <- c("name", "id", "category")
   } else if (category == "achievements"){
-      acs                              <- fromJSON(getOption("url.strings.achievements"))
+      acs                              <- jsonlite::fromJSON(getOption("url.strings.achievements"))
       strings.achievements             <- data.frame(id = names(acs))
       strings.achievements$description <- unlist(lapply(acs, function(x) cbind(x[[1]])), use.names=F)
       strings.achievements$name        <- unlist(lapply(acs, function(x) cbind(x[[2]])), use.names=F)
@@ -61,7 +61,7 @@ getStrings <- function(category = "general"){
    }
   
   if (category == "items"){
-    itemsJSON       <- fromJSON(getOption("url.strings.items"))
+    itemsJSON       <- jsonlite::fromJSON(getOption("url.strings.items"))
     itemData        <- data.frame(numID = names(itemsJSON))
     itemData$ID     <- getListElement(itemsJSON, "id")
     itemData$ID     <- sub(":",".", itemData$ID)
@@ -69,7 +69,7 @@ getStrings <- function(category = "general"){
     return(itemData)
   }
   if (category == "biomes"){
-    biomeJSON      <- fromJSON(getOption("url.strings.biomes"))
+    biomeJSON      <- jsonlite::fromJSON(getOption("url.strings.biomes"))
     strings.biomes <- ldply(biomeJSON$biomes, data.frame, .id="id")
     return(strings.biomes)
   }
@@ -155,7 +155,7 @@ stats2df <- function(data, type = "default"){
 getDeathStats <- function(){
   require(jsonlite)
    
-    latestdeaths        <- fromJSON(getOption("url.general.deaths.latest"))
+    latestdeaths        <- jsonlite::fromJSON(getOption("url.general.deaths.latest"))
     
     deaths              <- ldply(latestdeaths$deaths, data.frame, .id = "player")
     deaths$timestamp    <- as.POSIXct(deaths$timestamp, tz="UTC")
@@ -176,7 +176,7 @@ getDeathStats <- function(){
 getActivePeople <- function(){
   require(jsonlite)
     ## Get people.json for player id and join dates
-    people <- fromJSON(getOption("url.strings.people"))
+    people <- jsonlite::fromJSON(getOption("url.strings.people"))
     people <- as.data.frame(people[1])
     names(people) <- sub("people.","",names(people))
     # Add category to people$status for easier matching, give numIDs excluding Dinnerbone
@@ -315,7 +315,7 @@ getItemStats <- function(items, itemActions, itemData){
 
 getSessions <- function(){
   require(jsonlite)
-    sessions <- fromJSON(getOption("url.general.sessions"))
+    sessions <- jsonlite::fromJSON(getOption("url.general.sessions"))
     sessions <- as.data.frame(sessions)
     # Remove empty (NULL) sessions, because they make shit complicated
     sessions <- sessions[!as.logical(lapply(sessions$uptimes.sessions, is.null)), ]
