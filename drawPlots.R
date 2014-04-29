@@ -59,7 +59,7 @@ p <- p + scale_x_datetime(labels = date_format("%y-%m-%d"),
                           breaks = date_breaks("weeks"),
                           minor_breaks = "days")
 p <- p + scale_y_continuous(breaks=pretty_breaks())
-p <- p + labs(y="Played Hours", x="Day", title="Total Time Played per Day")
+p <- p + labs(y="Played Hours", x="Day", title="Total Time Played per Day (UTC)")
 ggsave(p, file="Plots/sessions/playTime.png", height=6, width=12)
 
 # Testing "played per weekday"
@@ -83,7 +83,7 @@ p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 #p <- p + scale_x_datetime(labels = date_format("%y-%m-%d"),
 #                          breaks = date_breaks("days"))
 p <- p + scale_y_continuous(breaks=pretty_breaks()) + playerTheme
-p <- p + labs(y="Played Hours", x="Day of Month", title="Time Played per Day: 2014")
+p <- p + labs(y="Played Hours", x="Day of Month (UTC)", title="Time Played per Day: 2014")
 p <- p + scale_fill_manual(name="People", values=fillColours)
 p <- p + facet_grid(month ~ .)
 monthNum <- length(unique(playedPerPerson$month))
@@ -107,7 +107,7 @@ fillColours   <- activePeople$color[activePeople$name %in% playerSessions$person
 p <- ggplot(data=playerSessions)
 p <- p + aes(x=hour(playerSessions$joinTime), fill=person)
 p <- p + geom_histogram(colour="black", binwidth=.7)
-p <- p + labs(y="Frequency", x="Hour of Day", title="Join Time Frequencies")
+p <- p + labs(y="Frequency", x="Hour of Day (UTC)", title="Join Time Frequencies")
 p <- p + scale_fill_manual(name="People", values=fillColours) + playerTheme
 p <- p + scale_x_discrete(limits=seq(0, 23, by=1))
 p <- p + scale_y_continuous(breaks=pretty_breaks())
@@ -117,7 +117,7 @@ ggsave(p, file="Plots/sessions/joinTime_hours.png", height=6, width=12)
 p <- ggplot(data=playerSessions)
 p <- p + aes(x=hour(playerSessions$leaveTime), fill=person)
 p <- p + geom_histogram(colour="black", binwidth=.7)
-p <- p + labs(y="Frequency", x="Hour of Day", title="Leave Time Frequencies")
+p <- p + labs(y="Frequency", x="Hour of Day (UTC)", title="Leave Time Frequencies")
 p <- p + scale_fill_manual(name="People", values=fillColours) + playerTheme
 p <- p + scale_x_discrete(limits=seq(0, 23, by=1))
 p <- p + scale_y_continuous(breaks=pretty_breaks())
