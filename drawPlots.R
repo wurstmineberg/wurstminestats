@@ -33,7 +33,7 @@ p <- p + scale_x_datetime(labels = date_format("%Y %b"),
                           breaks = date_breaks("month"),
                           minor_breaks = date_breaks("week"),
                           expand = c(.2,1))
-p <- p + scale_y_discrete(breaks=pretty_breaks())
+p <- p + scale_y_discrete(breaks=seq(0, nrow(activePeople), by = 2))
 ggsave(p, file="Plots/WhitelistGrowth.png", height=6, width=12)
 
 ### Death stats ###
