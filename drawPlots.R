@@ -188,7 +188,7 @@ cat("Generating achievement plots \n")
 for(i in 1:nrow(strings.achievements)){
 
   ID          <- strings.achievements$id[i]
-  name        <- strings.achievements$name[i]
+  name        <- strings.achievements$displayname[i]
   description <- strings.achievements$description[i]
 
   if(ID == "exploreAllBiomes"){ next };
