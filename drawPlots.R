@@ -5,6 +5,9 @@ tweet(randomAchievement("random"))
 if (wday(now(), T, F) == "Monday"){
   tweet(mostActiveDay(7))
 }
+if (hour(now()) %in% 20:24){
+  tweet(dailyActivity(1))
+}
 
 #-----------------------------------------------#
 #### Meta stats (server stuff, death stats…) ####

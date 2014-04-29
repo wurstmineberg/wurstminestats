@@ -564,6 +564,21 @@ mostActiveDay <- function(daysAgo = 7){
   return(msg)
 }
 
+dailyActivity <- function(daysAgo = 1){
+  pastDay        <- playedPerPerson[playedPerPerson$date > (now() - days(daysAgo + 1)), ]
+  if (nrow(pastDay) == 0){
+    stop("Nobody played :(")
+  }
+  people         <- unique(pastDay$person)
+  hoursPlayed    <- sum(pastDay$timePlayed)/60
+  peopleMax      <- pastDay$person[pastDay$timePlayed == max(pastDay$timePlayed)]
+  hoursPlayedMax <- sum(pastDay$timePlayed[pastDay$person == peopleMax])/60
+  msg <- paste0("In the past ",  daysAgo*24, " hours, ", length(people)[1], " people were online, accumulating ", 
+                round(hoursPlayed, 2), " hours total. ", peopleMax, " played the most: ",
+                round(hoursPlayedMax, 2), " (", round((hoursPlayedMax/hoursPlayed)*100, 2), "%)")
+  return(msg)
+}
+
 #------------------------------#
 #### Generally useful stuff ####
 #------------------------------#
