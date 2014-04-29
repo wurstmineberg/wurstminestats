@@ -1,4 +1,4 @@
-## Defining some functions used by other scripts
+# Defining some functions used by other scripts -------------------------------
 
 # First up, some convenience variables
 require(lubridate)
@@ -428,9 +428,9 @@ getPlayedPerPerson <- function(PlayerSessions){
   return(playedPerPerson)
 }
 
-###############################################
-### Handling the clusterfuck that is colors ###
-###############################################
+#-----------------------------------------------#
+#### Handling the clusterfuck that is colors ####
+#-----------------------------------------------#
 
 colErrors <- function(peopleTemp, simLimit = 0.92){
   peopleTemp$colConflict <- 0
@@ -564,9 +564,9 @@ mostActiveDay <- function(daysAgo = 7){
   return(msg)
 }
 
-##############################
-### Generally useful stuff ###
-##############################
+#------------------------------#
+#### Generally useful stuff ####
+#------------------------------#
 
 # Via http://stackoverflow.com/a/18339562/409362
 moveCol <- function(data, tomove, where = "last", ba = NULL) {
