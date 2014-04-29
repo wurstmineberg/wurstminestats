@@ -1,7 +1,10 @@
 #### First of all, getting some tweets out ####
 tweet(statOfTheDay())
-tweet(statOfTheDay(type = "itemStats"))
+tweet(randomItemStat())
 tweet(randomAchievement("random"))
+if (wday(now(), T, F) == "Monday"){
+  tweet(mostActiveDay(7))
+}
 
 #-----------------------------------------------#
 #### Meta stats (server stuff, death stats…) ####
