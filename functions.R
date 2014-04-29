@@ -491,9 +491,9 @@ colSimilarity <- function(col.i, col.j){
   return(colSim)
 }
 
-#########################
-### For the lulz shit ###
-#########################
+#-------------------------#
+#### For the lulz shit ####
+#-------------------------#
 
 serverBirthday <- function(activePeople){
   require(lubridate)
@@ -512,44 +512,55 @@ serverBirthday <- function(activePeople){
   return(birthdays)
 }
 
-statOfTheDay <- function(type = "general"){
-  require(twitteR)
-  
-  if(type == "general"){
-    statset <- generalstats[!(names(generalstats) %in% c("playOneHour", "distanceTraveled"))]
-    r1      <- round(runif(1, 1, nrow(activePeople)))
-    person  <- activePeople$name[r1]
-    r2      <- round(runif(1, 2, ncol(statset)))
-    stat    <- names(statset[r2])
-    desc    <- as.character(strings.general$name[strings.general$id == stat])
-    number  <- round(statset[r1, r2] / strings.general$scale[strings.general$id == stat], 2)
-    unit    <- strings.general$unit[strings.general$id == stat]
-    generalStatsMessage <- paste0("Random stat for ", person, ": ", number, " ", unit, " in category: ", desc)
-    return(generalStatsMessage)
-  } else if (type == "itemStats"){
-    r1         <- round(runif(1, 1, nrow(itemStats)))
-    item       <- itemStats$item[r1]
-    action     <- itemStats$action[r1]
-    number     <- itemStats$total[r1]
-    leadPlayer <- itemStats$leadingPlayer[r1]
-    playerMax  <- itemStats$playerMax[r1]
-    itemMessage <- paste0('The item “', item, '” was ', action, ' ', number, ' times in total, with ', leadPlayer, ' leading with ', playerMax, ' — Accounting for ', round((playerMax/number)*100, 2), '%')
-    return(itemMessage)
-  }
-}
-
-randomAchievement <- function(player = "random"){
-  r1       <- round(runif(1, 2, ncol(achievements)))
+statOfTheDay <- function(player = "random"){
   if (player == "random"){
-    rPlayer  <- activePeople$name[round(runif(1, 1, nrow(activePeople)))]
+    rPlayer    <- activePeople$name[round(runif(1, 1, nrow(activePeople)))]
   } else if (player %in% activePeople$name){
-    rPlayer <- player
+    rPlayer  <- player
   } else {
     stop("Player not found :(")
   }
+  
+  statset <- generalstats[!(names(generalstats) %in% c("playOneHour", "distanceTraveled"))]
+  r2      <- round(runif(1, 2, ncol(statset)))
+  stat    <- names(statset[r2])
+  desc    <- as.character(strings.general$name[strings.general$id == stat])
+  number  <- round(statset[statset$player == rPlayer, r2] / strings.general$scale[strings.general$id == stat], 2)
+  unit    <- strings.general$unit[strings.general$id == stat]
+  generalStatsMessage <- paste0("Random stat for ", rPlayer, ": ", number, " ", unit, " in category: ", desc)
+  return(generalStatsMessage)
+}
+
+randomItemStat <- function(){
+  r1         <- round(runif(1, 1, nrow(itemStats)))
+  item       <- itemStats$item[r1]
+  action     <- itemStats$action[r1]
+  number     <- itemStats$total[r1]
+  leadPlayer <- itemStats$leadingPlayer[r1]
+  playerMax  <- itemStats$playerMax[r1]
+  itemMessage <- paste0('The item “', item, '” was ', action, ' ', number, ' times in total, with ', leadPlayer, ' leading with ', playerMax, ' — Accounting for ', round((playerMax/number)*100, 2), '%')
+  return(itemMessage)
+}
+
+randomAchievement <- function(player = "random"){
+  if (player == "random"){
+    rPlayer  <- activePeople$name[round(runif(1, 1, nrow(activePeople)))]
+  } else if (player %in% activePeople$name){
+    rPlayer  <- player
+  } else {
+    stop("Player not found :(")
+  }
+  r1       <- round(runif(1, 2, ncol(achievements)))
   achValue <- achievements[achievements$player == rPlayer, r1]
   achName  <- strings.achievements$name[strings.achievements$id == names(achievements[r1])]
   msg      <- paste0(rPlayer, "'s achievement progress for “", achName, "” is ", achValue)
+  return(msg)
+}
+
+mostActiveDay <- function(daysAgo = 7){
+  data    <- playedPerDay[playedPerDay$date >= now() - days(daysAgo), ]
+  maximum <- data[data$timePlayed == max(data$timePlayed), ]
+  msg     <- paste0("The most active day in the past ", daysAgo, " days was ", maximum$wday, " (", maximum$date, "), with ", round(maximum$timePlayed, 1), " (combined) hours played in total")
   return(msg)
 }
 
