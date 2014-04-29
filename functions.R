@@ -43,10 +43,16 @@ getStrings <- function(category = "general"){
     names(strings)         <- c("name", "id", "category")
   } else if (category == "achievements"){
       acs                              <- jsonlite::fromJSON(getOption("url.strings.achievements"))
-      strings.achievements             <- data.frame(id = names(acs))
-      strings.achievements$description <- unlist(lapply(acs, function(x) cbind(x[[1]])), use.names=F)
-      strings.achievements$name        <- unlist(lapply(acs, function(x) cbind(x[[2]])), use.names=F)
-      strings.achievements$id          <- as.character(strings.achievements$id) # defactorize
+      acs$openInventory$requires       <- "NONE"
+      strings.achievements             <- ldply(acs, data.frame, stringsAsFactors=F)
+      strings.achievements$requires[strings.achievements$.id == "openInventory"] <- NA
+      strings.achievements            <- rename(strings.achievements, c("id" = "numID", ".id" = "id"))
+      
+      #strings.achievements             <- data.frame(id = names(acs))
+      #strings.achievements$description <- getListElement(acs, "description")
+      #strings.achievements$name        <- getListElement(acs, "displayname")
+      #strings.achievements$requirement <- getListElement(acs, "requires")
+      #strings.achievements$id          <- as.character(strings.achievements$id) # defactorize
       return(strings.achievements)
   }
 
@@ -552,7 +558,7 @@ randomAchievement <- function(player = "random"){
   }
   r1       <- round(runif(1, 2, ncol(achievements)))
   achValue <- achievements[achievements$player == rPlayer, r1]
-  achName  <- strings.achievements$name[strings.achievements$id == names(achievements[r1])]
+  achName  <- strings.achievements$displayname[strings.achievements$id == names(achievements[r1])]
   msg      <- paste0(rPlayer, "'s achievement progress for “", achName, "” is ", achValue)
   return(msg)
 }
