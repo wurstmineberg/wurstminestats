@@ -47,12 +47,6 @@ getStrings <- function(category = "general"){
       strings.achievements             <- ldply(acs, data.frame, stringsAsFactors=F)
       strings.achievements$requires[strings.achievements$.id == "openInventory"] <- NA
       strings.achievements            <- rename(strings.achievements, c("id" = "numID", ".id" = "id"))
-      
-      #strings.achievements             <- data.frame(id = names(acs))
-      #strings.achievements$description <- getListElement(acs, "description")
-      #strings.achievements$name        <- getListElement(acs, "displayname")
-      #strings.achievements$requirement <- getListElement(acs, "requires")
-      #strings.achievements$id          <- as.character(strings.achievements$id) # defactorize
       return(strings.achievements)
   }
 
@@ -581,7 +575,7 @@ dailyActivity <- function(daysAgo = 1){
   hoursPlayedMax <- sum(pastDay$timePlayed[pastDay$person == peopleMax])/60
   msg <- paste0("In the past ",  daysAgo*24, " hours, ", length(people)[1], " people were online, accumulating ", 
                 round(hoursPlayed, 2), " hours total. ", peopleMax, " played the most: ",
-                round(hoursPlayedMax, 2), " (", round((hoursPlayedMax/hoursPlayed)*100, 2), "%)")
+                round(hoursPlayedMax, 2), "h (", round((hoursPlayedMax/hoursPlayed)*100, 2), "%)")
   return(msg)
 }
 
