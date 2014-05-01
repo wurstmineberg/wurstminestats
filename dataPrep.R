@@ -122,8 +122,7 @@ for(i in playerSessions$person){
   playerSessions$person[playerSessions$person == i] <- activePeople$name[activePeople$id == i]
 }; rm(i)
 
-playerSessions$person <- as.factor(playerSessions$person)
-playerSessions$person <- reorder(playerSessions$person, new.order=activePeople$name)
+playerSessions$person <- factor(playerSessions$person, levels=activePeople$name, ordered = T)
 
 ## Experimental perPerson dataframe for googleVis
 perPerson <- data.frame(date = playedPerPerson$date)
