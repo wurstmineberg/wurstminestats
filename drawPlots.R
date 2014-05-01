@@ -236,7 +236,7 @@ ggsave(p, file="Plots/achievements/exploreAllBiomesProgress.png", height=plotHei
 #----------------------------------------#
 #### Plotting item stats as they come ####
 #----------------------------------------#
-if (wday(now(), T, F) == "Sunday" && hour(now()) > 20){}
+if (wday(now(), T, F) == "Sunday" && hour(now()) > 20){
   cat("Generating item stats plots \n")
   
   for(i in 1:length(itemStats$stat)){
