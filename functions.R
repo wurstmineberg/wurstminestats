@@ -218,7 +218,6 @@ getActivePeople <- function(){
                                           activePeople$joinDate[2:nrow(activePeople)], 
                                           activePeople$joinDate[1:(nrow(activePeople)-1)], 
                                           units="days"))))
-
     return(activePeople)
 }
 
@@ -423,7 +422,7 @@ getPlayedPerPerson <- function(PlayerSessions){
   }
 
   playedPerPerson$person <- as.factor(playedPerPerson$person)
-  playedPerPerson$person <- reorder(playedPerPerson$person, new.order=activePeople$name, order = T)
+  playedPerPerson$person <- reorder.factor(playedPerPerson$person, new.order=activePeople$name, order = T)
 
   return(playedPerPerson)
 }
