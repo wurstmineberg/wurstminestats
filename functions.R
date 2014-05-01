@@ -423,7 +423,7 @@ getPlayedPerPerson <- function(PlayerSessions){
   }
 
   playedPerPerson$person <- as.factor(playedPerPerson$person)
-  playedPerPerson$person <- reorder(playedPerPerson$person, new.order=activePeople$name)
+  playedPerPerson$person <- reorder(playedPerPerson$person, new.order=activePeople$name, order = T)
 
   return(playedPerPerson)
 }
