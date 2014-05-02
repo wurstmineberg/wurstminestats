@@ -455,7 +455,7 @@ getLeadingPlayers <- function(mobStats){
 }
 
 getMobStats <- function(){
-  entities.only           <- subset(entities, select=-player)
+  entities.only           <- entities[-1]
   mobStats                <- data.frame(stat = names(entities.only), stringsAsFactors = F)
   mobStats$action         <- character(nrow(mobStats))
   mobStats$action[grep("killEntity", mobStats$stat)]      <- "killed"
