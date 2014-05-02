@@ -593,6 +593,10 @@ randomAchievement <- function(player = "random"){
   achValue <- achievements[achievements$player == rPlayer, r1]
   achName  <- strings.achievements$displayname[strings.achievements$id == names(achievements[r1])]
   msg      <- paste0(rPlayer, "'s achievement progress for “", achName, "” is ", achValue)
+  if (names(achievements[r1]) == "exploreAllBiomesProgress"){
+    achName <- "Adventuring Time"
+    msg      <- paste0(rPlayer, "'s achievement progress for “", achName, "” is ", achValue, " of 36 biomes")
+  }
   return(msg)
 }
 
