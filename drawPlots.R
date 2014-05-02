@@ -1,6 +1,7 @@
 #### First of all, getting some tweets out ####
 tweet(statOfTheDay())
 tweet(randomItemStat())
+tweet(randomMobStat())
 tweet(randomAchievement("random"))
 if (wday(now(), T, F) == "Monday"){
   tweet(mostActiveDay(7))

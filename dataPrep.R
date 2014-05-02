@@ -34,6 +34,7 @@ items                   <- jsonlite::fromJSON(getOption("url.stats.items"))
 activePeople  <- getActivePeople()
 birthdays     <- serverBirthday(activePeople)
 deaths        <- getDeathStats()
+mobStats      <- getMobStats()
 
 ## Reformat stat datasets ##
 generalstats  <- stats2df(generalstats)
@@ -63,9 +64,6 @@ generalColumns <- c("timestamp", "player_id" , "player", "joinDate", "joinStatus
                     "playOneHour", "jump", "animalsBred", "mobKills")
 playerstats <- playerstats[c(generalColumns, setdiff(names(playerstats), generalColumns))]
 rm(generalColumns)
-
-## One last time to make sure
-playerstats[is.na(playerstats)] <- 0
 
 #----------------------------#
 #### Handle items dataset ####

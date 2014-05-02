@@ -139,14 +139,14 @@ stats2df <- function(data, type = "default"){
     # Everything else can be handled quite simply
     data.df <- ldply(data, data.frame, .id = "player")
   }
-  # Nullifying NAs for plotting reasons
-  data.df[is.na(data.df)] <- 0
   # Removing "stat." and "achievement." prefixes from column names
   names(data.df) <- sub("stat.", "", names(data.df))
   names(data.df) <- sub("achievement.", "", names(data.df))
   # Sorting according to activePeople, reordering the rows and factor levels
   data.df        <- data.df[match(activePeople$mc, data.df$player), ]
   data.df$player <- factor(activePeople$name, levels = activePeople$name, ordered = T)
+  # Nullifying NAs for plotting reasons
+  data.df[is.na(data.df)] <- 0
   
   return(data.df)
   
@@ -427,6 +427,46 @@ getPlayedPerPerson <- function(PlayerSessions){
   return(playedPerPerson)
 }
 
+#------------------------------#
+#### Functions for entities ####
+#------------------------------#
+
+extractMobNames <- function(stat){
+  mob <- sub("entityKilledBy.", "", stat)
+  mob <- sub("killEntity.", "", mob)
+  mob <- lapply(mob, function(mob){
+    if (mob %in% strings.mobs$id){
+      sub(mob, strings.mobs$name[strings.mobs$id == mob], mob)
+    } else {mob}
+  })
+  mob <- unlist(mob)
+  return(mob)
+}
+
+getLeadingPlayers <- function(mobStats){
+  require("stringr")
+  maxPlayers <- lapply(mobStats$stat, function(stat){
+    players <- entities[entities[[stat]] == max(entities[[stat]]), "player"]
+    #as.vector(players)
+    players <- str_join(players, collapse=" and ")
+  })
+  maxPlayers <- unlist(maxPlayers)
+  return(maxPlayers)
+}
+
+getMobStats <- function(){
+  entities.only           <- subset(entities, select=-player)
+  mobStats                <- data.frame(stat = names(entities.only), stringsAsFactors = F)
+  mobStats$action         <- character(nrow(mobStats))
+  mobStats$action[grep("killEntity", mobStats$stat)]      <- "killed"
+  mobStats$action[grep("entityKilledBy.", mobStats$stat)] <- "killed by"
+  mobStats$mob            <- extractMobNames(mobStats$stat)
+  mobStats$total          <- as.numeric(colwise(sum)(entities.only))
+  mobStats$playerMax      <- as.numeric(colwise(max)(entities.only))
+  mobStats$leadingPlayers <- getLeadingPlayers(mobStats)
+  return(mobStats)
+}
+
 #-----------------------------------------------#
 #### Handling the clusterfuck that is colors ####
 #-----------------------------------------------#
@@ -553,6 +593,21 @@ randomAchievement <- function(player = "random"){
   achValue <- achievements[achievements$player == rPlayer, r1]
   achName  <- strings.achievements$displayname[strings.achievements$id == names(achievements[r1])]
   msg      <- paste0(rPlayer, "'s achievement progress for “", achName, "” is ", achValue)
+  return(msg)
+}
+
+randomMobStat <- function(){
+  entry      <- mobStats[runif(1, 1, nrow(mobStats)), ]
+  maxPercent <- round((entry$playerMax/entry$total)*100, 2)
+  if (entry$action == "killed"){
+    msg <- paste0("The mob “", entry$mob, "” was killed ", entry$total, " times, mostly by ",
+                  entry$leadingPlayers, ", who killed ", entry$playerMax, " (", maxPercent, "%)")
+  } else if (entry$action == "killed by"){
+    msg <- paste0("The mob “", entry$mob, "” caused ", entry$total, " player deaths, mostly for ",
+                  entry$leadingPlayers, ", who died ", entry$playerMax, " times (", maxPercent, "%) because of it")
+  } else {
+    stop("Something went wrong.")
+  }
   return(msg)
 }
 
