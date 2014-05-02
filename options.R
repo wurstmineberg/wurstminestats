@@ -23,7 +23,7 @@ options(url.general.sessions        = "http://api.wurstmineberg.de/server/sessio
 
 #### Dependencies ####
 # List of libraries required
-libraries <- c("jsonlite", "ggplot2", "scales", "grid", "plyr", "dplyr", "RColorBrewer", 
+libraries <- c("jsonlite", "ggplot2", "scales", "grid", "plyr", "dplyr", "RColorBrewer", "stringr",
                "RCurl", "httr", "lubridate", "shiny", "httpuv", "markdown", "gdata", "googleVis", "reshape2", "twitteR")
 
 # Loading some libraries but with suppressed messages because they're too noisy
@@ -44,6 +44,7 @@ library("dplyr")
 library("reshape2")
 library("twitteR")
 library("jsonlite")
+library("stringr")
 
 checkDependencies <- function(update = F){
     if(update) update.packages(ask = F)
