@@ -34,7 +34,6 @@ items                   <- jsonlite::fromJSON(getOption("url.stats.items"))
 activePeople  <- getActivePeople()
 birthdays     <- serverBirthday(activePeople)
 deaths        <- getDeathStats()
-mobStats      <- getMobStats()
 
 ## Reformat stat datasets ##
 generalstats  <- stats2df(generalstats)
@@ -130,6 +129,9 @@ for(i in unique(playedPerPerson$person)){
   tmp <- rename(tmp, c("timePlayed" = i))
   perPerson <- join(perPerson, tmp, type="full", match="all")
 }; rm(i, tmp)
+
+### Entity stuff ####
+mobStats      <- getMobStats()
 
 #### Cache some objects ####
 saveRDS(playerstats,          file = paste0("cache/", "playerstats", ".rds"))
