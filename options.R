@@ -55,9 +55,3 @@ statusColourScale     <- scale_colour_manual( name = "Join Status", values = sta
 
 #activePeople          <- fixPeopleColors(activePeople, 0.95)
 legendPeople          <- scale_fill_manual(name = "People", values = activePeople$color)
-
-### Make twitteR work ####
-if(!exists("twitCred")){
-  load("cache/twitcred.RData")
-  print(ifelse(registerTwitterOAuth(twitCred), "Tweets should work", "Something broke"))
-}

@@ -5,7 +5,18 @@
 source("dataPrep.R")        # Loads all libraries, calls functions.R, which is needed for pretty much everything
 
 # These are not, but they all require dataPrep.R
-source("drawPlots.R")       # Generates all the plots in ./Plots. All of them.
+source("plots-sessions.R")
+source("plots-meta.R")
+source("plots-generalstats.R")
+source("plots-achievements.R")
+if (hour(now()) < 4){
+  source("plots-entities.R")
+}
+if (wday(now(), T, F) == "Sunday" && hour(now()) > 20){
+  source("plots-items.R")
+}
+
+source("tweetstats.R")
 
 # Sooner or later, I want a giant logfile.
 writePlayerstatsLog()
