@@ -20,3 +20,7 @@ if (hour(now()) %in% 20:24){
   Sys.sleep(30)
   tweet(dailyActivity(1))
 }
+if (!is.null(getBirthdayNotification(birthdays))){
+  Sys.sleep(60)
+  tweet(getBirthdayNotification(birthdays))
+}

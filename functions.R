@@ -104,11 +104,12 @@ serverBirthday <- function(activePeople){
   daysSinceLast <- max(ydays[ydays < 0])
   nextPerson    <- activePeople$name[ydays == daysToNext]
   lastPerson    <- activePeople$name[ydays == daysSinceLast]
-  nextDate      <- format(activePeople$joinDate[activePeople$name == nextPerson[1]], "%m-%d")
-  lastDate      <- format(activePeople$joinDate[activePeople$name == lastPerson[1]], "%m-%d")
+  nextDate      <- format(activePeople$joinDate[activePeople$name == nextPerson], "%m-%d")
+  lastDate      <- format(activePeople$joinDate[activePeople$name == lastPerson], "%m-%d")
   
   birthdays <- data.frame(nextPerson = nextPerson, nextDate = nextDate,
-                          lastPerson = lastPerson, lastDate = lastDate)
+                          lastPerson = lastPerson, lastDate = lastDate,
+                          daysToNext = daysToNext, daysSinceLast = daysSinceLast)
   return(birthdays)
 }
 
@@ -198,6 +199,16 @@ dailyActivity <- function(daysAgo = 1){
   return(msg)
 }
 
+getBirthdayNotification <- function(birthdays, forceoutput = FALSE){
+  if (birthdays$daysToNext == 1){
+    msg <- paste0("Tomorrow is going to be the server birthday of ", birthdays$nextPerson, ", yaay!")
+  } else if (birthdays$daysToNext > 1 && birthdays$daysToNext < 10 | forceoutput){
+    msg <- paste0("In ", birthdays$daysToNext, " days, it's going to be the server birthday of ", birthdays$nextPerson, ", yaay!")
+  } else {
+    msg <- NULL
+  }
+  return(msg)
+}
 #------------------------------#
 #### Generally useful stuff ####
 #------------------------------#

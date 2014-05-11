@@ -30,7 +30,7 @@ items                   <- jsonlite::fromJSON(getOption("url.stats.items"))
 
 ## Getting a people dataset from people.json ## (Also, deaths)
 activePeople  <- getActivePeople()
-#birthdays     <- serverBirthday(activePeople)
+birthdays     <- serverBirthday(activePeople)
 deaths        <- getLatestDeaths()
 
 ## Reformat stat datasets ##
@@ -63,7 +63,7 @@ playerstats$timestamp   <- dataTime
 generalColumns <- c("timestamp", "player_id" , "player", "joinDate", "joinStatus", "leaveGame",
                     "deaths", "timeSinceDeath", "playerKills", "damageDealt", "damageTaken", "playOneMinute", 
                     "playOneHour", "jump", "animalsBred", "mobKills")
-playerstats <- playerstats[c(generalColumns, setdiff(names(playerstats), generalColumns))]
+playerstats    <- playerstats[c(generalColumns, setdiff(names(playerstats), generalColumns))]
 rm(generalColumns)
 
 #--------------------------------#
@@ -115,9 +115,9 @@ saveRDS(playerstats,       file = paste0("cache/", "playerstats", ".rds"))
 saveRDS(activePeople,      file = paste0("cache/", "activePeople", ".rds"))
 saveRDS(playerSessions,    file = paste0("cache/", "playerSessions", ".rds"))
 saveRDS(itemStats,         file = paste0("cache/", "itemStats", ".rds"))
+saveRDS(mobStats,          file = paste0("cache/", "mobStats", ".rds"))
 save(strings.general,      file = paste0("cache/", "strings.general", ".rda"))
 save(strings.achievements, file = paste0("cache/", "strings.achievements", ".rda"))
 save(strings.mobs,         file = paste0("cache/", "strings.mobs", ".rda"))
 save(strings.biomes,       file = paste0("cache/", "strings.biomes", ".rda"))
 save(strings.items,        file = paste0("cache/", "strings.items", ".rda"))
-
