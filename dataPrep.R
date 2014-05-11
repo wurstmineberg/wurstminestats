@@ -1,9 +1,22 @@
 #### Datapreparations ####
 
-# Startup
+## Startup
+# Checking if wurstmineR needs an update
+ver_loc    <- packageVersion("wurstmineR")
+ver_github <- fromJSON("https://raw.githubusercontent.com/jemus42/wurstmineR/master/VERSION")$Version
+if (ver_loc == ver_github){
+  cat("wurstmineR is the current version, moving on.")
+} else if (ver_loc < ver_github){
+  cat(paste("Remote version is", ver_github, "— Installing…"))
+  library(devtools)
+  install_github("jemus42/wurstmineR")
+} else {
+  cat("How did you do that?")
+}
+
 source("options.R")
 source("functions.R")
-library(wurstmineR)
+library("wurstmineR")
 
 Sys.setenv(TZ = "UTC") # Don't ask
 
