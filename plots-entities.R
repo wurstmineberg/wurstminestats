@@ -1,7 +1,7 @@
 #------------------------------------------------------#
 #### Dealing with entitiy stats. Kind of a big one. ####
 #------------------------------------------------------#
-cat("Generating entity stat plots \n")
+message("Generating entity stat plots")
 
 # Get columns for killEntity and KilledBy categories respectively
 killEntity      <- grep("killEntity", names(playerstats))
@@ -33,7 +33,7 @@ for(i in 1:length(killEntity)){
   p <- p + barChart + statusFillScale + coord_flip() + scale_y_discrete(breaks= pretty_breaks())
   p <- p + xLable + labs(y="Kills", title=paste("Kills of:",killEntityMobs[i]))
   
-  cat(paste("Saving", filename, "\n"))
+  message("Saving ", filename)
   ggsave(plot=p, file=filename, height=plotHeight, width=plotWidth)
   
 }; rm(i, p, filename)
@@ -52,7 +52,7 @@ for(i in 1:length(killedByEntity)){
   p <- p + barChart + statusFillScale + coord_flip() + scale_y_discrete(breaks= pretty_breaks())
   p <- p + xLable + labs(y="Deaths", title=paste("Killed by:",killedByEntityMobs[i]))
   
-  cat(paste("Saving", filename, "\n"))
+  message("Saving ", filename)
   ggsave(plot=p, file=filename, height=plotHeight, width=plotWidth)
   
 }; rm(i, p, filename)

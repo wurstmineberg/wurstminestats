@@ -8,13 +8,13 @@ source("functions.R")
 ver_loc    <- packageVersion("wurstmineR")
 ver_github <- package_version(fromJSON("https://raw.githubusercontent.com/jemus42/wurstmineR/master/VERSION")$Version)
 if (ver_loc == ver_github){
-  cat("wurstmineR is the current version, moving on.")
+  message("wurstmineR is the current version, moving on.")
 } else if (ver_loc < ver_github){
-  cat(paste("Remote version is", ver_github, "— Installing…"))
+  message(paste("Remote version is", ver_github, "— Installing…"))
   library(devtools)
   install_github("jemus42/wurstmineR")
 } else {
-  cat("How did you do that?")
+  message("How did you do that?")
 }
 
 library("wurstmineR")
@@ -33,10 +33,10 @@ dataTime <- format(Sys.time(), "%s")
 #strings.biomes          <- getStrings(category = "biomes")
 
 #### Get player stats from wurstmineberg API ####
-generalstats            <- jsonlite::fromJSON(getOption("url.stats.general"))
-achievements            <- jsonlite::fromJSON(getOption("url.stats.achievements"))
-entities                <- jsonlite::fromJSON(getOption("url.stats.entities"))
-items                   <- jsonlite::fromJSON(getOption("url.stats.items"))
+generalstats  <- jsonlite::fromJSON(getOption("url.stats.general"))
+achievements  <- jsonlite::fromJSON(getOption("url.stats.achievements"))
+entities      <- jsonlite::fromJSON(getOption("url.stats.entities"))
+items         <- jsonlite::fromJSON(getOption("url.stats.items"))
 
 #----------------------------------------------------------------------------------#
 #### This is where imported datasets get cleaned up so we can actually use them ####
@@ -53,14 +53,14 @@ achievements  <- stats2df(achievements, type = "achievements")
 entities      <- stats2df(entities)
 items         <- stats2df(items)
 ## Merge old and new item stat IDs and whate have you ##
-items           <- mergeItemStats(items, strings.items)
+items         <- mergeItemStats(items, strings.items)
 
 #---------------------------------------------------#
 #### Enhancing playerstats with some useful shit ####
 #---------------------------------------------------#
 
 ## Convert play time to real time hours as separate column ##
-generalstats$playOneHour <- (generalstats$playOneMinute/20/60/60)
+generalstats$playOneHour      <- (generalstats$playOneMinute/20/60/60)
 ## Get total distance column by summing up all *OneCm rows per player ##
 generalstats$distanceTraveled <- rowSums(generalstats[, grep("OneCm", colnames(generalstats))])
 ## Resort columns to get interesting stuff first. ##
@@ -91,22 +91,22 @@ mobStats    <- getMobStats(entities)
 #### Getting sessions from /sessions/overview.json ####
 #-----------------------------------------------------#
 
-sessions        <- getSessions()
-playerSessions  <- getPlayerSessions(sessions, splitByDay = T)
+sessions         <- getSessions()
+playerSessions   <- getPlayerSessions(sessions,   splitByDay = T)
 
 ## We want play time per day, sooooo… 
-playedPerDay  <- getPlayedPerX(playerSessions, sumBy = "day")
+playedPerDay     <- getPlayedPerX(playerSessions, sumBy = "day")
 
 # We also want play time per day per person, so, well… ##
-playedPerPerson       <- getPlayedPerX(playerSessions, sumBy = "person")
+playedPerPerson  <- getPlayedPerX(playerSessions, sumBy = "person")
 # Getting per weekday stuff
-playedPerWeekday      <- getPlayedPerX(playerSessions, sumBy = "weekday")
-avgPerWeekday         <- mean(ddply(playedPerWeekday, .(wday), summarize, timePlayed=sum(timePlayed))$timePlayed)
+playedPerWeekday <- getPlayedPerX(playerSessions, sumBy = "weekday")
+avgPerWeekday    <- mean(ddply(playedPerWeekday, .(wday), summarize, timePlayed=sum(timePlayed))$timePlayed)
 # Let's do a monthly one
-playedPerMonth       <- getPlayedPerX(playerSessions, sumBy = "month")
-avgPerMonth          <- mean(ddply(playedPerMonth, .(month), summarize, timePlayed=sum(timePlayed))$timePlayed)
+playedPerMonth   <- getPlayedPerX(playerSessions, sumBy = "month")
+avgPerMonth      <- mean(ddply(playedPerMonth, .(month), summarize, timePlayed=sum(timePlayed))$timePlayed)
 # Actually per person
-playtime.people      <- ddply(playedPerPerson, "person", summarize, timePlayed=sum(timePlayed))
+playtime.people  <- ddply(playedPerPerson, "person", summarize, timePlayed=sum(timePlayed))
 
 # Fix playerSession person names
 for(i in playerSessions$person){
@@ -125,13 +125,13 @@ for(i in unique(playedPerPerson$person)){
 }; rm(i, tmp)
 
 #### Cache some objects ####
-saveRDS(playerstats,       file = paste0("cache/", "playerstats", ".rds"))
-saveRDS(activePeople,      file = paste0("cache/", "activePeople", ".rds"))
-saveRDS(playerSessions,    file = paste0("cache/", "playerSessions", ".rds"))
-saveRDS(itemStats,         file = paste0("cache/", "itemStats", ".rds"))
-saveRDS(mobStats,          file = paste0("cache/", "mobStats", ".rds"))
-save(strings.general,      file = paste0("cache/", "strings.general", ".rda"))
+saveRDS(playerstats,       file = paste0("cache/", "playerstats",          ".rds"))
+saveRDS(activePeople,      file = paste0("cache/", "activePeople",         ".rds"))
+saveRDS(playerSessions,    file = paste0("cache/", "playerSessions",       ".rds"))
+saveRDS(itemStats,         file = paste0("cache/", "itemStats",            ".rds"))
+saveRDS(mobStats,          file = paste0("cache/", "mobStats",             ".rds"))
+save(strings.general,      file = paste0("cache/", "strings.general",      ".rda"))
 save(strings.achievements, file = paste0("cache/", "strings.achievements", ".rda"))
-save(strings.mobs,         file = paste0("cache/", "strings.mobs", ".rda"))
-save(strings.biomes,       file = paste0("cache/", "strings.biomes", ".rda"))
-save(strings.items,        file = paste0("cache/", "strings.items", ".rda"))
+save(strings.mobs,         file = paste0("cache/", "strings.mobs",         ".rda"))
+save(strings.biomes,       file = paste0("cache/", "strings.biomes",       ".rda"))
+save(strings.items,        file = paste0("cache/", "strings.items",        ".rda"))
