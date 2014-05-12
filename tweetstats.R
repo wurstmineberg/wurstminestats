@@ -12,7 +12,7 @@ Sys.sleep(30)
 tweet(randomMobStat())
 Sys.sleep(30)
 tweet(randomAchievement("random"))
-if (wday(now(), T, F) == "Monday"){
+if (wday(now(), T, F) == "Sunday" && hour(now()) %in% 20:24){
   Sys.sleep(30)
   tweet(mostActiveDay(7))
 }
