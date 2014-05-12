@@ -180,7 +180,9 @@ randomMobStat <- function(){
 mostActiveDay <- function(daysAgo = 7){
   data    <- playedPerDay[playedPerDay$date >= now() - days(daysAgo), ]
   maximum <- data[data$timePlayed == max(data$timePlayed), ]
-  msg     <- paste0("The most active day in the past ", daysAgo, " days was ", maximum$wday, " (", maximum$date, "), with ", round(maximum$timePlayed/60, 1), " (combined) hours played in total")
+  msg     <- paste0("The most active day in the past ", daysAgo, " days was ", 
+                    maximum$wday, " (", maximum$date, "), with ", 
+                    round(maximum$timePlayed/60, 1), " (combined) hours played in total")
   return(msg)
 }
 
