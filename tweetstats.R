@@ -4,14 +4,17 @@ if(!exists("twitCred")){
   load("cache/twitcred.RData")
   print(ifelse(registerTwitterOAuth(twitCred), "Tweets should work", "Something broke"))
 }
-# Get tweets out
-tweet(statOfTheDay())
-Sys.sleep(30)
+
+# Get random stats out
+tweet(statOfTheDay(category = sample(c("general", "items", "mobs"), 1)))
+Sys.sleep(60)
 tweet(randomItemStat())
-Sys.sleep(30)
+Sys.sleep(60)
 tweet(randomMobStat())
-Sys.sleep(30)
+Sys.sleep(60)
 tweet(randomAchievement("random"))
+
+# Special tweets
 if (wday(now(), T, F) == "Sunday" && hour(now()) %in% 20:24){
   Sys.sleep(30)
   tweet(mostActiveDay(7))
