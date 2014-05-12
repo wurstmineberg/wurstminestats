@@ -1,6 +1,9 @@
 #### Datapreparations ####
 
 ## Startup
+source("options.R")
+source("functions.R")
+
 # Checking if wurstmineR needs an update
 ver_loc    <- packageVersion("wurstmineR")
 ver_github <- package_version(fromJSON("https://raw.githubusercontent.com/jemus42/wurstmineR/master/VERSION")$Version)
@@ -14,8 +17,6 @@ if (ver_loc == ver_github){
   cat("How did you do that?")
 }
 
-source("options.R")
-source("functions.R")
 library("wurstmineR")
 
 Sys.setenv(TZ = "UTC") # Don't ask
