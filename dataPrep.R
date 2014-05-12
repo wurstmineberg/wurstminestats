@@ -6,7 +6,7 @@ source("functions.R")
 
 # Checking if wurstmineR needs an update
 ver_loc    <- packageVersion("wurstmineR")
-ver_github <- package_version(fromJSON("https://raw.githubusercontent.com/jemus42/wurstmineR/master/VERSION")$Version)
+ver_github <- package_version(jsonlite::fromJSON("https://raw.githubusercontent.com/jemus42/wurstmineR/master/VERSION")$Version)
 if (ver_loc == ver_github){
   message("wurstmineR is the current version, moving on.")
 } else if (ver_loc < ver_github){
