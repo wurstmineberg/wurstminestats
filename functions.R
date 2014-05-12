@@ -113,7 +113,7 @@ serverBirthday <- function(activePeople){
   return(birthdays)
 }
 
-statOfTheDay <- function(player = "random"){
+statOfTheDay <- function(player = "random", category = "general"){
   if (player == "random"){
     rPlayer    <- activePeople$name[round(runif(1, 1, nrow(activePeople)))]
   } else if (player %in% activePeople$name){
@@ -121,15 +121,39 @@ statOfTheDay <- function(player = "random"){
   } else {
     stop("Player not found :(")
   }
-  
-  statset <- generalstats[!(names(generalstats) %in% c("playOneHour", "distanceTraveled"))]
-  r2      <- round(runif(1, 2, ncol(statset)))
-  stat    <- names(statset[r2])
-  desc    <- as.character(strings.general$name[strings.general$id == stat])
-  number  <- round(statset[statset$player == rPlayer, r2] / strings.general$scale[strings.general$id == stat], 2)
-  unit    <- strings.general$unit[strings.general$id == stat]
-  generalStatsMessage <- paste0("Random stat for ", rPlayer, ": ", number, " ", unit, " in category: ", desc)
-  return(generalStatsMessage)
+  if (category == "general"){
+    statset <- generalstats[!(names(generalstats) %in% c("playOneHour", "distanceTraveled"))]
+    r2      <- round(runif(1, 2, ncol(statset)))
+    stat    <- names(statset[r2])
+    desc    <- as.character(strings.general$name[strings.general$id == stat])
+    number  <- round(statset[statset$player == rPlayer, r2] / strings.general$scale[strings.general$id == stat], 2)
+    unit    <- strings.general$unit[strings.general$id == stat]
+    msg     <- paste0("Random stat for ", rPlayer, ": ", number, " ", unit, " in category: ", desc)
+  } else if (category == "items"){
+    statset <- items
+    r2      <- round(runif(1, 2, ncol(statset)))
+    stat    <- names(statset[r2])
+    desc    <- itemStats$item[itemStats$stat == stat]
+    action  <- itemStats$action[itemStats$stat == stat]
+    number  <- round(statset[statset$player == rPlayer, r2])
+    msg     <- paste0("Random stat! ", rPlayer, " has ", action, " the item “", desc, "” ", number, " times")
+  } else if (category == "mobs"){
+    statset <- entities
+    r2      <- round(runif(1, 2, ncol(statset)))
+    stat    <- names(statset[r2])
+    desc    <- mobStats$mob[mobStats$stat == stat]
+    action  <- mobStats$action[mobStats$stat == stat]
+    number  <- round(statset[statset$player == rPlayer, r2])
+    if (action == "killed"){
+      msg   <- paste0("Random stat! ", rPlayer, " has ", action, " the mob “", desc, "” ", number, " times")
+    } else {
+      msg   <- paste0("Random stat! ", rPlayer, " was ", action, " the mob “", desc, "” ", number, " times")
+    }
+  } else {
+    stop("Category not recognized, only general, items and mobs work.")
+  }
+  msg <- paste(msg, "#randomstat")
+  return(msg)
 }
 
 randomItemStat <- function(){
@@ -139,8 +163,11 @@ randomItemStat <- function(){
   number     <- itemStats$total[r1]
   leadPlayer <- itemStats$leadingPlayer[r1]
   playerMax  <- itemStats$playerMax[r1]
-  itemMessage <- paste0('The item “', item, '” was ', action, ' ', number, ' times in total, with ', leadPlayer, ' leading with ', playerMax, ' — Accounting for ', round((playerMax/number)*100, 2), '%')
-  return(itemMessage)
+  msg        <- paste0('The item “', item, '” was ', action, ' ', number, ' times in total, with ', leadPlayer, ' leading with ', playerMax, ' — Accounting for ', round((playerMax/number)*100, 2), '%')
+  if (nchar(msg) < 130){
+    msg <- paste(msg, "#itemstat")
+  }
+  return(msg)
 }
 
 randomAchievement <- function(player = "random"){
@@ -159,6 +186,9 @@ randomAchievement <- function(player = "random"){
     achName <- "Adventuring Time"
     msg      <- paste0(rPlayer, "'s achievement progress for “", achName, "” is ", achValue, " of 36 biomes")
   }
+  if (nchar(msg) < 126){
+    msg <- paste(msg, "#achievements")
+  }
   return(msg)
 }
 
@@ -174,6 +204,9 @@ randomMobStat <- function(){
   } else {
     stop("Something went wrong.")
   }
+  if (nchar(msg) < 131){
+    msg <- paste(msg, "#mobstat")
+  }
   return(msg)
 }
 
@@ -183,6 +216,9 @@ mostActiveDay <- function(daysAgo = 7){
   msg     <- paste0("The most active day in the past ", daysAgo, " days was ", 
                     maximum$wday, " (", maximum$date, "), with ", 
                     round(maximum$timePlayed/60, 1), " (combined) hours played in total")
+  if (nchar(msg) < 115){
+    msg <- paste(msg, "#thisWeekInWurstmineberg")
+  }
   return(msg)
 }
 
@@ -198,6 +234,9 @@ dailyActivity <- function(daysAgo = 1){
   msg <- paste0("In the past ",  daysAgo*24, " hours, ", length(people)[1], " people were online, accumulating ", 
                 round(hoursPlayed, 2), " hours total. ", peopleMax, " played the most: ",
                 round(hoursPlayedMax, 2), "h (", round((hoursPlayedMax/hoursPlayed)*100, 2), "%)")
+  if (nchar(msg) < 118){
+    msg <- paste(msg, "#todayInWurstmineberg")
+  }
   return(msg)
 }
 
