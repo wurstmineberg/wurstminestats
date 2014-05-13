@@ -4,6 +4,7 @@
 load("cache/workspace.RData")
 source("options.R")
 source("functions.R")
+library("wurstmineR")
 
 # Make twitteR work
 load("cache/twitcred.RData")
