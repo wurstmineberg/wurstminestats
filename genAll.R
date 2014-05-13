@@ -16,8 +16,6 @@ if (wday(now(), T, F) == "Sunday" && hour(now()) > 20){
   source("plots-items.R")
 }
 
-source("tweetstats.R")
-
 # Sooner or later, I want a giant logfile.
 writePlayerstatsLog()
 write.csv(itemStats, "data/itemStats.csv")
