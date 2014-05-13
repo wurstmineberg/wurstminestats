@@ -2,6 +2,8 @@
 #### Get some tweets out for the dataz ====
 # Load cached data
 load("cache/workspace.RData")
+source("options.R")
+source("functions.R")
 
 # Make twitteR work
 if(!exists("twitCred")){
