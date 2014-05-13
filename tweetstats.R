@@ -1,12 +1,13 @@
 #! /usr/bin/Rscript
 #### Get some tweets out for the dataz ====
+# Load cached data
+load("cache/workspace.RData")
+
 # Make twitteR work
 if(!exists("twitCred")){
   load("cache/twitcred.RData")
   print(ifelse(registerTwitterOAuth(twitCred), "Tweets should work", "Something broke"))
 }
-# Load cached data
-load("cache/workspace.RData")
 
 # Get random stats out
 tweet(statOfTheDay(category = sample(c("general", "items", "mobs"), 1)))
