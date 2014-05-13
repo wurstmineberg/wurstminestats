@@ -125,13 +125,22 @@ for(i in unique(playedPerPerson$person)){
 }; rm(i, tmp)
 
 #### Cache some objects ####
-saveRDS(playerstats,       file = paste0("cache/", "playerstats",          ".rds"))
-saveRDS(activePeople,      file = paste0("cache/", "activePeople",         ".rds"))
-saveRDS(playerSessions,    file = paste0("cache/", "playerSessions",       ".rds"))
-saveRDS(itemStats,         file = paste0("cache/", "itemStats",            ".rds"))
-saveRDS(mobStats,          file = paste0("cache/", "mobStats",             ".rds"))
-save(strings.general,      file = paste0("cache/", "strings.general",      ".rda"))
-save(strings.achievements, file = paste0("cache/", "strings.achievements", ".rda"))
-save(strings.mobs,         file = paste0("cache/", "strings.mobs",         ".rda"))
-save(strings.biomes,       file = paste0("cache/", "strings.biomes",       ".rda"))
-save(strings.items,        file = paste0("cache/", "strings.items",        ".rda"))
+save.image(file = "cache/workspace.RData")
+
+#save(playerstats,      file = paste0("cache/", "playerstats",    ".rda"))
+#save(generalstats,     file = paste0("cache/", "generalstats",   ".rda"))
+#save(items,            file = paste0("cache/", "items",          ".rda"))
+#save(achievements,     file = paste0("cache/", "achievements",   ".rda"))
+#save(entities,         file = paste0("cache/", "entities",       ".rda"))
+
+#save(activePeople,     file = paste0("cache/", "activePeople",   ".rda"))
+#save(playerSessions,   file = paste0("cache/", "playerSessions", ".rda"))
+#save(itemStats,        file = paste0("cache/", "itemStats",      ".rda"))
+#save(mobStats,         file = paste0("cache/", "mobStats",       ".rda"))
+
+# Cache strings (not right now, wurstmineR takes care of that.)
+#save(strings.general,      file = paste0("cache/", "strings.general",      ".rda"))
+#save(strings.achievements, file = paste0("cache/", "strings.achievements", ".rda"))
+#save(strings.mobs,         file = paste0("cache/", "strings.mobs",         ".rda"))
+#save(strings.biomes,       file = paste0("cache/", "strings.biomes",       ".rda"))
+#save(strings.items,        file = paste0("cache/", "strings.items",        ".rda"))
