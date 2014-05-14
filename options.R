@@ -32,9 +32,9 @@ library("grid")                       # for unit() in ggplot theme() functions
 library("RColorBrewer")               # Because colours
 library("rCharts")                    # For interactive jsified plotting glory (http://ramnathv.github.io/rCharts/), install via install_github("rCharts", "ramnathv")
 library("lubridate") 
-library("twitteR")
 library("jsonlite")
 library("stringr")
+library("twitteR")
 
 #------------------------------------------------------------#
 ##### Define some variables for ggplot2 layout and labels ####

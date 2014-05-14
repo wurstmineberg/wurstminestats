@@ -1,10 +1,10 @@
 #! /usr/bin/Rscript
 #### Get some tweets out for the dataz ====
 # Load cached data
+suppressPackageStartupMessages(library("wurstmineR"))
 load("cache/workspace.RData")
 source("options.R")
 source("functions.R")
-library("wurstmineR")
 
 # Make twitteR work
 load("cache/twitcred.RData")
