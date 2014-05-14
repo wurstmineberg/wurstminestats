@@ -7,7 +7,7 @@ source("options.R")
 source("functions.R")
 
 # Make twitteR work
-load("cache/twitcred.RData")
+#load("cache/twitcred.RData")
 registerTwitterOAuth(twitCred)
 
 # Get random stats out, only one now.
