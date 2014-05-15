@@ -3,92 +3,63 @@
 #------------------------------------------------------#
 message("Generating entity stat plots")
 
-# Get columns for killEntity and KilledBy categories respectively
-killEntity      <- grep("killEntity", names(playerstats))
-killedByEntity  <- grep("entityKilledBy", names(playerstats))
-
-# Get a list of mob names from those columns
-killEntityMobs      <- sub("killEntity.", "", names(playerstats[killEntity]))
-killedByEntityMobs  <- sub("entityKilledBy.", "", names(playerstats[killedByEntity]))
-
-# Substitute mob names with more familiar names
-for(i in 1:nrow(strings.mobs)){
+for(i in 1:length(mobStats$stat)){
   
-  killedByEntityMobs  <- sub(strings.mobs$id[i], strings.mobs$name[i], killedByEntityMobs)
-  killEntityMobs      <- sub(strings.mobs$id[i], strings.mobs$name[i], killEntityMobs)
+  stat       <- mobStats$stat[i]
+  action     <- mobStats$action[i]
+  mobName    <- mobStats$mob[i]
+  filename   <- paste0("Plots/mobs/", stat, ".png")
   
-}; rm(i);
-
-#--------------------------------------------#
-#### Generate graphs for killEntity stats ####
-#--------------------------------------------#
-
-
-for(i in 1:length(killEntity)){
+  if (action == "killed"){
+    title    <- paste0("Times mob “", mobName, "” was killed")
+    ylab     <- "Kills"
+  } else if (action == "killed by"){
+    title    <- paste0("Deaths caused by mob “", mobName, "”")
+    ylab     <- "Caused Deaths"
+  }
   
-  filename <- paste("Plots/mobs/", names(playerstats[killEntity[i]]),".png", sep="")
-  
-  p <- ggplot(data=playerstats) 
-  p <- p + aes(fill=joinStatus, x=reorder(player, playerstats[,killEntity[i]], mean, order=T), y=playerstats[,killEntity[i]], mean, order=T)
-  p <- p + barChart + statusFillScale + coord_flip() + scale_y_discrete(breaks= pretty_breaks())
-  p <- p + xLable + labs(y="Kills", title=paste("Kills of:",killEntityMobs[i]))
+  p <- ggplot(data  = playerstats)
+  p <- p + aes(fill = joinStatus, 
+               x    = sortLevels(player, playerstats[[stat]]), 
+               y    = playerstats[[stat]])
+  p <- p + barChart + statusFillScale + coord_flip() + scale_y_discrete(breaks = pretty_breaks())
+  p <- p + labs(x   = "Player", y = ylab, title = title)
   
   message("Saving ", filename)
-  ggsave(plot=p, file=filename, height=plotHeight, width=plotWidth)
+  ggsave(plot = p, file = filename, height = plotHeight, width = plotWidth)
   
-}; rm(i, p, filename)
-
-#------------------------------------------------#
-#### Generate graphs for entityKilledBy stats ####
-#------------------------------------------------#
-
-for(i in 1:length(killedByEntity)){
-  
-  filename <- paste("Plots/mobs/", names(playerstats[killedByEntity[i]]),".png", sep="")
-  
-  p <- ggplot(data=playerstats) 
-  p <- p + aes(fill=joinStatus, x=reorder(player, playerstats[,killedByEntity[i]], mean, order=T), 
-               y=playerstats[,killedByEntity[i]])
-  p <- p + barChart + statusFillScale + coord_flip() + scale_y_discrete(breaks= pretty_breaks())
-  p <- p + xLable + labs(y="Deaths", title=paste("Killed by:",killedByEntityMobs[i]))
-  
-  message("Saving ", filename)
-  ggsave(plot=p, file=filename, height=plotHeight, width=plotWidth)
-  
-}; rm(i, p, filename)
+}; rm(p, i, title, filename, stat, action, itemName)
 
 #----------------------------------------------#
 #### Generate top killed / deaths by charts ####
 #----------------------------------------------#
 
 # Kills per mob #
-mobsKilled <- data.frame(killedMob =  killEntityMobs,
-                         nKills    =  unlist(colwise(sum)(playerstats[killEntity]), use.names=F))
+mobsKilled <- mobStats[mobStats$action == "killed", ]
 
-p <- ggplot(data=mobsKilled) 
-p <- p + aes(x=reorder(killedMob, nKills, mean, order=T), y=nKills)
-p <- p + barChart + coord_flip() + scale_y_discrete(breaks= pretty_breaks())
-p <- p + labs(x="Mobs", y="Kills", title="Killed Mobs")
-ggsave(plot=p, file="Plots/mobs/Kills_byMob.png", height=plotHeight, width=plotWidth)
+p <- ggplot(data = mobsKilled)
+p <- p + aes(x = sortLevels(mob, total), y = total)
+p <- p + barChart + coord_flip() + scale_y_discrete(breaks = pretty_breaks())
+p <- p + labs(x = "Mobs", y = "Kills", title = "Killed Mobs")
+ggsave(plot = p, file = "Plots/mobs/Kills_byMob.png", height = plotHeight, width = plotWidth)
 
 # … Let's filter out Endermen #
-mobsKilledFiltered <- mobsKilled[mobsKilled$killedMob != "Enderman",]
+mobsKilledFiltered <- mobsKilled[mobsKilled$mob != "Enderman", ]
 
-p <- ggplot(data=mobsKilledFiltered) 
-p <- p + aes(x=reorder(killedMob, nKills, mean, order=T), y=nKills)
-p <- p + barChart + coord_flip() + scale_y_discrete(breaks= pretty_breaks())
-p <- p + labs(x="Mobs", y="Kills", title="Killed Mobs (except Endermen)")
+p <- ggplot(data = mobsKilledFiltered) 
+p <- p + aes(x = reorder(mob, total), y = total)
+p <- p + barChart + coord_flip() + scale_y_discrete(breaks = pretty_breaks())
+p <- p + labs(x = "Mobs", y = "Kills", title = "Killed Mobs (except Endermen)")
 ggsave(plot=p, file="Plots/mobs/Kills_byMob_except_Endermen.png", height=plotHeight, width=plotWidth)
 
 #### Deaths by mob ####
-mobsKilledBy <- data.frame(killedByMob  = killedByEntityMobs,
-                           nKilledBy    = unlist(colwise(sum)(playerstats[killedByEntity]), use.names=F))
+mobsKilledBy <- mobStats[mobStats$action == "killed by", ]
 
-p <- ggplot(data=mobsKilledBy) 
-p <- p + aes(x=reorder(killedByMob, nKilledBy, mean, order=T), y=nKilledBy)
-p <- p + barChart + coord_flip() + scale_y_discrete(breaks= pretty_breaks())
-p <- p + labs(x="Mobs", y="Deaths", title="Deaths by Mob")
-ggsave(plot=p, file="Plots/mobs/Deaths_byMob.png", height=plotHeight, width=plotWidth)
+p <- ggplot(data = mobsKilledBy) 
+p <- p + aes(x = sortLevels(mob, total), y = total)
+p <- p + barChart + coord_flip() + scale_y_discrete(breaks = pretty_breaks())
+p <- p + labs(x = "Mobs", y = "Deaths", title = "Deaths by Mob")
+ggsave(plot = p, file = "Plots/mobs/Deaths_byMob.png", height = plotHeight, width = plotWidth)
 
 ## Classify by hostile and friendly mobs ##
 killFriendly  <- c("killEntity.Bat", "killEntity.Sheep", "killEntity.Pig", "killEntity.Chicken", "killEntity.Cow", 
@@ -109,17 +80,15 @@ for(i in 1:nrow(playerstats)){
 ## Generate graphs for that ##
 
 # Friendly Mobs #
-p <- ggplot(data=playerstats) 
-p <- p + aes(fill=joinStatus, x=reorder(player, killFriendly, mean, order=T), y=killFriendly)
-p <- p + barChart + statusFillScale + coord_flip() + scale_y_discrete(breaks= pretty_breaks())
-p <- p + xLable + labs(y="Kills", title="Total Friendly Mobs Killed")
-ggsave(plot=p, file="Plots/mobs/KillFriendlies.png", height=plotHeight, width=plotWidth)
+p <- ggplot(data  = playerstats) 
+p <- p + aes(fill = joinStatus, x = sortLevels(player, killFriendly), y = killFriendly)
+p <- p + barChart + statusFillScale + coord_flip() + scale_y_discrete(breaks = pretty_breaks())
+p <- p + xLable + labs(y = "Kills", title = "Total Friendly Mobs Killed")
+ggsave(plot = p, file ="Plots/mobs/KillFriendlies.png", height = plotHeight, width = plotWidth)
 
 # Hostile Mobs #
-p <- ggplot(data=playerstats) 
-p <- p + aes(fill=joinStatus, x=reorder(player, killHostile, mean, order=T), y=killHostile)
-p <- p + barChart + statusFillScale + coord_flip() + scale_y_discrete(breaks= pretty_breaks())
-p <- p + xLable + labs(y="Kills", title="Total Hostile Mobs Killed")
-ggsave(plot=p, file="Plots/mobs/KillHostiles.png", height=plotHeight, width=plotWidth)
-
-rm(killedByEntity, killedByEntityMobs, killEntity, killEntityMobs)
+p <- ggplot(data  = playerstats) 
+p <- p + aes(fill = joinStatus, x = sortLevels(player, killHostile), y = killHostile)
+p <- p + barChart + statusFillScale + coord_flip() + scale_y_discrete(breaks = pretty_breaks())
+p <- p + xLable + labs(y = "Kills", title = "Total Hostile Mobs Killed")
+ggsave(plot = p, file = "Plots/mobs/KillHostiles.png", height = plotHeight, width = plotWidth)
