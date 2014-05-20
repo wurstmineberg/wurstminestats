@@ -11,7 +11,7 @@ load("cache/twitcred.RData")
 registerTwitterOAuth(twitCred)
 
 # Get random stats out, only one now.
-diceroll <- round(runif(1,1,4))
+diceroll <- round(runif(1, 1, 4))
 if (diceroll == 1){
   tweet(statOfTheDay(category = sample(c("general", "items", "mobs"), 1)))
 } else if (diceroll == 2){

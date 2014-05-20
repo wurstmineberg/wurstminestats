@@ -161,9 +161,11 @@ randomItemStat <- function(){
   item       <- itemStats$item[r1]
   action     <- itemStats$action[r1]
   number     <- itemStats$total[r1]
-  leadPlayer <- itemStats$leadingPlayer[r1]
+  leadPlayer <- itemStats$leadingPlayers[r1]
   playerMax  <- itemStats$playerMax[r1]
-  msg        <- paste0('The item “', item, '” was ', action, ' ', number, ' times in total, with ', leadPlayer, ' leading with ', playerMax, ' — Accounting for ', round((playerMax/number)*100, 2), '%')
+  msg        <- paste0('The item “', item, '” was ', action, ' ', number, 
+                       ' times in total, with ', leadPlayer, ' leading with ', playerMax, 
+                       ' — Accounting for ', round((playerMax/number)*100, 2), '%')
   if (nchar(msg) < 130){
     msg <- paste(msg, "#itemstat")
   }
