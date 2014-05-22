@@ -10,7 +10,7 @@ Plotting the Wurstmineberg Minecraft Server
 Primarily it's me playing around with [R](http://www.r-project.org).  
 Besides that, this will be an addition to the [wurstmineberg](http://wurstminebger.de) player statistics page at our [stats page](http://wurstminebger.de/stats). 
 
-The public directoy at [i.wurstmineberg.de/wurstminestats](http://i.wurstmineberg.de/wurstminestats/) is the place to go for up to date plots (hopefully). 
+The public directory at [i.wurstmineberg.de/wurstminestats](http://i.wurstmineberg.de/wurstminestats/) is the place to go for up to date plots (hopefully). 
 For everything else, I'm currently working on a [shiny](http://shiny.rstudio.com/) version of wurstminestats, which should serve as a more convenient place to scroll through the data. In the long run, other fancy stuff might happen, but it's all very early as of now.
 
 ## Deployment
