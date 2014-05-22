@@ -28,7 +28,7 @@ for(i in 1:length(mobStats$stat)){
   message("Saving ", filename)
   ggsave(plot = p, file = filename, height = plotHeight, width = plotWidth)
   
-}; rm(p, i, title, filename, stat, action, itemName)
+}; rm(p, i, title, filename, stat, action, mobName)
 
 #----------------------------------------------#
 #### Generate top killed / deaths by charts ####

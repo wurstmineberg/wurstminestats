@@ -27,7 +27,7 @@ for(i in 1:length(itemStats$stat)){
 message("Generating item actions plots")
 
 # subset for each action, get top 20 items for each action, and plot them
-for(action in itemActions$name){
+for(action in unique(itemStats$action)){
   itemStatsPerAction <- itemStats[itemStats$action == action,]
   itemStatsPerAction <- head(arrange(itemStatsPerAction, desc(total)), 20)
   filename           <- paste0("Plots/items/top_", action, ".png")
