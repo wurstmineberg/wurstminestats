@@ -1,8 +1,8 @@
 #### Datapreparations ####
 
 ## Startup
-source("options.R")
-source("functions.R")
+source("../options.R")
+source("../functions.R")
 
 # Checking if wurstmineR needs an update
 ver_loc    <- packageVersion("wurstmineR")
