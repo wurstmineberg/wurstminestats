@@ -64,11 +64,11 @@ ggsave(plot = p, file = "Plots/mobs/Deaths_byMob.png", height = plotHeight, widt
 ## Classify by hostile and friendly mobs ##
 killFriendly  <- c("killEntity.Bat", "killEntity.Sheep", "killEntity.Pig", "killEntity.Chicken", "killEntity.Cow", 
                    "killEntity.EntityHorse", "killEntity.Squid", "killEntity.MushroomCow", "killEntity.Villager", 
-                   "killEntity.Ozelot", "killEntity.Wolf")
+                   "killEntity.Ozelot")
 killHostile   <- c("killEntity.PigZombie", "killEntity.Blaze", "killEntity.Enderman", "killEntity.Spider", 
                    "killEntity.Zombie", "killEntity.Skeleton", "killEntity.Creeper", "killEntity.Silverfish", 
                    "killEntity.Witch", "killEntity.Slime", "killEntity.CaveSpider", "killEntity.MushroomCow", 
-                   "killEntity.LavaSlime", "killEntity.Ghast", "killEntity.Endermite")
+                   "killEntity.LavaSlime", "killEntity.Ghast", "killEntity.Endermite", "killEntity.Wolf")
 
 for(i in 1:nrow(playerstats)){
   
