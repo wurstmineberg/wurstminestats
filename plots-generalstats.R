@@ -5,11 +5,11 @@ message("Generating general stats plots")
 
 for(i in 1:nrow(strings.general)){
   
-  filename  <- paste0("Plots/statspage/", strings.general$id[i],".png")
   stat      <- strings.general$id[i]
   statScale <- strings.general$scale[i]
   statName  <- strings.general$name[i]
   statUnit  <- strings.general$unit[i]
+  filename  <- paste0("Plots/statspage/", stat,".png")
   
   p <- ggplot(data  = playerstats)
   p <- p + aes(fill = joinStatus, 
@@ -26,7 +26,7 @@ for(i in 1:nrow(strings.general)){
   
   if(stat == "playOneMinute" | stat == "timeSinceDeath"){ next };
   
-  filename <- paste("Plots/statspage/scaled/", stat,"_scaled.png", sep="")
+  filename <- paste0("Plots/statspage/scaled/", stat,"_scaled.png")
   
   p <- ggplot(data  = playerstats)
   p <- p + aes(fill = joinStatus, 
@@ -35,7 +35,7 @@ for(i in 1:nrow(strings.general)){
   p <- p + barChart + statusFillScale + coord_flip()
   p <- p + xLable   + labs(y = paste(statUnit, "per hour"), title = paste(statName, "weighted by Online Time"))
   
-  cat(paste("Saving", filename, "\n"))
+  message("Saving", filename)
   ggsave(plot = p, file = filename, height = plotHeight, width = plotWidth)
   
 }; rm(i, filename, p, stat, statScale, statUnit, statName)
