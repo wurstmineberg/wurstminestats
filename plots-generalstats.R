@@ -35,7 +35,7 @@ for(i in 1:nrow(strings.general)){
   p <- p + barChart + statusFillScale + coord_flip()
   p <- p + xLable   + labs(y = paste(statUnit, "per hour"), title = paste(statName, "weighted by Online Time"))
   
-  message("Saving", filename)
+  message("Saving ", filename)
   ggsave(plot = p, file = filename, height = plotHeight, width = plotWidth)
   
 }; rm(i, filename, p, stat, statScale, statUnit, statName)
