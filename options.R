@@ -35,6 +35,8 @@ library("lubridate")
 library("jsonlite")
 library("stringr")
 library("twitteR")
+library("plyr")
+library("dplyr")
 
 #------------------------------------------------------------#
 ##### Define some variables for ggplot2 layout and labels ####
