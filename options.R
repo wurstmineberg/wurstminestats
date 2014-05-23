@@ -51,9 +51,13 @@ barChart  <- geom_bar(colour="black", width=.7, stat="identity")
 xLable    <- xlab("Player")
 
 # Define colour scale to keep status/people colours static
-statusColours         <- brewer.pal(9,"Set1")
-statusFillScale       <- scale_fill_manual(   name = "Join Status", values = statusColours)
-statusColourScale     <- scale_colour_manual( name = "Join Status", values = statusColours)
+statusColours       <- brewer.pal(9,"Set1")
+statusColours       <- c("founding"    = statusColours[1], 
+                          "later"      = statusColours[2], 
+                          "postfreeze" = statusColours[3], 
+                          "invited"    = statusColours[4])
+statusFillScale     <- scale_fill_manual(   name = "Join Status", values = statusColours)
+statusColourScale   <- scale_colour_manual( name = "Join Status", values = statusColours)
 
 #activePeople          <- fixPeopleColors(activePeople, 0.95)
 legendPeople          <- scale_fill_manual(name = "People", values = activePeople$color)
