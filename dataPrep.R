@@ -115,15 +115,6 @@ for(i in playerSessions$person){
 
 playerSessions$person <- factor(playerSessions$person, levels=activePeople$name, ordered = T)
 
-## Experimental perPerson dataframe for googleVis
-perPerson <- data.frame(date = playedPerPerson$date)
-for(i in unique(playedPerPerson$person)){
-  tmp <- dplyr::filter(playedPerPerson, person == i)
-  tmp <- dplyr::select(tmp, date, timePlayed)
-  tmp <- rename(tmp, c("timePlayed" = i))
-  perPerson <- join(perPerson, tmp, type="full", match="all")
-}; rm(i, tmp)
-
 #### Cache some objects ####
 save.image(file = "cache/workspace.RData")
 
