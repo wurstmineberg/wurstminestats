@@ -43,7 +43,8 @@ items         <- jsonlite::fromJSON(getOption("url.stats.items"))
 #----------------------------------------------------------------------------------#
 
 ## Getting a people dataset from people.json ## (Also, deaths)
-activePeople  <- getActivePeople()
+people        <- getActivePeople(size = "full")
+activePeople  <- people[!(people$joinStatus %in% c("former", "invited")), ]
 birthdays     <- serverBirthday(activePeople)
 deaths        <- getLatestDeaths()
 

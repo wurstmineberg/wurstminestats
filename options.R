@@ -6,6 +6,7 @@
 
 ## Strings & other descriptive JSON stuff ##
 options(url.strings.general         = "http://assets.wurstmineberg.de/json/strings.json")
+options(url.strings.mobs            = "http://assets.wurstmineberg.de/json/mobs.json")
 options(url.strings.achievements    = "http://assets.wurstmineberg.de/json/achievements.json")
 options(url.strings.items           = "http://assets.wurstmineberg.de/json/items.json")
 options(url.strings.biomes          = "http://assets.wurstmineberg.de/json/biomes.json")
@@ -27,16 +28,16 @@ suppressPackageStartupMessages(library("googleVis"))
 
 # Loading all the things manually
 library("ggplot2")
-library("scales")                     # For datetime scales on plots
-library("grid")                       # for unit() in ggplot theme() functions
-library("RColorBrewer")               # Because colours
-library("rCharts")                    # For interactive jsified plotting glory (http://ramnathv.github.io/rCharts/), install via install_github("rCharts", "ramnathv")
-library("lubridate") 
+library("scales")           # For datetime scales on plots
+library("grid")             # for unit() in ggplot theme() functions
+library("RColorBrewer")     # Because colours
+library("rCharts")          # For interactive jsified plotting glory (http://ramnathv.github.io/rCharts/), install via install_github("rCharts", "ramnathv")
+library("lubridate")        # Time is hell, people.
 library("jsonlite")
-library("stringr")
-library("twitteR")
-library("plyr")
-library("dplyr")
+library("stringr")          # Only used for the random stat functions
+library("twitteR")          # Used to tweet said random stats, not required for plotting etc.
+library("plyr")             # Data transformations are hard.
+library("dplyr")            # ^
 
 #------------------------------------------------------------#
 ##### Define some variables for ggplot2 layout and labels ####
@@ -55,7 +56,8 @@ statusColours       <- brewer.pal(9,"Set1")
 statusColours       <- c("founding"    = statusColours[1], 
                           "later"      = statusColours[2], 
                           "postfreeze" = statusColours[3], 
-                          "invited"    = statusColours[4])
+                          "invited"    = statusColours[4],
+                          "former"     = statusColours[5])
 statusFillScale     <- scale_fill_manual(   name = "Join Status", values = statusColours)
 statusColourScale   <- scale_colour_manual( name = "Join Status", values = statusColours)
 

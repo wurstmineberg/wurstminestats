@@ -13,8 +13,8 @@ p <- p + ggtitle("Online Time by Server Age")
 ggsave(p, file = "Plots/OnlineTimebyServerAge.png", height = plotHeight, width = plotWidth)
 
 # Server growth
-p <- ggplot(data = activePeople) 
-p <- p + aes(x   = joinDate, y = 1:nrow(activePeople), label = name, colour = joinStatus)
+p <- ggplot(data = people) 
+p <- p + aes(x   = joinDate, y = 1:nrow(people), label = name, colour = joinStatus)
 p <- p + geom_point(stat = "identity") + geom_text(size = 3, hjust = -.2) 
 p <- p + labs(y  = "Whitelist Count", x = "Date", title = "Wurstmineberg Server Growth") 
 p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
