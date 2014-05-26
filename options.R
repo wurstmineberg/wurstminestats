@@ -63,3 +63,23 @@ statusColourScale   <- scale_colour_manual( name = "Join Status", values = statu
 
 #activePeople          <- fixPeopleColors(activePeople, 0.95)
 legendPeople          <- scale_fill_manual(name = "People", values = activePeople$color)
+
+#### Defining a color scale for the colors used by Minecraft ####
+# Source: http://minecraft.gamepedia.com/Formatting_codes#Color_codes
+
+colors.Minecraft <- c("Black"      = "#000000",
+                    "Dark Blue"    = "#0000AA",
+                    "Dark Green"   = "#00AA00",
+                    "Dark Aqua"    = "#00AAAA",
+                    "Dark Red"     = "#AA0000",
+                    "Dark Purple"  = "#AA00AA",
+                    "Gold"         = "#FFAA00",
+                    "Gray"         = "#AAAAAA",
+                    "Dark Gray"    = "#555555",
+                    "Blue"         = "#5555FF",
+                    "Green"        = "#55FF55",
+                    "Aqua"         = "#55FFFF",
+                    "Red"          = "#FF5555",
+                    "Light Purple" = "#FF55FF",
+                    "Yellow"       = "#FFFF55",
+                    "White"        = "#FFFFFF")
