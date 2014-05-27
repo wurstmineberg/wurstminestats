@@ -33,7 +33,7 @@ library("grid")             # for unit() in ggplot theme() functions
 library("RColorBrewer")     # Because colours
 library("rCharts")          # For interactive jsified plotting glory (http://ramnathv.github.io/rCharts/), install via install_github("rCharts", "ramnathv")
 library("lubridate")        # Time is hell, people.
-library("jsonlite")
+library("jsonlite")         # Because JSON. I don't know if RJSONIO or rjson would wourk, too. Sorry.
 library("stringr")          # Only used for the random stat functions
 library("twitteR")          # Used to tweet said random stats, not required for plotting etc.
 library("plyr")             # Data transformations are hard.
@@ -67,19 +67,19 @@ legendPeople          <- scale_fill_manual(name = "People", values = activePeopl
 #### Defining a color scale for the colors used by Minecraft ####
 # Source: http://minecraft.gamepedia.com/Formatting_codes#Color_codes
 
-colors.Minecraft <- c("Black"      = "#000000",
-                    "Dark Blue"    = "#0000AA",
-                    "Dark Green"   = "#00AA00",
-                    "Dark Aqua"    = "#00AAAA",
-                    "Dark Red"     = "#AA0000",
-                    "Dark Purple"  = "#AA00AA",
-                    "Gold"         = "#FFAA00",
-                    "Gray"         = "#AAAAAA",
-                    "Dark Gray"    = "#555555",
-                    "Blue"         = "#5555FF",
-                    "Green"        = "#55FF55",
-                    "Aqua"         = "#55FFFF",
-                    "Red"          = "#FF5555",
-                    "Light Purple" = "#FF55FF",
-                    "Yellow"       = "#FFFF55",
-                    "White"        = "#FFFFFF")
+colors.Minecraft <- c("Black"        = "#000000",
+                      "Dark Blue"    = "#0000AA",
+                      "Dark Green"   = "#00AA00",
+                      "Dark Aqua"    = "#00AAAA",
+                      "Dark Red"     = "#AA0000",
+                      "Dark Purple"  = "#AA00AA",
+                      "Gold"         = "#FFAA00",
+                      "Gray"         = "#AAAAAA",
+                      "Dark Gray"    = "#555555",
+                      "Blue"         = "#5555FF",
+                      "Green"        = "#55FF55",
+                      "Aqua"         = "#55FFFF",
+                      "Red"          = "#FF5555",
+                      "Light Purple" = "#FF55FF",
+                      "Yellow"       = "#FFFF55",
+                      "White"        = "#FFFFFF")
