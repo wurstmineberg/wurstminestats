@@ -29,9 +29,10 @@ ggsave(p, file = "Plots/sessions/playTime_weekdays.png", height = 6, width = 12)
 rm(avgPerWeekday)
 
 # Plotting playedPerPerson 
-fillColours <- activePeople$color[activePeople$name %in% playedPerPerson$person]
+playedPerPerson_14 <- playedPerPerson[year(playedPerPerson$date) == "2014", ]
+fillColours        <- activePeople$color[activePeople$name %in% playedPerPerson_14$person]
 
-p <- ggplot(data = arrange(playedPerPerson, person), aes(x = format(date, "%d"), y = timePlayed/60, fill = person))
+p <- ggplot(data = arrange(playedPerPerson_14, person), aes(x = format(date, "%d"), y = timePlayed/60, fill = person))
 p <- p + geom_bar(position = "stack", stat = "identity", colour = "black")
 p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
 #p <- p + scale_x_datetime(labels = date_format("%y-%m-%d"), breaks = date_breaks("days"))
@@ -39,8 +40,24 @@ p <- p + scale_y_continuous(breaks = pretty_breaks()) + playerTheme
 p <- p + labs(y = "Played Hours", x = "Day of Month (UTC)", title = "Time Played per Day: 2014")
 p <- p + scale_fill_manual(name = "People", values = fillColours)
 p <- p + facet_grid(month ~ .)
-monthNum <- length(unique(playedPerPerson$month))
-ggsave(p, file = "Plots/sessions/playTime_perPerson.png", height = (monthNum*2), width = 12)
+monthNum <- length(unique(playedPerPerson_14$month))
+ggsave(p, file = "Plots/sessions/playTime_perPerson_2014.png", height = (monthNum*2), width = 12)
+rm(p, fillColours, monthNum)
+
+# For 2013
+playedPerPerson_13 <- playedPerPerson[year(playedPerPerson$date) == "2013", ]
+fillColours        <- activePeople$color[activePeople$name %in% playedPerPerson_13$person]
+
+p <- ggplot(data = arrange(playedPerPerson_13, person), aes(x = format(date, "%d"), y = timePlayed/60, fill = person))
+p <- p + geom_bar(position = "stack", stat = "identity", colour = "black")
+p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+#p <- p + scale_x_datetime(labels = date_format("%y-%m-%d"), breaks = date_breaks("days"))
+p <- p + scale_y_continuous(breaks = pretty_breaks()) + playerTheme
+p <- p + labs(y = "Played Hours", x = "Day of Month (UTC)", title = "Time Played per Day: 2013")
+p <- p + scale_fill_manual(name = "People", values = fillColours)
+p <- p + facet_grid(month ~ .)
+monthNum <- length(unique(playedPerPerson_13$month))
+ggsave(p, file = "Plots/sessions/playTime_perPerson_2013.png", height = (monthNum*2), width = 12)
 rm(p, fillColours, monthNum)
 
 # Plotting playedPerMonth 
