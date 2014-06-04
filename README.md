@@ -4,7 +4,7 @@ wurstminestats
 Plotting the Wurstmineberg Minecraft Server
 
 ![Whitelist growth](http://i.wurstmineberg.de/wurstminestats/WhitelistGrowth.png)  
-![Play Time](http://i.wurstmineberg.de/wurstminestats/sessions/playTime.png) 
+![Play Time](http://i.wurstmineberg.de/wurstminestats/sessions/playTime_2014.png) 
 
 ## What this is
 Primarily it's me playing around with [R](http://www.r-project.org).  
