@@ -11,25 +11,25 @@ playedPerDay_13  <- playedPerDay[playedPerDay$year == "2013", ]
 p <- ggplot(data = playedPerDay_14)
 p <- p + aes(x = date, y = timePlayed/60)
 p <- p + geom_area(alpha = 0.7) + geom_point() + geom_path(alpha = .8)
-p <- p + geom_hline(yintercept = mean(playedPerDay$timePlayed/60), alpha = .5)
+p <- p + geom_hline(yintercept = mean(playedPerDay_14$timePlayed/60), alpha = .5)
 p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
-p <- p + scale_x_datetime(labels = date_format("%y-%m-%d"),
+p <- p + scale_x_datetime(labels = date_format("%B-%d"),
                           breaks = date_breaks("weeks"),
                           minor_breaks = "days")
 p <- p + scale_y_continuous(breaks = pretty_breaks())
-p <- p + labs(y = "Played Hours", x = "Day", title = "Total Time Played per Day 2014 (UTC)")
+p <- p + labs(y = "Played Hours", x = "Date", title = "Total Time Played per Day 2014 (UTC)")
 ggsave(p, file = "Plots/sessions/playTime_2014.png", height = 6, width = 12)
 ##
 p <- ggplot(data = playedPerDay_13)
 p <- p + aes(x = date, y = timePlayed/60)
 p <- p + geom_area(alpha = 0.7) + geom_point() + geom_path(alpha = .8)
-p <- p + geom_hline(yintercept = mean(playedPerDay$timePlayed/60), alpha = .5)
+p <- p + geom_hline(yintercept = mean(playedPerDay_13$timePlayed/60), alpha = .5)
 p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
-p <- p + scale_x_datetime(labels = date_format("%y-%m-%d"),
+p <- p + scale_x_datetime(labels = date_format("%B-%d"),
                           breaks = date_breaks("weeks"),
                           minor_breaks = "days")
 p <- p + scale_y_continuous(breaks = pretty_breaks())
-p <- p + labs(y = "Played Hours", x = "Day", title = "Total Time Played per Day 2013 (UTC)")
+p <- p + labs(y = "Played Hours", x = "Date", title = "Total Time Played per Day 2013 (UTC)")
 ggsave(p, file = "Plots/sessions/playTime_2013.png", height = 6, width = 12)
 
 # Testing "played per weekday"
