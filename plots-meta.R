@@ -30,6 +30,22 @@ ggsave(p, file = "Plots/WhitelistGrowth.png", height = 6, width = 12)
 
 p <- ggplot(data  = deaths)
 p <- p + aes(fill = joinStatus, x = sortLevels(player, desc(daysSince)), y = daysSince)
-p <- p + barChart + statusFillScale + coord_flip()
+p <- p + barChart + coord_flip() + statusFillScale
 p <- p + xLable   + labs(y = "Days Since Death", title = "Days Since Players' Latest Death")
+#p <- p + geom_text(aes(y = 2, label = cause.simple), size = 5, hjust = 0)
 ggsave(p, file = "Plots/LatestDeaths.png", height = plotHeight, width = plotWidth)
+
+
+#### Quick & dirty people color overview ####
+ppl <- getActivePeople()
+ppl$dummy <- 1
+ppl$name <- factor(rev(ppl$name), levels = rev(ppl$name), ordered = TRUE)
+p <- ggplot(data = ppl)
+p <- p + aes(x = rev(name), y = rev(dummy), fill = name)
+p <- p + geom_bar(stat = "identity", colour = "black") + coord_flip()
+p <- p + scale_fill_manual(name = "Player", values = ppl$color, guide = F)
+p <- p + theme(axis.title.x = element_blank(), axis.text.x = element_blank(),
+               axis.ticks.x = element_blank())
+p <- p + labs(title = "People Color Preview", x = "Person")
+
+ggsave(p, file = "Plots/PeopleColors.png", width = 8, height = 7)
