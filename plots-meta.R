@@ -43,6 +43,8 @@ ppl$name <- factor(rev(ppl$name), levels = rev(ppl$name), ordered = TRUE)
 p <- ggplot(data = ppl)
 p <- p + aes(x = rev(name), y = rev(dummy), fill = name)
 p <- p + geom_bar(stat = "identity", colour = "black") + coord_flip()
+p <- p + geom_text(aes(x = rev(name), y = 0, label = ppl$color), hjust = -2, size = 4)
+p <- p + geom_text(aes(x = rev(name), y = 0, label = ppl$color), hjust = -4, size = 4, colour = "white")
 p <- p + scale_fill_manual(name = "Player", values = ppl$color, guide = F)
 p <- p + theme(axis.title.x = element_blank(), axis.text.x = element_blank(),
                axis.ticks.x = element_blank())
