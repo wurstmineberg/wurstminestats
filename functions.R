@@ -76,19 +76,22 @@ fixPeopleColors <- function(peopleTemp, simLimit = 0.92){
 }
 
 colSimilarity <- function(col.i, col.j){
-  col.i     <- as.vector(col2rgb(col.i))
+  # Takes #RRGGBB hex strings as input and returns cosine similarity
+  # 0 means no similarity whatsoever,
+  # 1 means colors are identical
+  col.i     <- as.vector(col2rgb(col.i)) # Convert hex string to rgb vector
   col.j     <- as.vector(col2rgb(col.j))
   scalProd  <- col.i %*% col.j
   normProd  <- sqrt(sum(col.i * col.i)) * sqrt(sum(col.j * col.j))
   if(normProd == 0 & scalProd > 0){
     colSim  <- 1
   } else if(normProd == 0 & scalProd == 0){
-    colSim <- 0
+    colSim  <- 0
     } else {
     colSim  <- scalProd / normProd 
   }
   
-  return(colSim)
+  return(as.numeric(colSim))
 }
 
 #-------------------------#
