@@ -33,7 +33,7 @@ p <- p + labs(y = "Played Hours", x = "Date", title = "Total Time Played per Day
 ggsave(p, file = "Plots/sessions/playTime_2013.png", height = 6, width = 12)
 
 # Testing "played per weekday"
-fillColours   <- activePeople$color[activePeople$name %in% playedPerWeekday$person]
+fillColours   <- people$color[people$name %in% playedPerWeekday$person]
 
 p <- ggplot(data = arrange(playedPerWeekday, person))
 p <- p + aes(x = wday, y = timePlayed/60, fill = person)
@@ -46,7 +46,7 @@ rm(avgPerWeekday)
 
 # Plotting playedPerPerson 
 playedPerPerson_14 <- playedPerPerson[year(playedPerPerson$date) == "2014", ]
-fillColours        <- activePeople$color[activePeople$name %in% playedPerPerson_14$person]
+fillColours        <- people$color[people$name %in% playedPerPerson_14$person]
 
 p <- ggplot(data = arrange(playedPerPerson_14, person), aes(x = format(date, "%d"), y = timePlayed/60, fill = person))
 p <- p + geom_bar(position = "stack", stat = "identity", colour = "black")
@@ -62,7 +62,7 @@ rm(p, fillColours, monthNum)
 
 # For 2013
 playedPerPerson_13 <- playedPerPerson[year(playedPerPerson$date) == "2013", ]
-fillColours        <- activePeople$color[activePeople$name %in% playedPerPerson_13$person]
+fillColours        <- people$color[people$name %in% playedPerPerson_13$person]
 
 p <- ggplot(data = arrange(playedPerPerson_13, person), aes(x = format(date, "%d"), y = timePlayed/60, fill = person))
 p <- p + geom_bar(position = "stack", stat = "identity", colour = "black")
@@ -77,7 +77,7 @@ ggsave(p, file = "Plots/sessions/playTime_perPerson_2013.png", height = (monthNu
 rm(p, fillColours, monthNum)
 
 # Plotting playedPerMonth 
-fillColours   <- activePeople$color[activePeople$name %in% playedPerMonth$person]
+fillColours   <- people$color[people$name %in% playedPerMonth$person]
 
 p <- ggplot(data = arrange(playedPerMonth, person))
 p <- p + aes(x = month, y = timePlayed/60, fill = person)
@@ -88,7 +88,7 @@ p <- p + scale_fill_manual(name = "People", values = fillColours) + playerTheme
 ggsave(p, file = "Plots/sessions/playTime_months.png", height = 6, width = 12)
 rm(p)
 # JoinTime hours histogram
-fillColours   <- activePeople$color[activePeople$name %in% playerSessions$person]
+fillColours   <- people$color[people$name %in% playerSessions$person]
 
 p <- ggplot(data = arrange(playerSessions, person))
 p <- p + aes(x = hour(playerSessions$joinTime), fill = person)
