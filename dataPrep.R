@@ -96,25 +96,25 @@ sessions         <- getSessions()
 playerSessions   <- getPlayerSessions(sessions,   splitByDay = T)
 
 ## We want play time per day, sooooo… 
-playedPerDay     <- getPlayedPerX(playerSessions, sumBy = "day")
+playedPerDay     <- getPlayedPerX(playerSessions, people = people, sumBy = "day")
 
 # We also want play time per day per person, so, well… ##
-playedPerPerson  <- getPlayedPerX(playerSessions, sumBy = "person")
+playedPerPerson  <- getPlayedPerX(playerSessions, people = people, sumBy = "person")
 # Getting per weekday stuff
-playedPerWeekday <- getPlayedPerX(playerSessions, sumBy = "weekday")
+playedPerWeekday <- getPlayedPerX(playerSessions, people = people, sumBy = "weekday")
 avgPerWeekday    <- mean(ddply(playedPerWeekday, .(wday), summarize, timePlayed=sum(timePlayed))$timePlayed)
 # Let's do a monthly one
-playedPerMonth   <- getPlayedPerX(playerSessions, sumBy = "month")
+playedPerMonth   <- getPlayedPerX(playerSessions, people = people, sumBy = "month")
 avgPerMonth      <- mean(ddply(playedPerMonth, .(month), summarize, timePlayed=sum(timePlayed))$timePlayed)
 # Actually per person
 playtime.people  <- ddply(playedPerPerson, "person", summarize, timePlayed=sum(timePlayed))
 
 # Fix playerSession person names
-#for(i in playerSessions$person){
-#  playerSessions$person[playerSessions$person == i] <- activePeople$name[activePeople$id == i]
-#}; rm(i)
+for(i in playerSessions$person){
+  playerSessions$person[playerSessions$person == i] <- people$name[people$id == i]
+}; rm(i)
 
-playerSessions$person <- factor(playerSessions$person, levels=activePeople$id, ordered = T)
+playerSessions$person <- factor(playerSessions$person, levels = people$id, ordered = T)
 
 #### Cache some objects ####
 save.image(file = "cache/workspace.RData")
