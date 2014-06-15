@@ -1,4 +1,4 @@
-#### Stats for USC6 ####
+#### Stats for USC7 ####
 source("functions.R")
 source("options.R")
 library(wurstmineR)
@@ -7,9 +7,11 @@ require(plyr)
 #### General preparations ####
 
 # Set plot base dir
-basedir      <- "usc6"
+basedir      <- "usc7"
 plotlocation <- paste0(basedir, "/plots/")
-datadir      <- "usc6/stats/"
+datadir      <- paste0(basedir, "/stats")
+pregame      <- paste0(datadir, "/pregame/")
+postgame     <- paste0(datadir, "/postgame/")
 
 if (!file.exists(plotlocation)){
   dir.create(plotlocation, recursive = TRUE)
@@ -17,12 +19,18 @@ if (!file.exists(plotlocation)){
 
 # Teams
 teams       <- list()
-teams[[1]]  <- list("members" = c("Fenhl", "Jemus42", "Farthen08", "niklasmeyer"),
+teams[[1]]  <- list("members" = c("naturalismus", "Jemus42", "Farthen08"),
                     "color"   = colors.Minecraft[["Aqua"]],
-                    "name"    = "AnderZEL")
-teams[[2]]  <- list("members" = c("papierschiff", "l3viathan2142", "m4dm41ik", "felis_blue"),
+                    "name"    = "Team Cavalry")
+teams[[2]]  <- list("members" = c("niklasmeyer", "m4dm41ik", "felis_blue"),
                     "color"   = colors.Minecraft[["Light Purple"]],
-                    "name"    = "All Teh Dmianods")
+                    "name"    = "Team Sail Away")
+teams[[3]]  <- list("members" = c("KunzNiklas", "l3viathan2142", "Fenhl"),
+                    "color"   = colors.Minecraft[["Green"]],
+                    "name"    = "Team Friendly Fire")
+
+# If team names are long, enhance plotwidth
+plotWidth <- plotWidth * 1.5
 
 # Defining team color scales ##
 teamColors        <- sapply(teams, "[[", "color")
@@ -31,15 +39,37 @@ teamFillScale     <- scale_fill_manual(   name = "Team", values = teamColors)
 teamColourScale   <- scale_colour_manual( name = "Team", values = teamColors)
 
 #### Actualy doing stuff ####
-playerstats <- data.frame()
-for(file in dir(datadir)){
-  stat <- readStatsFile(paste0(datadir, file))
-  playerstats <<- rbind.fill(stat, playerstats)
+playerstats_pre <- data.frame()
+for(file in dir(pregame)){
+  stat <- readStatsFile(paste0(pregame, file))
+  playerstats_pre <<- rbind.fill(stat, playerstats_pre)
 }; rm(stat)
+playerstats_pre[is.na(playerstats_pre)] <- 0
 
+playerstats_post <- data.frame()
+for(file in dir(postgame)){
+  stat <- readStatsFile(paste0(postgame, file))
+  playerstats_post <<- rbind.fill(stat, playerstats_post)
+}; rm(stat)
+playerstats_post[is.na(playerstats_post)] <- 0
+
+# Get differnce of pre and post game
+#playerstats      <- playerstats_post[!(names(playerstats_post) %in% c("exploreAllBiomes.progress", "UUID"))] - playerstats_pre[!(names(playerstats_pre) %in% c("exploreAllBiomes.progress", "UUID"))]
+#playerstats$UUID <- playerstats_pre$UUID
+
+playerstats <- playerstats_post
+for (stat in names(playerstats_post)){
+  if (stat %in% c("exploreAllBiomes.progress", "UUID", "timeSinceDeath")){next}
+  if (stat %in% names(playerstats_pre)){
+    playerstats[[stat]] <- playerstats_post[[stat]] - playerstats_pre[[stat]]
+  }
+}
+
+# Get player names from UUIDs
 playerstats$player <- sapply(playerstats$UUID, getNameFromUUID)
 playerstats[is.na(playerstats)] <- 0
 
+# Get get the subclass stats from playerstats object
 items        <- playerstats[c(grep("Item.minecraft", names(playerstats)), 
                               grep("mineBlock.minecraft", names(playerstats)))]
 items$player <- playerstats$player
@@ -54,29 +84,33 @@ entities        <- playerstats[c(grep("killEntity", names(playerstats)),
                                  grep("KilledBy", names(playerstats)))]
 entities$player <- playerstats$player
 
+# Get the summary stats
 itemStats <- arrange(getItemStats(items),   desc(total))
 mobStats  <- arrange(getMobStats(entities), desc(total))
 
 # Team assignment
-playerstats$team[playerstats$player %in% teams[[1]]$members] <- teams[[1]]$name
-playerstats$team[playerstats$player %in% teams[[2]]$members] <- teams[[2]]$name
+for (i in 1:length(teams)){
+  playerstats$team[playerstats$player %in% teams[[i]]$members] <- teams[[i]]$name
+}; rm(i)
 playerstats$team <- factor(playerstats$team, 
                            levels = sapply(teams, "[[", "name"), ordered = T)
 
-write.csv(arrange(itemStats, leadingPlayers, desc(total)), file = paste0(basedir, "/itemStats.csv"))
-write.csv(arrange(mobStats,  leadingPlayers, desc(total)), file = paste0(basedir, "/mobStats.csv"))
+#write.csv(arrange(itemStats, leadingPlayers, desc(total)), file = paste0(basedir, "/itemStats.csv"))
+#write.csv(arrange(mobStats,  leadingPlayers, desc(total)), file = paste0(basedir, "/mobStats.csv"))
 
 #----------------------------------------#
 #### Plotting item stats as they come ####
 #----------------------------------------#
 message("Generating item stats plots")
-
+subdir      <- "items/"
+if (!file.exists(paste0(plotlocation, subdir))){
+  dir.create(paste0(plotlocation, subdir), recursive = TRUE)
+}
 for(i in 1:length(itemStats$stat)){
   
   stat        <- itemStats$stat[i]
   action      <- itemStats$action[i]
   itemName    <- itemStats$item[i]
-  subdir      <- "items/"
   filename    <- paste0(plotlocation, subdir, stat, ".png")
   title       <- paste0("Times item was ", action, ": ", itemName)
   
@@ -116,13 +150,16 @@ for(action in unique(itemStats$action)){
 #### Dealing with entitiy stats. Kind of a big one. ####
 #------------------------------------------------------#
 message("Generating entity stat plots")
-
+subdir      <- "mobs/"
+if (!file.exists(paste0(plotlocation, subdir))){
+  dir.create(paste0(plotlocation, subdir), recursive = TRUE)
+}
 for(i in 1:length(mobStats$stat)){
   
   stat       <- mobStats$stat[i]
   action     <- mobStats$action[i]
   mobName    <- mobStats$mob[i]
-  filename   <- paste0(plotlocation, "mobs/", stat, ".png")
+  filename   <- paste0(plotlocation, subdir, stat, ".png")
   
   if (action == "killed"){
     title    <- paste0("Times mob “", mobName, "” was killed")
@@ -168,6 +205,10 @@ strings.general[grep("damage", strings.general$id), "unit"]  <- rep("Hearts", 2)
 strings.general[grep("OneCm",  strings.general$id), "scale"] <- rep(100, 2)
 strings.general[grep("OneCm",  strings.general$id), "unit"]  <- rep("Meters", 2)
 
+subdir      <- "generalstats/"
+if (!file.exists(paste0(plotlocation, subdir))){
+  dir.create(paste0(plotlocation, subdir), recursive = TRUE)
+}
 
 for(i in 1:nrow(strings.general)){
   
@@ -175,7 +216,7 @@ for(i in 1:nrow(strings.general)){
   statScale <- strings.general$scale[i]
   statName  <- strings.general$name[i]
   statUnit  <- strings.general$unit[i]
-  filename  <- paste0(plotlocation, "generalstats/", stat,".png")
+  filename  <- paste0(plotlocation, subdir, stat,".png")
   
   p <- ggplot(data  = playerstats)
   p <- p + aes(fill = team, 
@@ -195,6 +236,12 @@ for(i in 1:nrow(strings.general)){
 #-------------------------#
 message("Generating achievement plots")
 strings.achievements <- strings.achievements[strings.achievements$id %in% names(achievements), ]
+
+subdir      <- "achievements/"
+if (!file.exists(paste0(plotlocation, subdir))){
+  dir.create(paste0(plotlocation, subdir), recursive = TRUE)
+}
+
 for(i in 1:nrow(strings.achievements)){
   
   ID          <- strings.achievements$id[i]
@@ -203,7 +250,7 @@ for(i in 1:nrow(strings.achievements)){
   
   if(ID == "exploreAllBiomes"){ next };
   
-  filename <- paste(plotlocation, "achievements/", ID,".png", sep="")
+  filename <- paste(plotlocation, subdir, ID,".png", sep="")
   
   p <- ggplot(data  = playerstats)
   p <- p + aes(fill = team, 
