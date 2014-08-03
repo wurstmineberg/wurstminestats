@@ -94,6 +94,32 @@ colSimilarity <- function(col.i, col.j){
   return(as.numeric(colSim))
 }
 
+col2lab <- function(col){
+  col <- convertColor(as.numeric(col2rgb(col)), from = "sRGB", to = "Lab", scale.in = 255)
+  return(col)
+}
+
+lab2lch <- function(lab){
+  h <- atan(lab[3]/lab[2])
+  c <- sqrt(lab[2]^2 + lab[3]^2)
+  l <- lab[1]
+  lch <- c(l, c, h)
+  return(lch)
+}
+
+deltaE <- function(col.p, col.v){
+  # Input must be hex strings in "#RRGGBB" format
+  col.p_lab <- col2lab(col.p)
+  col.v_lab <- col2lab(col.v)
+  edist <- sqrt(sum((col.p_lab - col.v_lab)^2))
+  attr(edist, "noticeable") <- FALSE
+  if (edist > 2.3){
+    attr(edist, "noticeable") <- TRUE
+  }
+  return(edist)
+}
+
+
 #-------------------------#
 #### For the lulz shit ####
 #-------------------------#
