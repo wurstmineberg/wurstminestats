@@ -14,7 +14,7 @@ ggsave(p, file = "Plots/OnlineTimebyServerAge.png", height = plotHeight, width =
 
 # Server growth
 p <- ggplot(data = people) 
-p <- p + aes(x   = joinDate, y = 1:nrow(people), label = name, colour = joinStatus)
+p <- p + aes(x   = joinDate, y = numID, label = name, colour = joinStatus)
 p <- p + geom_point(stat = "identity") + geom_text(size = 3, hjust = -.2) 
 p <- p + labs(y  = "Whitelist Count", x = "Date", title = "Wurstmineberg Server Growth") 
 p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
@@ -23,7 +23,7 @@ p <- p + scale_x_datetime(labels = date_format("%Y %b"),
                           breaks = date_breaks("month"),
                           minor_breaks = date_breaks("week"),
                           expand = c(.2,1))
-p <- p + scale_y_discrete(breaks = seq(0, nrow(activePeople), by = 2))
+p <- p + scale_y_discrete(breaks = seq(0, nrow(people), by = 2))
 ggsave(p, file = "Plots/WhitelistGrowth.png", height = 6, width = 12)
 
 ### Death stats (latest) ###
