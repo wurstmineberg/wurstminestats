@@ -45,7 +45,7 @@ items         <- jsonlite::fromJSON(getOption("url.stats.items"))
 ## Getting a people dataset from people.json ## (Also, deaths)
 people        <- getActivePeople(size = "full")
 activePeople  <- people[!(people$joinStatus %in% c("former", "invited")), ]
-birthdays     <- serverBirthday(activePeople)
+#birthdays     <- serverBirthday(activePeople)
 deaths        <- getLatestDeaths()
 
 ## Reformat stat datasets ##
@@ -54,7 +54,8 @@ achievements  <- stats2df(achievements, type = "achievements")
 entities      <- stats2df(entities)
 items         <- stats2df(items)
 ## Merge old and new item stat IDs and whate have you ##
-items         <- mergeItemStats(items, strings.items)
+# Nah, this be broke and it's not worth picking up the pieces
+#items         <- mergeItemStats(items, strings.items)
 
 #---------------------------------------------------#
 #### Enhancing playerstats with some useful shit ####
@@ -74,6 +75,7 @@ playerstats$joinStatus  <- activePeople$joinStatus
 playerstats$joinDate    <- activePeople$joinDate
 playerstats$player_id   <- activePeople$id
 playerstats$timestamp   <- dataTime
+
 ## Reordering columns
 generalColumns <- c("timestamp", "player_id" , "player", "joinDate", "joinStatus", "leaveGame",
                     "deaths", "timeSinceDeath", "playerKills", "damageDealt", "damageTaken", "playOneMinute", 

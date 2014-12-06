@@ -306,7 +306,6 @@ moveCol <- function(data, tomove, where = "last", ba = NULL) {
 }
 
 sortLevels <- function(factors, reference, sortFunction = mean){
-  require(gdata)
   sortedLevels <- reorder(factors, reference, sortFunction, order = T)
   return(sortedLevels)
 }
