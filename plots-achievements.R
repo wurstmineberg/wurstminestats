@@ -47,8 +47,8 @@ ggsave(p, file    = "Plots/achievements/openInventory_by_Time.png", height = plo
 rm(cowRatio)
 
 # Adventuring time progress in number of biomes visited
-p <- ggplot(playerstats)
-p <- p + aes(fill   = joinStatus, x = sortLevels(player, exploreAllBiomes.count), y = exploreAllBiomes.count)
-p <- p + barChart   + coord_flip() + statusFillScale + xLable
-p <- p + labs(title = "Number of biomes explored \n (Only biomes relevant to Adventuring Time)", y = "Biomes")
-ggsave(p, file = "Plots/achievements/exploreAllBiomesProgress.png", height = plotHeight, width = plotWidth)
+#p <- ggplot(playerstats)
+#p <- p + aes(fill   = joinStatus, x = sortLevels(player, exploreAllBiomes.count), y = exploreAllBiomes.count)
+#p <- p + barChart   + coord_flip() + statusFillScale + xLable
+#p <- p + labs(title = "Number of biomes explored \n (Only biomes relevant to Adventuring Time)", y = "Biomes")
+#ggsave(p, file = "Plots/achievements/exploreAllBiomesProgress.png", height = plotHeight, width = plotWidth)
