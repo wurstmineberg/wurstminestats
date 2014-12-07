@@ -49,7 +49,7 @@ colErrors <- function(peopleTemp, simLimit = 0.92){
 randCol <- function(n = 1){
   col <- character(0)
   for(i in 1:n){
-    col[i] <- rgb(runif(1, 0, 1), runif(1, 0, 1), runif(1, 0, 1))
+    col[i] <- rgb(sample(0:255, 1), sample(0:255, 1), sample(0:255, 1), maxColorValue = 255)
   }
   return(col)
 }
