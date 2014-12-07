@@ -20,6 +20,7 @@ options(url.stats.entities          = "http://api.wurstmineberg.de/server/player
 options(url.stats.items             = "http://api.wurstmineberg.de/server/playerstats/item.json")
 
 options(url.general.deaths.latest   = "http://api.wurstmineberg.de/server/deaths/latest.json")
+options(url.general.deaths          = "http://api.wurstmineberg.de/server/deaths/overview.json")
 options(url.general.sessions        = "http://api.wurstmineberg.de/server/sessions/overview.json")
 
 #### Dependencies ####
@@ -83,3 +84,7 @@ colors.Minecraft <- c("Black"        = "#000000",
                       "Light Purple" = "#FF55FF",
                       "Yellow"       = "#FFFF55",
                       "White"        = "#FFFFFF")
+
+colors.Dimensions <- c("Overworld" = "#00CF1F",
+                       "Nether"    = "#DB310B",
+                       "End"       = "#8800AD")
