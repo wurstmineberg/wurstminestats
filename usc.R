@@ -1,4 +1,5 @@
-#### Stats for USC7 ####
+#### Stats for USC ####
+
 source("functions.R")
 source("options.R")
 library(wurstmineR)
@@ -7,11 +8,11 @@ require(plyr)
 #### General preparations ####
 
 # Set plot base dir
-basedir      <- "usc7"
-plotlocation <- paste0(basedir, "/plots/")
-datadir      <- paste0(basedir, "/stats")
-pregame      <- paste0(datadir, "/pregame/")
-postgame     <- paste0(datadir, "/postgame/")
+basedir      <- "usc10/"
+plotlocation <- paste0(basedir, "plots/")
+datadir      <- paste0(basedir, "data/")
+pregame      <- paste0(datadir, "pregame/")
+postgame     <- paste0(datadir, "postgame/")
 
 if (!file.exists(plotlocation)){
   dir.create(plotlocation, recursive = TRUE)
@@ -19,24 +20,26 @@ if (!file.exists(plotlocation)){
 
 # Teams
 teams       <- list()
-teams[[1]]  <- list("members" = c("naturalismus", "Jemus42", "Farthen08"),
+teams[[1]]  <- list("members" = c("naturalismus", "Fenhl", "katthekat"),
                     "color"   = colors.Minecraft[["Aqua"]],
-                    "name"    = "Team Cavalry")
-teams[[2]]  <- list("members" = c("niklasmeyer", "m4dm41ik", "felis_blue"),
+                    "name"    = "Understatement")
+teams[[2]]  <- list("members" = c("felis_blue", "m4dm41ik", "Farthen08"),
                     "color"   = colors.Minecraft[["Light Purple"]],
-                    "name"    = "Team Sail Away")
-teams[[3]]  <- list("members" = c("KunzNiklas", "l3viathan2142", "Fenhl"),
+                    "name"    = "Cobble is Stealth")
+teams[[3]]  <- list("members" = c("plyspomitox", "KunzNiklas", "papierschiff"),
                     "color"   = colors.Minecraft[["Green"]],
-                    "name"    = "Team Friendly Fire")
+                    "name"    = "Mushroom Soup")
 
 # If team names are long, enhance plotwidth
-plotWidth <- plotWidth * 1.5
+if (max(nchar(lapply(teams, "[[", "name"))) >= 15){
+  plotWidth <- plotWidth * 1.5
+}
 
 # Defining team color scales ##
 teamColors        <- sapply(teams, "[[", "color")
 names(teamColors) <- sapply(teams, "[[", "name")
-teamFillScale     <- scale_fill_manual(   name = "Team", values = teamColors)
-teamColourScale   <- scale_colour_manual( name = "Team", values = teamColors)
+teamFillScale     <- scale_fill_manual(  name = "Team", values = teamColors)
+teamColourScale   <- scale_colour_manual(name = "Team", values = teamColors)
 
 #### Actualy doing stuff ####
 playerstats_pre <- data.frame()
@@ -54,8 +57,8 @@ for(file in dir(postgame)){
 playerstats_post[is.na(playerstats_post)] <- 0
 
 # Get differnce of pre and post game
-#playerstats      <- playerstats_post[!(names(playerstats_post) %in% c("exploreAllBiomes.progress", "UUID"))] - playerstats_pre[!(names(playerstats_pre) %in% c("exploreAllBiomes.progress", "UUID"))]
-#playerstats$UUID <- playerstats_pre$UUID
+# playerstats      <- playerstats_post[!(names(playerstats_post) %in% c("exploreAllBiomes.progress", "UUID"))] - playerstats_pre[!(names(playerstats_pre) %in% c("exploreAllBiomes.progress", "UUID"))]
+# playerstats$UUID <- playerstats_pre$UUID
 
 playerstats <- playerstats_post
 for (stat in names(playerstats_post)){
@@ -200,10 +203,10 @@ rm(p, mobsKilled)
 message("Generating general stats plots")
 
 strings.general <- strings.general[strings.general$id %in% names(generalstats), ]
-strings.general[grep("damage", strings.general$id), "scale"] <- rep(2, 2)
-strings.general[grep("damage", strings.general$id), "unit"]  <- rep("Hearts", 2)
-strings.general[grep("OneCm",  strings.general$id), "scale"] <- rep(100, 2)
-strings.general[grep("OneCm",  strings.general$id), "unit"]  <- rep("Meters", 2)
+strings.general[grep("damage", strings.general$id), "scale"] <- 2
+strings.general[grep("damage", strings.general$id), "unit"]  <- "Hearts"
+strings.general[grep("OneCm",  strings.general$id), "scale"] <- 100
+strings.general[grep("OneCm",  strings.general$id), "unit"]  <- "Meters"
 
 subdir      <- "generalstats/"
 if (!file.exists(paste0(plotlocation, subdir))){
