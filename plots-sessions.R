@@ -33,7 +33,7 @@ p <- p + labs(y = "Played Hours", x = "Date", title = "Total Time Played per Day
 ggsave(p, file = "Plots/sessions/playTime_2013.png", height = 6, width = 12)
 
 # Testing "played per weekday"
-fillColours   <- people$color[people$name %in% playedPerWeekday$person]
+fillColours   <- people$color[people$id %in% playedPerWeekday$person]
 
 p <- ggplot(data = arrange(playedPerWeekday, person))
 p <- p + aes(x = wday, y = timePlayed/60, fill = person)
