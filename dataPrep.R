@@ -112,9 +112,6 @@ avgPerMonth      <- mean(ddply(playedPerMonth, .(month), summarize, timePlayed=s
 playtime.people  <- ddply(playedPerPerson, "person", summarize, timePlayed=sum(timePlayed))
 
 # Fix playerSession person names
-for(i in playerSessions$person){
-  playerSessions$person[playerSessions$person == i] <- people$name[people$id == i]
-}; rm(i)
 
 playerSessions$person <- factor(playerSessions$person, levels = people$id, ordered = T)
 
