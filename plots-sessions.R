@@ -130,7 +130,7 @@ p <- p + scale_y_continuous(breaks = pretty_breaks())
 ggsave(p, file = "Plots/sessions/leaveTime_hours_d.png", height = 6, width = 12)
 rm(fillColours)
 
-# Played per Year
+# Played per year
 fillColours   <- people$color[people$id %in% playerSessions$person]
 
 p <- ggplot(data = playedPerYear)
@@ -140,3 +140,13 @@ p <- p + scale_y_continuous(breaks = pretty_breaks())
 p <- p + scale_fill_manual(name = "People", values = fillColours) + playerTheme
 p <- p + labs(y = "Played Hours", x = "Year", title = "Total Time Played Year")
 ggsave(p, file = "Plots/sessions/playedPerYear.png", height = 6, width = 7)
+
+# Played per month… per year
+p <- ggplot(data = playedPerMonthYear)
+p <- p + aes(x = month, y = playedMinutes/60, fill = person)
+p <- p + geom_bar(position = "stack", stat = "identity", colour = "black")
+p <- p + scale_y_continuous(breaks = pretty_breaks())
+p <- p + scale_fill_manual(name = "People", values = fillColours) + playerTheme
+p <- p + labs(y = "Played Hours", x = "Year", title = "Total Time Played Month")
+p <- p + facet_grid(~ year)
+ggsave(p, file = "Plots/sessions/playedPerMonthYear.png", height = 6, width = 11)
