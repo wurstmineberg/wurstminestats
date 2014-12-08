@@ -86,7 +86,7 @@ p <- p + geom_hline(yintercept = avgPerMonth/60, alpha = .5)
 p <- p + labs(y = "Played Hours", x = "Months", title = "Total Time Played per Month")
 p <- p + scale_fill_manual(name = "People", values = fillColours) + playerTheme
 ggsave(p, file = "Plots/sessions/playTime_months.png", height = 6, width = 12)
-rm(p)
+
 # JoinTime hours histogram
 fillColours   <- people$color[people$id %in% playerSessions$person]
 
@@ -99,6 +99,17 @@ p <- p + scale_x_discrete(limits = seq(0, 23, by = 1))
 p <- p + scale_y_continuous(breaks = pretty_breaks())
 ggsave(p, file = "Plots/sessions/joinTime_hours.png", height = 6, width = 12)
 rm(p)
+
+# Now density because lol
+p <- ggplot(data = arrange(playerSessions, person))
+p <- p + aes(x = hour(playerSessions$joinTime), fill = person)
+p <- p + geom_density(colour = "black", position = "stack")
+p <- p + labs(y = "Density", x = "Hour of Day (UTC)", title = "Join Time Frequencies")
+p <- p + scale_fill_manual(name = "People", values = fillColours) + playerTheme
+p <- p + scale_x_discrete(limits = seq(0, 23, by = 1))
+p <- p + scale_y_continuous(breaks = pretty_breaks())
+ggsave(p, file = "Plots/sessions/joinTime_hours_d.png", height = 6, width = 12)
+
 # LeaveTime hours histogram because it's only right
 p <- ggplot(data = arrange(playerSessions, person))
 p <- p + aes(x = hour(playerSessions$leaveTime), fill = person)
@@ -108,4 +119,24 @@ p <- p + scale_fill_manual(name = "People", values = fillColours) + playerTheme
 p <- p + scale_x_discrete(limits = seq(0, 23, by = 1))
 p <- p + scale_y_continuous(breaks = pretty_breaks())
 ggsave(p, file = "Plots/sessions/leaveTime_hours.png", height = 6, width = 12)
+
+p <- ggplot(data = arrange(playerSessions, person))
+p <- p + aes(x = hour(playerSessions$leaveTime), fill = person)
+p <- p + geom_density(colour = "black", position = "stack")
+p <- p + labs(y = "Density", x = "Hour of Day (UTC)", title = "Leave Time Frequencies")
+p <- p + scale_fill_manual(name = "People", values = fillColours) + playerTheme
+p <- p + scale_x_discrete(limits = seq(0, 23, by = 1))
+p <- p + scale_y_continuous(breaks = pretty_breaks())
+ggsave(p, file = "Plots/sessions/leaveTime_hours_d.png", height = 6, width = 12)
 rm(fillColours)
+
+# Played per Year
+fillColours   <- people$color[people$id %in% playerSessions$person]
+
+p <- ggplot(data = playedPerYear)
+p <- p + aes(x = as.factor(year), y = playedMinutes/60, fill = person)
+p <- p + geom_bar(position = "stack", stat = "identity", colour = "black")
+p <- p + scale_y_continuous(breaks = pretty_breaks())
+p <- p + scale_fill_manual(name = "People", values = fillColours) + playerTheme
+p <- p + labs(y = "Played Hours", x = "Year", title = "Total Time Played Year")
+ggsave(p, file = "Plots/sessions/playedPerYear.png", height = 6, width = 7)

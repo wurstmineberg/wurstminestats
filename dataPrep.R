@@ -96,6 +96,7 @@ mobStats    <- getMobStats(entities)
 
 sessions         <- getSessions()
 playerSessions   <- getPlayerSessions(sessions,   splitByDay = T)
+playerSessions$year <- lubridate::year(playerSessions$joinTime)
 
 ## We want play time per day, sooooo… 
 playedPerDay     <- getPlayedPerX(playerSessions, people = people, sumBy = "day")
@@ -110,9 +111,10 @@ playedPerMonth   <- getPlayedPerX(playerSessions, people = people, sumBy = "mont
 avgPerMonth      <- mean(ddply(playedPerMonth, .(month), summarize, timePlayed=sum(timePlayed))$timePlayed)
 # Actually per person
 playtime.people  <- ddply(playedPerPerson, "person", summarize, timePlayed=sum(timePlayed))
+# Now per year
+playedPerYear    <- ddply(playerSessions, .(year, person), summarize, playedMinutes = sum(playedMinutes))
 
 # Fix playerSession person names
-
 playerSessions$person <- factor(playerSessions$person, levels = people$id, ordered = T)
 
 #### Cache some objects ####
