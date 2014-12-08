@@ -149,4 +149,6 @@ p <- p + scale_y_continuous(breaks = pretty_breaks())
 p <- p + scale_fill_manual(name = "People", values = fillColours) + playerTheme
 p <- p + labs(y = "Played Hours", x = "Year", title = "Total Time Played Month")
 p <- p + facet_grid(~ year)
+p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+
 ggsave(p, file = "Plots/sessions/playedPerMonthYear.png", height = 6, width = 11)
