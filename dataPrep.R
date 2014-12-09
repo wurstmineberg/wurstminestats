@@ -120,6 +120,15 @@ playedPerMonthYear$person <- factor(playedPerMonthYear$person, levels = people$i
 # Fix playerSession person names
 playerSessions$person <- factor(playerSessions$person, levels = people$id, ordered = T)
 
+
+#### Add lastseen data
+lastseen           <- jsonlite::fromJSON(txt = "http://api.wurstmineberg.de/server/sessions/lastseen.json")
+lastseen           <- plyr::ldply(lastseen, data.frame)
+lastseen$leaveTime <- as.POSIXct(lastseen$leaveTime)
+lastseen$daysSince <- as.numeric((lubridate::now() - lastseen$leaveTime)/24)
+lastseen           <- plyr::arrange(lastseen, daysSince)
+lastseen$person    <- factor(lastseen$person, levels = people$id, labels = people$name, ordered = T)
+
 #### Cache some objects ####
 save.image(file = "cache/workspace.RData")
 
