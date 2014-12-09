@@ -54,8 +54,8 @@ achievements  <- stats2df(achievements, type = "achievements")
 entities      <- stats2df(entities)
 items         <- stats2df(items)
 ## Merge old and new item stat IDs and whate have you ##
-# Nah, this be broke and it's not worth picking up the pieces
-#items         <- mergeItemStats(items, strings.items)
+# maybe there's hope
+items         <- mergeItemStats(items, strings.items)
 
 #---------------------------------------------------#
 #### Enhancing playerstats with some useful shit ####
