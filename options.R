@@ -24,15 +24,12 @@ options(url.general.deaths          = "http://api.wurstmineberg.de/server/deaths
 options(url.general.sessions        = "http://api.wurstmineberg.de/server/sessions/overview.json")
 
 #### Dependencies ####
-# Loading some libraries but with suppressed messages because they're too noisy
-suppressPackageStartupMessages(library("googleVis"))
 
 # Loading all the things manually
 library("ggplot2")
 library("scales")           # For datetime scales on plots
 library("grid")             # for unit() in ggplot theme() functions
 library("RColorBrewer")     # Because colours
-library("rCharts")          # For interactive jsified plotting glory (http://ramnathv.github.io/rCharts/), install via install_github("rCharts", "ramnathv")
 library("lubridate")        # Time is hell, people.
 library("jsonlite")         # Because JSON. I don't know if RJSONIO or rjson would wourk, too. Sorry.
 library("stringr")          # Only used for the random stat functions
