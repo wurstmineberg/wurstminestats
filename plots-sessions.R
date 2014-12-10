@@ -166,3 +166,12 @@ p <- p + scale_fill_manual(name = "People", values = fillColours, guide = "none"
 p <- p + labs(title = "Days Since Last Activity", x = "Person", y = "Days") 
 p <- p + scale_linetype_discrete(name = "Markers")
 ggsave(p, file = "Plots/sessions/lastSeen.png", height = 6, width = 9)
+
+# Now z-scaled because z-scaling is funnne
+p <- ggplot(data = lastseen, aes(x = sortLevels(person, desc(scale(daysSince))), 
+                                 y = scale(daysSince),
+                                 fill = person))
+p <- p + barChart + playerTheme
+p <- p + scale_fill_manual(name = "People", values = fillColours, guide = "none") + coord_flip()
+p <- p + labs(title = "Days Since Last Activity", x = "Person", y = "Scaled Days ((x-m)/sd)") 
+ggsave(p, file = "Plots/sessions/lastSeen_z.png", height = 6, width = 9)
