@@ -128,7 +128,7 @@ lastseen$leaveTime <- as.POSIXct(lastseen$leaveTime)
 lastseen$daysSince <- as.numeric(difftime(lubridate::now(), lastseen$leaveTime, units = "days"))
 lastseen           <- plyr::arrange(lastseen, daysSince)
 lastseen$person    <- factor(lastseen$person, levels = people$id, labels = people$name, ordered = T)
-lastseen$daysSince[is.na(lastseen$daysSince)] <- 0
+lastseen$daysSince <- nullifyNA(lastseen$daysSince)
 
 #### Cache some objects ####
 save.image(file = "cache/workspace.RData")
