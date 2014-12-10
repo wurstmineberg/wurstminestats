@@ -60,23 +60,24 @@ items         <- mergeItemStats(items, strings.items)
 #---------------------------------------------------#
 #### Enhancing playerstats with some useful shit ####
 #---------------------------------------------------#
-
-## Convert play time to real time hours as separate column ##
+# Convert play time to real time hours as separate column ##
 generalstats$playOneHour      <- (generalstats$playOneMinute/20/60/60)
-## Get total distance column by summing up all *OneCm rows per player ##
+
+# Get total distance column by summing up all *OneCm rows per player ##
 generalstats$distanceTraveled <- rowSums(generalstats[, grep("OneCm", colnames(generalstats))])
-## Resort columns to get interesting stuff first. ##
+
+# Resort columns to get interesting stuff first. ##
 playerstats             <- join(generalstats, achievements)
 playerstats             <- join(playerstats, entities)
 playerstats             <- join(playerstats, items, type="full")
 
-## Append other useful meta info 
+# Append other useful meta info 
 playerstats$joinStatus  <- activePeople$joinStatus
 playerstats$joinDate    <- activePeople$joinDate
 playerstats$player_id   <- activePeople$id
 playerstats$timestamp   <- dataTime
 
-## Reordering columns
+# Reordering columns
 generalColumns <- c("timestamp", "player_id" , "player", "joinDate", "joinStatus", "leaveGame",
                     "deaths", "timeSinceDeath", "playerKills", "damageDealt", "damageTaken", "playOneMinute", 
                     "playOneHour", "jump", "animalsBred", "mobKills")
@@ -87,18 +88,18 @@ rm(generalColumns)
 #### Handle per stat datasets ####
 #--------------------------------#
 
-## Get a dataframe of item stat ID, item name and action ##
+# Get a dataframe of item stat ID, item name and action ##
 itemStats   <- getItemStats(items)
 mobStats    <- getMobStats(entities)
+
 #-----------------------------------------------------#
 #### Getting sessions from /sessions/overview.json ####
 #-----------------------------------------------------#
-
 sessions            <- getSessions()
 playerSessions      <- getPlayerSessions(sessions, splitByDay = T)
 playerSessions$year <- lubridate::year(playerSessions$joinTime)
 
-## We want play time per day, sooooo… 
+# We want play time per day, sooooo… 
 playedPerDay     <- getPlayedPerX(playerSessions, people = people, sumBy = "day")
 
 # We also want play time per day per person, so, well… ##
@@ -113,13 +114,12 @@ avgPerMonth      <- mean(ddply(playedPerMonth, .(month), summarize, timePlayed=s
 playtime.people  <- ddply(playedPerPerson, "person", summarize, timePlayed=sum(timePlayed))
 # Now per year
 playedPerYear             <- getPlayedPerX(playerSessions, people = people, sumBy = "year")
-
+# Now per months
 playedPerMonthYear        <- ddply(playerSessions, .(year, month, person), summarize, playedMinutes = sum(playedMinutes))
 playedPerMonthYear$person <- factor(playedPerMonthYear$person, levels = people$id, labels = people$name, ordered = T)
 
 # Fix playerSession person names
 playerSessions$person <- factor(playerSessions$person, levels = people$id, ordered = T)
-
 
 #### Add lastseen data
 lastseen           <- jsonlite::fromJSON(txt = "http://api.wurstmineberg.de/server/sessions/lastseen.json")
@@ -143,10 +143,3 @@ save.image(file = "cache/workspace.RData")
 #save(playerSessions,   file = paste0("cache/", "playerSessions", ".rda"))
 #save(itemStats,        file = paste0("cache/", "itemStats",      ".rda"))
 #save(mobStats,         file = paste0("cache/", "mobStats",       ".rda"))
-
-# Cache strings (not right now, wurstmineR takes care of that.)
-#save(strings.general,      file = paste0("cache/", "strings.general",      ".rda"))
-#save(strings.achievements, file = paste0("cache/", "strings.achievements", ".rda"))
-#save(strings.mobs,         file = paste0("cache/", "strings.mobs",         ".rda"))
-#save(strings.biomes,       file = paste0("cache/", "strings.biomes",       ".rda"))
-#save(strings.items,        file = paste0("cache/", "strings.items",        ".rda"))

@@ -160,9 +160,9 @@ legend <- data.frame(value = c(mean(lastseen$daysSince),
 p <- ggplot(data = lastseen, aes(x = sortLevels(person, desc(daysSince)), 
                                  y = daysSince,
                                  fill = person))
-p <- p+ barChart + scale_fill_manual(name = "People", values = fillColours, guide = "none") + playerTheme
-p <- p + coord_flip()
-p <- p + labs(title = "Days Since Last Activity", x = "Person", y = "Days")
-p <- p + geom_hline(data = legend, show_guide = T, aes(yintercept = value, linetype = name)) 
+p <- p + barChart + playerTheme
+p <- p + geom_hline(data = legend, show_guide = T, aes(yintercept = value, linetype = name))
+p <- p + scale_fill_manual(name = "People", values = fillColours, guide = "none") + coord_flip()
+p <- p + labs(title = "Days Since Last Activity", x = "Person", y = "Days") 
 p <- p + scale_linetype_discrete(name = "Markers")
 ggsave(p, file = "Plots/sessions/lastSeen.png", height = 6, width = 9)
