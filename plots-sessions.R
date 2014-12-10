@@ -157,8 +157,11 @@ p <- ggplot(data = lastseen, aes(x = sortLevels(person, desc(daysSince)),
                                  fill = person))
 p <- p+ barChart + scale_fill_manual(name = "People", values = fillColours, guide = "none") + playerTheme
 p <- p + coord_flip()
-p <- p + geom_hline(y = 365)
+if (max(lastseen$daysSince) > 250){
+  p <- p + geom_hline(y = 365)
+}
 p <- p + geom_hline(y = mean(lastseen$daysSince, na.rm = T), linetype = 2)
+p <- p + geom_hline(y = median(lastseen$daysSince, na.rm = T), linetype = 3)
 p <- p + labs(title = "Days Since Last Activity", x = "Person", y = "Days")
 ggsave(p, file = "Plots/sessions/lastSeen.png", height = 6, width = 9)
 
