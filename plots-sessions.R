@@ -57,7 +57,7 @@ p <- p + scale_fill_manual(name = "People", values = fillColours)
 #p <- p + facet_grid(month ~ ., scales = "free_y")
 p <- p + facet_wrap(~month, ncol = 2, scales = "free_y")
 ggsave(p, file = "Plots/sessions/playTime_perPerson_2014.png", height = 8, width = 12)
-rm(p, fillColours, monthNum)
+rm(p, fillColours)
 
 # For 2013
 playedPerPerson_13 <- playedPerPerson[year(playedPerPerson$date) == "2013", ]
@@ -73,7 +73,7 @@ p <- p + scale_fill_manual(name = "People", values = fillColours)
 #p <- p + facet_grid(month ~ ., scales = "free_y")
 p <- p + facet_wrap(~month, ncol = 2, scales = "free_y")
 ggsave(p, file = "Plots/sessions/playTime_perPerson_2013.png", height = 8, width = 12)
-rm(p, fillColours, monthNum)
+rm(p, fillColours)
 
 #### Plotting playedPerMonth 
 fillColours   <- people$color[people$name %in% playedPerMonth$person]
