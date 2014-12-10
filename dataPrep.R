@@ -125,7 +125,7 @@ playerSessions$person <- factor(playerSessions$person, levels = people$id, order
 lastseen           <- jsonlite::fromJSON(txt = "http://api.wurstmineberg.de/server/sessions/lastseen.json")
 lastseen           <- plyr::ldply(lastseen, data.frame)
 lastseen$leaveTime <- as.POSIXct(lastseen$leaveTime)
-lastseen$daysSince <- as.numeric((lubridate::now() - lastseen$leaveTime)/24)
+lastseen$daysSince <- as.numeric((lubridate::now() - lastseen$leaveTime)/60/24)
 lastseen           <- plyr::arrange(lastseen, daysSince)
 lastseen$person    <- factor(lastseen$person, levels = people$id, labels = people$name, ordered = T)
 lastseen$daysSince[is.na(lastseen$daysSince)] <- 0

@@ -152,16 +152,17 @@ p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ggsave(p, file = "Plots/sessions/playedPerMonthYear.png", height = 6, width = 11)
 
 #### LastSeen
+legend <- data.frame(value = c(mean(lastseen$daysSince),
+                               median(lastseen$daysSince),
+                               365),
+                     name  = c("Mean", "Median", "1 Year Mark"))
+
 p <- ggplot(data = lastseen, aes(x = sortLevels(person, desc(daysSince)), 
                                  y = daysSince,
                                  fill = person))
 p <- p+ barChart + scale_fill_manual(name = "People", values = fillColours, guide = "none") + playerTheme
 p <- p + coord_flip()
-if (max(lastseen$daysSince) > 250){
-  p <- p + geom_hline(y = 365)
-}
-p <- p + geom_hline(y = mean(lastseen$daysSince, na.rm = T), linetype = 2)
-p <- p + geom_hline(y = median(lastseen$daysSince, na.rm = T), linetype = 3)
 p <- p + labs(title = "Days Since Last Activity", x = "Person", y = "Days")
+p <- p + geom_hline(data = legend, show_guide = T, aes(yintercept = value, linetype = name)) 
+p <- p + scale_linetype_discrete(name = "Markers")
 ggsave(p, file = "Plots/sessions/lastSeen.png", height = 6, width = 9)
-
