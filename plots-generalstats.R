@@ -11,6 +11,11 @@ for(i in 1:nrow(strings.general)){
   statUnit  <- strings.general$unit[i]
   filename  <- paste0("Plots/statspage/", stat,".png")
   
+  if (stat == "playOneMinute"){
+    statScale <- statScale*24
+    statUnit <- "Days"
+  }
+  
   p <- ggplot(data  = playerstats)
   p <- p + aes(fill = joinStatus, 
                x    = sortLevels(player, playerstats[[stat]]), 
