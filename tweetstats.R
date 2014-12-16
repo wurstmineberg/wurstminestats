@@ -11,7 +11,7 @@ load("cache/twitcred.RData")
 registerTwitterOAuth(twitCred)
 
 # Get random stats out, only one now.
-diceroll <- round(runif(1, 1, 4))
+diceroll <- sample(1:4, 1)
 if (diceroll == 1){
   tweet(statOfTheDay(category = sample(c("general", "items", "mobs"), 1)))
 } else if (diceroll == 2){
@@ -31,7 +31,8 @@ if (hour(now()) == 22){
   Sys.sleep(30)
   tweet(dailyActivity(1))
 }
-if (!is.null(getBirthdayNotification(birthdays)) && hour(now()) == 20){
-  Sys.sleep(60)
-  tweet(getBirthdayNotification(birthdays))
-}
+
+# if (!is.null(getBirthdayNotification(birthdays)) && hour(now()) == 20){
+#   Sys.sleep(60)
+#   tweet(getBirthdayNotification(birthdays))
+# }
