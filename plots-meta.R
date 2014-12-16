@@ -32,7 +32,7 @@ p <- ggplot(data  = deaths)
 p <- p + aes(fill = joinStatus, x = sortLevels(player, desc(daysSince)), y = daysSince)
 p <- p + barChart + coord_flip() + statusFillScale
 p <- p + xLable   + labs(y = "Days Since Death", title = "Days Since Players' Latest Death")
-#p <- p + geom_text(aes(y = 2, label = cause.simple), size = 5, hjust = 0)
+p <- p + geom_text(aes(y = 2, label = cause), size = 3, hjust = 0)
 ggsave(p, file = "Plots/LatestDeaths.png", height = plotHeight, width = plotWidth)
 
 
