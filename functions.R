@@ -129,7 +129,7 @@ serverBirthday <- function(activePeople){
   now           <- as.POSIXlt(Sys.time(), "UTC")
   now$year      <- now$year + 1900
   ydays         <- as.POSIXlt(activePeople$joinDate)$yday - now$yday
-  daysToNext    <- min(ydays[ydays > 0])
+  daysToNext    <- ifelse(identical(ydays[ydays > 0], integer(0)), 0, ydays[ydays > 0])
   daysSinceLast <- max(ydays[ydays < 0])
   nextPerson    <- activePeople$name[ydays == daysToNext]
   lastPerson    <- activePeople$name[ydays == daysSinceLast]

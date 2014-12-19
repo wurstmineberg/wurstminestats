@@ -3,13 +3,13 @@
 #-------------------------------------------------------------------------------#
 message("Generating general stats plots")
 
-for(i in 1:nrow(strings.general)){
+for(i in seq_len(nrow(strings.general))){
   
   stat      <- strings.general$id[i]
   statScale <- strings.general$scale[i]
   statName  <- strings.general$name[i]
   statUnit  <- strings.general$unit[i]
-  filename  <- paste0("Plots/statspage/", stat,".png")
+  filename  <- paste0("Plots/statspage/", stat, ".png")
   
   if (stat == "playOneMinute"){
     statScale <- statScale*24
@@ -29,7 +29,7 @@ for(i in 1:nrow(strings.general)){
   
   ## Weighted by hours played ##
   
-  if(stat == "playOneMinute" | stat == "timeSinceDeath"){ next };
+  if(stat %in% c("playOneMinute", "timeSinceDeath")){ next };
   
   filename <- paste0("Plots/statspage/scaled/", stat,"_scaled.png")
   

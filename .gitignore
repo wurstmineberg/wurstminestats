@@ -4,8 +4,9 @@
 notepad.R
 wurstmineberg.Rproj
 brewer-palettes.pdf
-updatepush.sh
 Plots
 data
 shiny/www
 cache
+usc*/
+*png
