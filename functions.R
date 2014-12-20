@@ -357,16 +357,3 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
     }
   }
 }
-
-# Replace NAs in data with 0 if appropriate
-
-nullifyNA <- function(data){
-  if (!is.vector(data)){
-    message("Data is not a vector, nullifying _all_ NAs in data!")
-  }
-  if (!is.numeric(data)){
-    stop("Data is not numeric, refusing to nullify")
-  }
-  data[is.na(data)] <- 0
-  return(data)
-}
