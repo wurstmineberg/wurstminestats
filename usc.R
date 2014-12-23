@@ -1,14 +1,12 @@
 #### Stats for USC ####
-
 source("functions.R")
 source("options.R")
 library(wurstmineR)
-require(plyr)
+library(plyr)
 
 #### General preparations ####
-
 # Set plot base dir
-basedir      <- "usc10/"
+basedir      <- "usc11/"
 plotlocation <- paste0(basedir, "plots/")
 datadir      <- paste0(basedir, "data/")
 pregame      <- paste0(datadir, "pregame/")
@@ -18,17 +16,17 @@ if (!file.exists(plotlocation)){
   dir.create(plotlocation, recursive = TRUE)
 }
 
-# Teams
+## Teams
 teams       <- list()
-teams[[1]]  <- list("members" = c("naturalismus", "Fenhl", "katthekat"),
-                    "color"   = colors.Minecraft[["Aqua"]],
-                    "name"    = "Understatement")
-teams[[2]]  <- list("members" = c("felis_blue", "m4dm41ik", "Farthen08"),
+teams[[1]]  <- list("members" = c("l3viathan2142", "lev3lUp", "RainbowRevenge", "__mine_creeper__"),
                     "color"   = colors.Minecraft[["Light Purple"]],
-                    "name"    = "Cobble is Stealth")
-teams[[3]]  <- list("members" = c("plyspomitox", "KunzNiklas", "papierschiff"),
+                    "name"    = "Light Purple")
+teams[[2]]  <- list("members" = c("plyspomitox", "Fenhl", "papierschiff", "alexexde"),
+                    "color"   = colors.Minecraft[["Aqua"]],
+                    "name"    = "Fire and Water")
+teams[[3]]  <- list("members" = c("Farthen08", "naturalismus", "m4dm41ik", "katthekat"),
                     "color"   = colors.Minecraft[["Green"]],
-                    "name"    = "Mushroom Soup")
+                    "name"    = "Think with Portals")
 
 # If team names are long, enhance plotwidth
 if (max(nchar(lapply(teams, "[[", "name"))) >= 15){
@@ -47,19 +45,16 @@ for(file in dir(pregame)){
   stat <- readStatsFile(paste0(pregame, file))
   playerstats_pre <<- rbind.fill(stat, playerstats_pre)
 }; rm(stat)
-playerstats_pre[is.na(playerstats_pre)] <- 0
+playerstats_pre <- nullifyNA(playerstats_pre)
 
 playerstats_post <- data.frame()
 for(file in dir(postgame)){
   stat <- readStatsFile(paste0(postgame, file))
   playerstats_post <<- rbind.fill(stat, playerstats_post)
 }; rm(stat)
-playerstats_post[is.na(playerstats_post)] <- 0
+playerstats_post <- nullifyNA(playerstats_post)
 
 # Get differnce of pre and post game
-# playerstats      <- playerstats_post[!(names(playerstats_post) %in% c("exploreAllBiomes.progress", "UUID"))] - playerstats_pre[!(names(playerstats_pre) %in% c("exploreAllBiomes.progress", "UUID"))]
-# playerstats$UUID <- playerstats_pre$UUID
-
 playerstats <- playerstats_post
 for (stat in names(playerstats_post)){
   if (stat %in% c("exploreAllBiomes.progress", "UUID", "timeSinceDeath")){next}
@@ -70,10 +65,10 @@ for (stat in names(playerstats_post)){
 
 # Get player names from UUIDs
 playerstats$player <- sapply(playerstats$UUID, getNameFromUUID)
-playerstats[is.na(playerstats)] <- 0
+playerstats        <- nullifyNA(playerstats)
 
 # Get get the subclass stats from playerstats object
-items        <- playerstats[c(grep("Item.minecraft", names(playerstats)), 
+items        <- playerstats[c(grep("Item.minecraft",      names(playerstats)), 
                               grep("mineBlock.minecraft", names(playerstats)))]
 items$player <- playerstats$player
 
@@ -95,6 +90,7 @@ mobStats  <- arrange(getMobStats(entities), desc(total))
 for (i in 1:length(teams)){
   playerstats$team[playerstats$player %in% teams[[i]]$members] <- teams[[i]]$name
 }; rm(i)
+
 playerstats$team <- factor(playerstats$team, 
                            levels = sapply(teams, "[[", "name"), ordered = T)
 
