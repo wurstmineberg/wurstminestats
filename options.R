@@ -3,7 +3,7 @@
 # clusterfuck at some point and I'm a nice person.
 
 #### Data sources ####
-
+message("Setting global options")
 ## Strings & other descriptive JSON stuff ##
 options(url.strings.general         = "http://assets.wurstmineberg.de/json/strings.json")
 options(url.strings.mobs            = "http://assets.wurstmineberg.de/json/mobs.json")
@@ -24,23 +24,36 @@ options(url.general.deaths          = "http://api.wurstmineberg.de/server/deaths
 options(url.general.sessions        = "http://api.wurstmineberg.de/server/sessions/overview.json")
 
 #### Dependencies ####
-
+message("Loading required packages")
 # Loading all the things manually
-library("ggplot2")
-library("scales")           # For datetime scales on plots
-library("grid")             # for unit() in ggplot theme() functions
-library("RColorBrewer")     # Because colours
-library("lubridate")        # Time is hell, people.
-library("jsonlite")         # Because JSON. I don't know if RJSONIO or rjson would wourk, too. Sorry.
-library("stringr")          # Only used for the random stat functions
-library("twitteR")          # Used to tweet said random stats, not required for plotting etc.
-library("plyr")             # Data transformations are hard.
-library("dplyr")            # ^
+library("ggplot2", quietly = TRUE)
+library("scales", quietly = TRUE)           # For datetime scales on plots
+library("grid", quietly = TRUE)             # for unit() in ggplot theme() functions
+library("RColorBrewer", quietly = TRUE)     # Because colours
+library("lubridate", quietly = TRUE)        # Time is hell, people.
+library("jsonlite", quietly = TRUE)         # Because JSON. I don't know if RJSONIO or rjson would wourk, too. Sorry.
+library("stringr", quietly = TRUE)          # Only used for the random stat functions
+library("twitteR", quietly = TRUE)          # Used to tweet said random stats, not required for plotting etc.
+library("plyr", quietly = TRUE)             # Data transformations are hard.
+library("dplyr", quietly = TRUE)            # ^
+
+##### Directories for plot locations ####
+message("Checking if plot directories are present")
+plotdirs <- c("Plots", "Plots/items", "Plots/items/mined", "Plots/items/crafted", "Plots/items/broken",
+              "Plots/items/used", "Plots/achievements", "Plots/statspage", "Plots/statspage/scaled",
+              "Plots/sessions")
+
+for (i in plotdirs){
+  if (!file.exists(i)){
+    message("Seems directory ", i, " is missing, trying to create")
+    dir.create(i)
+  }
+}
 
 #------------------------------------------------------------#
 ##### Define some variables for ggplot2 layout and labels ####
 #------------------------------------------------------------#
-
+message("Defining some ggplot2 theme elements")
 playerTheme <- theme(legend.position  = "right",
                      legend.key.size   = unit(.4, "cm"),
                      legend.text       = element_text(size = rel(.8)))
