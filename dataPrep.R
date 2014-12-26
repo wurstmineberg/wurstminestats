@@ -1,10 +1,12 @@
 #### Datapreparations ####
 
 ## Startup
+message("Making preparations…")
 source("options.R")
 source("functions.R")
 
 # Checking if wurstmineR needs an update
+message("Checking for wurstmineR")
 ver_loc    <- packageVersion("wurstmineR")
 ver_github <- package_version(jsonlite::fromJSON("https://raw.githubusercontent.com/jemus42/wurstmineR/master/VERSION")$Version)
 if (ver_loc == ver_github){
@@ -21,8 +23,9 @@ library("wurstmineR")
 
 Sys.setenv(TZ = "UTC") # Don't ask
 
-# Get a close enough timestamp for the data age. Reimport via as.POSIXct(x,origin="1970-01-01") should be sufficient, else handle as.numeric()
-dataTime <- format(Sys.time(), "%s")
+# Get a close enough timestamp for the data age.
+dataTime <- format(now(tzone = "UTC"), "%s")
+message("Timestamped data at ", dataTime, " (", now(tzone = "UTC"), ")")
 
 #### Get strings for some… strings. (Mob IDs, display names, biomes, achievements…) ####
 # Note: strings.biomes is required for proper achievements dataset handling
@@ -33,6 +36,7 @@ dataTime <- format(Sys.time(), "%s")
 #strings.biomes          <- getStrings(category = "biomes")
 
 #### Get player stats from wurstmineberg API ####
+message("Sucking data out of the API")
 generalstats  <- jsonlite::fromJSON(getOption("url.stats.general"))
 achievements  <- jsonlite::fromJSON(getOption("url.stats.achievements"))
 entities      <- jsonlite::fromJSON(getOption("url.stats.entities"))
@@ -48,6 +52,7 @@ activePeople  <- people[!(people$joinStatus %in% c("former", "invited")), ]
 #birthdays     <- serverBirthday(activePeople)
 deaths        <- getLatestDeaths()
 
+message("Trying to do things to the data")
 ## Reformat stat datasets ##
 generalstats  <- stats2df(generalstats)
 achievements  <- stats2df(achievements, type = "achievements")
@@ -95,6 +100,7 @@ mobStats    <- getMobStats(entities)
 #-----------------------------------------------------#
 #### Getting sessions from /sessions/overview.json ####
 #-----------------------------------------------------#
+message("Now the session data…")
 sessions            <- getSessions()
 playerSessions      <- getPlayerSessions(sessions, splitByDay = T)
 playerSessions$year <- lubridate::year(playerSessions$joinTime)
@@ -131,6 +137,7 @@ lastseen$person    <- factor(lastseen$person, levels = people$id, labels = peopl
 lastseen$daysSince <- nullifyNA(lastseen$daysSince)
 
 #### Cache some objects ####
+message("So far soo good, caching data…")
 save.image(file = "cache/workspace.RData")
 
 #save(playerstats,      file = paste0("cache/", "playerstats",    ".rda"))
