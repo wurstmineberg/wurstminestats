@@ -54,12 +54,12 @@ for (i in plotdirs){
 ##### Define some variables for ggplot2 layout and labels ####
 #------------------------------------------------------------#
 message("Defining some ggplot2 theme elements")
-playerTheme <- theme(legend.position  = "right",
-                     legend.key.size   = unit(.4, "cm"),
-                     legend.text       = element_text(size = rel(.8)))
+playerTheme <- theme(legend.position = "right",
+                     legend.key.size = unit(.4, "cm"),
+                     legend.text     = element_text(size = rel(.8)))
 
 plotWidth <- 6; plotHeight <- 5;
-barChart  <- geom_bar(colour="black", width=.7, stat="identity")
+barChart  <- geom_bar(colour = "black", width = .7, stat = "identity")
 xLable    <- xlab("Player")
 
 # Define colour scale to keep status/people colours static
@@ -72,8 +72,8 @@ statusColours       <- c("founding"    = statusColours[1],
 statusFillScale     <- scale_fill_manual(   name = "Join Status", values = statusColours)
 statusColourScale   <- scale_colour_manual( name = "Join Status", values = statusColours)
 
-#activePeople          <- fixPeopleColors(activePeople, 0.95)
-legendPeople          <- scale_fill_manual(name = "People", values = activePeople$color)
+#activePeople       <- fixPeopleColors(activePeople, 0.95)
+legendPeople        <- scale_fill_manual(name = "People", values = activePeople$color)
 
 #### Defining a color scale for the colors used by Minecraft ####
 # Source: http://minecraft.gamepedia.com/Formatting_codes#Color_codes
@@ -95,6 +95,6 @@ colors.Minecraft <- c("Black"        = "#000000",
                       "Yellow"       = "#FFFF55",
                       "White"        = "#FFFFFF")
 
-colors.Dimensions <- c("Overworld" = "#00CF1F",
-                       "Nether"    = "#DB310B",
-                       "End"       = "#8800AD")
+colors.Dimensions   <- c("Overworld" = "#00CF1F",
+                         "Nether"    = "#DB310B",
+                         "End"       = "#8800AD")

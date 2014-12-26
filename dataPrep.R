@@ -8,12 +8,16 @@ source("functions.R")
 # Checking if wurstmineR needs an update
 message("Checking for wurstmineR")
 ver_loc    <- packageVersion("wurstmineR")
+message("Local version is ", ver_loc)
 ver_github <- package_version(jsonlite::fromJSON("https://raw.githubusercontent.com/jemus42/wurstmineR/master/VERSION")$Version)
 if (ver_loc == ver_github){
   message("wurstmineR is the current version, moving on.")
 } else if (ver_loc < ver_github){
-  message(paste("Remote version is", ver_github, "— Installing…"))
-  if (!("devtools" %in% installed.packages())){install.packages("devtools")}
+  message("Remote version is ", ver_github, " — Installing…")
+  if (!("devtools" %in% installed.packages())){
+    warning("Package 'devtools' not found, trying to install…")
+    install.packages("devtools")
+  }
   library(devtools)
   install_github("jemus42/wurstmineR")
 } else {
