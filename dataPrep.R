@@ -13,6 +13,7 @@ if (ver_loc == ver_github){
   message("wurstmineR is the current version, moving on.")
 } else if (ver_loc < ver_github){
   message(paste("Remote version is", ver_github, "— Installing…"))
+  if (!("devtools" %in% installed.packages())){install.packages("devtools")}
   library(devtools)
   install_github("jemus42/wurstmineR")
 } else {
