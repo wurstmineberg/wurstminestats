@@ -10,3 +10,5 @@ shiny/www
 cache
 usc*/
 *png
+packrat/lib*/
+packrat/src/
