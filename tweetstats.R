@@ -11,7 +11,7 @@ load("cache/twitcred.RData")
 registerTwitterOAuth(twitCred)
 
 # Get random stats out, only one now.
-diceroll <- sample(1:4, 1)
+diceroll <- round(runif(1, min = 1, max = 4))
 if (diceroll == 1){
   tweet(statOfTheDay(category = sample(c("general", "items", "mobs"), 1)))
 } else if (diceroll == 2){
@@ -23,7 +23,7 @@ if (diceroll == 1){
 }
 
 # Special tweets
-if (wday(now(), T, F) == "Sunday" && hour(now()) == 22){
+if (wday(now(), T, F) == "Sunday" && hour(now()) >= 21){
   Sys.sleep(30)
   tweet(mostActiveDay(7))
 }
