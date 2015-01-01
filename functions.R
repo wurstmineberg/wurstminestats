@@ -357,3 +357,23 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
     }
   }
 }
+
+checkCriticalPackage <- function(githubid = NULL, package = NULL){
+  ver_loc    <- packageVersion(package)
+  message("Local version is ", ver_loc)
+  url <- paste0("https://raw.githubusercontent.com/", githubid, "/master/VERSION")
+  ver_github <- package_version(jsonlite::fromJSON(url)$Version)
+  if (ver_loc == ver_github){
+    message(package, " is the current version, moving on.")
+  } else if (ver_loc < ver_github){
+    message("Remote version is ", ver_github, " — Installing…")
+    if (!("devtools" %in% installed.packages())){
+      warning("Package 'devtools' not found, trying to install…")
+      install.packages("devtools")
+    }
+    library(devtools)
+    install_github(githubid)
+  } else {
+    message("How did you do that?")
+  }
+}
