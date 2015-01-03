@@ -9,6 +9,7 @@ playedPerDay_15   <- playedPerDay[playedPerDay$year == "2015", ]
 playedPerDay_14   <- playedPerDay[playedPerDay$year == "2014", ]
 playedPerDay_13   <- playedPerDay[playedPerDay$year == "2013", ]
 
+# 2015
 p <- ggplot(data = playedPerDay_15)
 p <- p + aes(x = date, y = timePlayed/60)
 p <- p + geom_area(alpha = 0.7) + geom_point() + geom_path(alpha = .8)
@@ -20,7 +21,8 @@ p <- p + scale_x_datetime(labels = date_format("%B-%d"),
 p <- p + scale_y_continuous(breaks = pretty_breaks())
 p <- p + labs(y = "Played Hours", x = "Date", title = "Total Time Played per Day 2015 (UTC)")
 ggsave(p, file = "Plots/sessions/playTime_2015.png", height = 6, width = 12)
-##
+
+## 2014
 p <- ggplot(data = playedPerDay_14)
 p <- p + aes(x = date, y = timePlayed/60)
 p <- p + geom_area(alpha = 0.7) + geom_point() + geom_path(alpha = .8)
@@ -32,7 +34,8 @@ p <- p + scale_x_datetime(labels = date_format("%B-%d"),
 p <- p + scale_y_continuous(breaks = pretty_breaks())
 p <- p + labs(y = "Played Hours", x = "Date", title = "Total Time Played per Day 2014 (UTC)")
 ggsave(p, file = "Plots/sessions/playTime_2014.png", height = 6, width = 12)
-##
+
+## 2013
 p <- ggplot(data = playedPerDay_13)
 p <- p + aes(x = date, y = timePlayed/60)
 p <- p + geom_area(alpha = 0.7) + geom_point() + geom_path(alpha = .8)
