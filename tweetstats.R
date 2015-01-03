@@ -1,4 +1,5 @@
 #! /usr/bin/Rscript
+
 #### Get some tweets out for the dataz ====
 # Load cached data
 suppressPackageStartupMessages(library("wurstmineR"))
@@ -7,8 +8,16 @@ source("options.R")
 source("functions.R")
 
 # Make twitteR work
-load("cache/twitcred.RData")
-registerTwitterOAuth(twitCred)
+if (!(file.exists("cache"))){
+  dir.create("cache")
+} else if (!(file.exists("cache/twitcred.RData"))){
+  stop("Twitter credentials file is not present!")
+} else {
+  load("cache/twitcred.RData")
+  if (registerTwitterOAuth(twitCred)){
+    message("twitteR should work.")
+  }
+}
 
 # Get random stats out, only one now.
 diceroll <- round(runif(1, min = 1, max = 4))
