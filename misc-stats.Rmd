@@ -34,3 +34,31 @@ paste0(ppl$invitedBy, "-->", ppl$id, collapse = ";") %>%
            mermaid
 ```
 
+## Session Stream: 2015
+
+```{r session_1, echo=F}
+library(streamgraph)
+sessions            <- getSessions()
+playerSessions      <- getPlayerSessions(sessions, splitByDay = T)
+playerSessions$year <- lubridate::year(playerSessions$joinTime)
+playedPerPerson     <- getPlayedPerX(playerSessions, people = people, sumBy = "person")
+playedPerPerson %>% 
+  filter(lubridate::year(date) == "2015") %>%
+  #streamgraph(key = "person", "timePlayed", "date", interpolate = "step", offset = "zero") %>%
+  streamgraph(key = "person", "timePlayed", "date") %>%
+  sg_axis_x(1, "month", "%b-%Y") %>%
+  sg_colors("PuOr") %>%
+  sg_legend(show=TRUE, label="Person: ")
+```
+
+## Session Stream: 2014
+
+```{r session_2, echo=F}
+library(streamgraph)
+playedPerPerson %>% 
+  filter(lubridate::year(date) == "2014") %>%
+  streamgraph(key = "person", "timePlayed", "date") %>%
+  sg_axis_x(1, "month", "%b-%Y") %>%
+  sg_colors("PuOr") %>%
+  sg_legend(show=TRUE, label="Person: ")
+```
