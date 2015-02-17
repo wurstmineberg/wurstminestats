@@ -1,0 +1,36 @@
+---
+title: "Misc Data"
+author: "jemus42"
+date: "17 Feb 2015"
+output:
+  html_document:
+    fig_width: 9
+---
+
+```{r startup, echo=FALSE,message=FALSE}
+library("dplyr")
+library("wurstmineR")
+library("networkD3")
+library("DiagrammeR")
+
+people <- wurstmineR::getActivePeople(size = "full")
+
+ppl    <- people[c("invitedBy", "id", "color", "joinStatus", "name")] %>%
+            arrange(invitedBy) %>%
+            filter(!is.na(invitedBy))
+```
+
+## People as a Network of Invitations
+
+```{r d3,echo=F}
+simpleNetwork(ppl[c("id", "invitedBy")], fontSize = 14, textColour = "black", linkDistance = 200, charge = -200)
+```
+
+## Invite Tree
+
+```{r mermaid,echo=F}
+paste0(ppl$invitedBy, "-->", ppl$id, collapse = ";") %>%
+           paste("graph TD", ., sep = ";") %>%
+           mermaid
+```
+
