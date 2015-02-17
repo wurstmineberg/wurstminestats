@@ -80,6 +80,7 @@ dygraph(ptime) %>%
   dyOptions(stackedGraph = TRUE, fillGraph = TRUE, fillAlpha = 0.4) %>%
   dyRangeSelector %>%
   dyEvent(date = "2013-12-19", "Great Outage of 2013", labelLoc = "top") %>%
+  dyShading(from = "2013-12-19", to = "2014-01-02") %>%
   dyLegend(width = 600, show = "onmouseover", showZeroValues = F) %>%
   dyAxis("y", label = "Time Active (min)") %>%
   dyHighlight(highlightCircleSize = 5,
