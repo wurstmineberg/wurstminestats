@@ -9,7 +9,7 @@ source("plots-sessions.R")
 source("plots-meta.R")
 source("plots-generalstats.R")
 source("plots-achievements.R")
-rmarkdown::render("misc-stats.Rmd")
+rmarkdown::render("misc-stats.Rmd", output_dir = "Plots/")
 
 if (hour(now()) < 4){
   source("plots-entities.R")
