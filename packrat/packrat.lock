@@ -104,6 +104,12 @@ Version: 0.3.0.2
 Hash: e99be567bac13f0d6335cddfb801da24
 Requires: BH, DBI, R6, Rcpp, assertthat, lazyeval, magrittr
 
+Package: dygraphs
+Source: CRAN
+Version: 0.4.1
+Hash: 2014d9505f13b35e9f9344a9b1b5ee92
+Requires: htmlwidgets, magrittr, xts, zoo
+
 Package: evaluate
 Source: CRAN
 Version: 0.5.5
