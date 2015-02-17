@@ -1,7 +1,6 @@
 ---
 title: "Misc Data"
 author: "jemus42"
-date: "17 Feb 2015"
 output:
   html_document:
     fig_width: 9
@@ -36,7 +35,7 @@ paste0(ppl$invitedBy, "-->", ppl$id, collapse = ";") %>%
 
 ## Session Stream: 2015
 
-```{r session_1, echo=F}
+```{r session_1, echo=FALSE,message=FALSE}
 library(streamgraph)
 sessions            <- getSessions()
 playerSessions      <- getPlayerSessions(sessions, splitByDay = T)
@@ -53,8 +52,7 @@ playedPerPerson %>%
 
 ## Session Stream: 2014
 
-```{r session_2, echo=F}
-library(streamgraph)
+```{r session_2, echo=FALSE,message=FALSE}
 playedPerPerson %>% 
   filter(lubridate::year(date) == "2014") %>%
   streamgraph(key = "person", "timePlayed", "date") %>%
