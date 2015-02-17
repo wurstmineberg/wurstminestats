@@ -79,6 +79,7 @@ ptime[is.na(ptime)] <- 0
 dygraph(ptime) %>% 
   dyOptions(stackedGraph = TRUE, fillGraph = TRUE, fillAlpha = 0.4) %>%
   dyRangeSelector %>%
+  dyLegend(width = 900, show = "onmouseover", showZeroValues = F) %>%
   dyAxis("y", label = "Time Active (min)") %>%
   dyHighlight(highlightCircleSize = 5,
               hideOnMouseOut = FALSE)
