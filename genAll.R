@@ -1,8 +1,8 @@
 #! /usr/bin/Rscript
-## Headless / IDE-less executable script to autogenerate all the plots
+## Headless executable script to autogenerate all the plots
 
 # This is the biggie
-source("dataPrep.R")        # Loads all libraries, calls functions.R, which is needed for pretty much everything
+source("dataPrep.R") # Loads all libraries, calls functions.R, which is needed for pretty much everything
 
 # These are not, but they all require dataPrep.R
 source("plots-sessions.R")

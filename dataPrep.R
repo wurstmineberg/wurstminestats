@@ -81,7 +81,6 @@ rm(generalColumns)
 #--------------------------------#
 #### Handle per stat datasets ####
 #--------------------------------#
-
 # Get a dataframe of item stat ID, item name and action ##
 itemStats   <- getItemStats(items)
 mobStats    <- getMobStats(entities)
@@ -106,9 +105,9 @@ avgPerWeekday    <- mean(ddply(playedPerWeekday, .(wday), summarize, timePlayed=
 playedPerMonth   <- getPlayedPerX(playerSessions, people = people, sumBy = "month")
 avgPerMonth      <- mean(ddply(playedPerMonth, .(month), summarize, timePlayed=sum(timePlayed))$timePlayed)
 # Actually per person
-playtime.people  <- ddply(playedPerPerson, "person", summarize, timePlayed=sum(timePlayed))
+playtime.people  <- ddply(playedPerPerson, "person", summarize, timePlayed = sum(timePlayed))
 # Now per year
-playedPerYear             <- getPlayedPerX(playerSessions, people = people, sumBy = "year")
+playedPerYear    <- getPlayedPerX(playerSessions, people = people, sumBy = "year")
 # Now per months
 playedPerMonthYear        <- ddply(playerSessions, .(year, month, person), summarize, playedMinutes = sum(playedMinutes))
 playedPerMonthYear$person <- factor(playedPerMonthYear$person, levels = people$id, labels = people$name, ordered = T)

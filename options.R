@@ -1,6 +1,4 @@
 # Defining some global options which may or may not prove useful.
-# Because I pretend somebody else will want to use this 
-# clusterfuck at some point and I'm a nice person.
 
 #### Data sources ####
 message("Setting global options")
