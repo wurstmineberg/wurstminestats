@@ -17,6 +17,16 @@ Source: CRAN
 Version: 0.3.1
 Hash: 3a9e85b26ec3ab570266bccb3f9de055
 
+Package: DT
+Source: github
+Version: 0.0.11
+Hash: 6eeef42a867c2ff3661234472866da2737c101ff
+Requires: htmltools, htmlwidgets, magrittr
+GithubRepo: DT
+GithubUsername: rstudio
+GithubRef: master
+GithubSha1: 6eeef42a867c2ff3661234472866da2737c101ff
+
 Package: DiagrammeR
 Source: CRAN
 Version: 0.4
@@ -198,6 +208,16 @@ Source: CRAN
 Version: 0.2.1
 Hash: fc52fa39dfd216c44d64812ff31b1c67
 Requires: digest
+
+Package: metricsgraphics
+Source: github
+Version: 0.7
+Hash: 0f26045e9b253325fdc41902941d1241aa191259
+Requires: htmltools, htmlwidgets, magrittr
+GithubRepo: metricsgraphics
+GithubUsername: hrbrmstr
+GithubRef: master
+GithubSha1: 0f26045e9b253325fdc41902941d1241aa191259
 
 Package: mime
 Source: CRAN

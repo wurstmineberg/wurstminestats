@@ -106,3 +106,4 @@ datatable(playedPerYear, options = list(pageLength = 20))
 
 ```
 
+
