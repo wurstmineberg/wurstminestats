@@ -89,3 +89,20 @@ p <- dygraph(ptime) %>%
 p
 ```
 
+## Session Data as a Table (SDaaT)
+
+### Total Time Played per Person
+
+```{r tables, echo = FALSE, message = FALSE}
+library(DT)
+
+datatable(playtime.people, options = list(pageLength = -1))
+```
+
+### Time Played per Year per Person
+
+```{r perYear, echo = FALSE, message = FALSE}
+datatable(playedPerYear, options = list(pageLength = 20))
+
+```
+
