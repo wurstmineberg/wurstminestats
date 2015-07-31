@@ -12,7 +12,6 @@ output:
 library("dplyr")
 library("wurstmineR")
 library("networkD3")
-library("DiagrammeR")
 
 people <- wurstmineR::getActivePeople(size = "full")
 
@@ -35,40 +34,12 @@ paste0(ppl$invitedBy, "-->", ppl$id, collapse = ";") %>%
            mermaid
 ```
 
-## Session Stream: 2015
-
-```{r session_1, echo=FALSE,message=FALSE}
-library(streamgraph)
-sessions            <- getSessions()
-playerSessions      <- getPlayerSessions(sessions, splitByDay = T)
-playerSessions$year <- lubridate::year(playerSessions$joinTime)
-playedPerPerson     <- getPlayedPerX(playerSessions, people = people, sumBy = "person")
-playedPerPerson %>% 
-  filter(lubridate::year(date) == "2015") %>%
-  #streamgraph(key = "person", "timePlayed", "date", interpolate = "step", offset = "zero") %>%
-  streamgraph(key = "person", "timePlayed", "date") %>%
-  sg_axis_x(1, "month", "%b-%Y") %>%
-  sg_colors("PuOr") %>%
-  sg_legend(show=TRUE, label="Person: ")
-```
-
-## Session Stream: 2014
-
-```{r session_2, echo=FALSE,message=FALSE}
-playedPerPerson %>% 
-  filter(lubridate::year(date) == "2014") %>%
-  streamgraph(key = "person", "timePlayed", "date") %>%
-  sg_axis_x(1, "month", "%b-%Y") %>%
-  sg_colors("PuOr") %>%
-  sg_legend(show=TRUE, label="Person: ")
-```
-
 ## Time Series of Session Data
 
 ```{r timeSeries, echo=FALSE,message=FALSE}
-library(tidyr)
-library(xts)
-library(dygraphs)
+library("tidyr")
+library("xts")
+library("dygraphs")
 
 ptime <- spread(playedPerPerson[c("person", "timePlayed", "date")], key = "person", value = "timePlayed") %>%
            select(-date) %>%
@@ -94,7 +65,7 @@ p
 ### Total Time Played per Person
 
 ```{r tables, echo = FALSE, message = FALSE}
-library(DT)
+library("DT")
 
 datatable(playtime.people, options = list(pageLength = -1))
 ```
@@ -106,4 +77,76 @@ datatable(playedPerYear, options = list(pageLength = 20))
 
 ```
 
+## Money Stuffs
+
+```{r moneys, echo = FALSE, message = FALSE}
+#### Data cleanup ####
+library("ggplot2")
+library("lubridate")
+library("scales")
+library("dplyr")
+
+moneys       <- httr::GET("http://wurstmineberg.de/assets/serverstatus/moneys.json") %>%
+                  httr::content(as = "text") %>% jsonlite::fromJSON(.)
+moneys       <- moneys$history
+moneys$date  <- as.POSIXct(moneys$date)
+moneys$total <- numeric(length(moneys$amount))
+
+for (i in 1:(length(moneys$amount))){
+  if (i == 1){
+    moneys$total[i] <- moneys$amount[1]
+  } else {
+    moneys$total[i] <- moneys$total[i-1] + moneys$amount[i]
+  }
+}
+
+moneys$transaction[moneys$type %in% c("monthly", "unique")]       <- "Expense"
+moneys$transaction[moneys$type %in% c("player", "playerMonthly")] <- "Income"
+
+#### Information ####
+moneys %>% group_by(type) %>% summarize(sum = sum(amount)) %>% knitr::kable()
+
+#### Plots ####
+moneys_totals <- moneys %>% group_by(type) %>% summarize(amount = sum(amount))
+moneys_totals$transaction[moneys_totals$type %in% c("monthly", "unique")]       <- "Expense"
+moneys_totals$transaction[moneys_totals$type %in% c("player", "playerMonthly")] <- "Income"
+
+ggplot(data = moneys_totals, aes(x = transaction, y = abs(amount), fill = type)) +
+  geom_bar(stat = "identity", position = "stack", colour = "black") +
+  labs(title = "Transactions", y = "Amount (€)", x = "Transaction Type")
+
+#### Transaction history ####
+moneydays <- seq.Date(from = as.Date(moneys$date[1]), to = last(as.Date(moneys$date)), by = "days")
+totals    <- plyr::rbind.fill(moneys, data.frame(date = moneydays)) %>% arrange(date)
+totals    <- totals[-1, ]
+
+for (i in 1:nrow(totals)){
+  if (is.na(totals$total[i])){
+    totals$total[i] <- totals$total[i-1]
+  }
+}
+
+totals$date <- as.POSIXct(totals$date)
+totals$year <- year(totals$date)
+
+ggplot(data = totals, aes(x = date, y = total)) +
+  geom_line(size = 1, alpha = .4) +
+  geom_point(size = 2) +
+  geom_smooth(method = loess, colour = "blue", se = F) +
+  geom_hline(y = 0, size = 1, colour = "red") +
+  geom_hline(y = mean(totals$total), linetype = "dotdash") +
+  geom_hline(y = 59, colour = "green") +
+  scale_x_datetime(labels = date_format("%Y-%B"),
+                   breaks = date_breaks("months"),
+                   minor_breaks = "weeks") +
+  scale_y_continuous(breaks = pretty_breaks(), minor_breaks = seq(-200, 200, 10)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Wurstmineberg Funding History", x = "Date", y = "Total (€)")
+
+
+moneys %>% select(total) %>% xts::xts(order.by = moneys$date) %>%
+  dygraph(main = "Wurstmineberg Funding", ylab = "Account Status (€)") %>%
+  dyOptions(fillGraph = TRUE, fillAlpha = 0.7, stepPlot = T, drawPoints = TRUE, pointSize = 2) %>%
+  dyRangeSelector(dateWindow = c(as.POSIXct("2015-01-01"), max(moneys$date)))
+```
 
