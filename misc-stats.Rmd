@@ -23,15 +23,7 @@ ppl    <- people[c("invitedBy", "id", "color", "joinStatus", "name")] %>%
 ## People as a Network of Invitations
 
 ```{r d3,echo=F}
-simpleNetwork(ppl[c("id", "invitedBy")], fontSize = 14, textColour = "black", linkDistance = 200, charge = -200)
-```
-
-## Invite Tree
-
-```{r mermaid,echo=F}
-paste0(ppl$invitedBy, "-->", ppl$id, collapse = ";") %>%
-           paste("graph TD", ., sep = ";") %>%
-           mermaid
+simpleNetwork(ppl[c("id", "invitedBy")], fontSize = 14, textColour = "black", linkDistance = 100, charge = -200)
 ```
 
 ## Time Series of Session Data
@@ -40,6 +32,11 @@ paste0(ppl$invitedBy, "-->", ppl$id, collapse = ";") %>%
 library("tidyr")
 library("xts")
 library("dygraphs")
+
+sessions            <- getSessions()
+playerSessions      <- getPlayerSessions(sessions, splitByDay = T)
+playerSessions$year <- lubridate::year(playerSessions$joinTime)
+playedPerPerson     <- getPlayedPerX(playerSessions, people = people, sumBy = "person")
 
 ptime <- spread(playedPerPerson[c("person", "timePlayed", "date")], key = "person", value = "timePlayed") %>%
            select(-date) %>%
@@ -67,14 +64,17 @@ p
 ```{r tables, echo = FALSE, message = FALSE}
 library("DT")
 
+playtime.people  <- plyr::ddply(playedPerPerson, "person", summarize, timePlayed = sum(timePlayed))
+
 datatable(playtime.people, options = list(pageLength = -1))
 ```
 
 ### Time Played per Year per Person
 
 ```{r perYear, echo = FALSE, message = FALSE}
-datatable(playedPerYear, options = list(pageLength = 20))
+playedPerYear    <- getPlayedPerX(playerSessions, people = people, sumBy = "year")
 
+datatable(playedPerYear, options = list(pageLength = 20))
 ```
 
 ## Money Stuffs
@@ -100,6 +100,8 @@ for (i in 1:(length(moneys$amount))){
   }
 }
 
+data.frame("Current Account Status (€)" = sum(moneys$amount)) %>% knitr::kable()
+
 moneys$transaction[moneys$type %in% c("monthly", "unique")]       <- "Expense"
 moneys$transaction[moneys$type %in% c("player", "playerMonthly")] <- "Income"
 
@@ -107,13 +109,6 @@ moneys$transaction[moneys$type %in% c("player", "playerMonthly")] <- "Income"
 moneys %>% group_by(type) %>% summarize(sum = sum(amount)) %>% knitr::kable()
 
 #### Plots ####
-moneys_totals <- moneys %>% group_by(type) %>% summarize(amount = sum(amount))
-moneys_totals$transaction[moneys_totals$type %in% c("monthly", "unique")]       <- "Expense"
-moneys_totals$transaction[moneys_totals$type %in% c("player", "playerMonthly")] <- "Income"
-
-ggplot(data = moneys_totals, aes(x = transaction, y = abs(amount), fill = type)) +
-  geom_bar(stat = "identity", position = "stack", colour = "black") +
-  labs(title = "Transactions", y = "Amount (€)", x = "Transaction Type")
 
 #### Transaction history ####
 moneydays <- seq.Date(from = as.Date(moneys$date[1]), to = last(as.Date(moneys$date)), by = "days")
