@@ -79,7 +79,7 @@ datatable(playedPerYear, options = list(pageLength = 20))
 
 ## Money Stuffs
 
-```{r moneys, echo = FALSE, message = FALSE}
+```{r moneys, echo = FALSE, message = FALSE, results='asis'}
 #### Data cleanup ####
 library("ggplot2")
 library("lubridate")
@@ -100,13 +100,13 @@ for (i in 1:(length(moneys$amount))){
   }
 }
 
-data.frame("Current Account Status (€)" = sum(moneys$amount)) %>% knitr::kable()
-
 moneys$transaction[moneys$type %in% c("monthly", "unique")]       <- "Expense"
 moneys$transaction[moneys$type %in% c("player", "playerMonthly")] <- "Income"
 
 #### Information ####
 moneys %>% group_by(type) %>% summarize(sum = sum(amount)) %>% knitr::kable()
+
+cat(paste0("**Current Account Status**: ", round(sum(moneys$amount), 2), "€"))
 
 #### Plots ####
 
