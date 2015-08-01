@@ -10,10 +10,9 @@ output:
 
 ```{r startup, echo=FALSE,message=FALSE}
 library("dplyr")
-library("wurstmineR")
 library("networkD3")
-
-people <- wurstmineR::getActivePeople(size = "full")
+suppressPackageStartupMessages(library("wurstmineR"))
+load("cache/workspace.RData")
 
 ppl    <- people[c("invitedBy", "id", "color", "joinStatus", "name")] %>%
             arrange(invitedBy) %>%
@@ -32,11 +31,6 @@ simpleNetwork(ppl[c("id", "invitedBy")], fontSize = 14, textColour = "black", li
 library("tidyr")
 library("xts")
 library("dygraphs")
-
-sessions            <- getSessions()
-playerSessions      <- getPlayerSessions(sessions, splitByDay = T)
-playerSessions$year <- lubridate::year(playerSessions$joinTime)
-playedPerPerson     <- getPlayedPerX(playerSessions, people = people, sumBy = "person")
 
 ptime <- spread(playedPerPerson[c("person", "timePlayed", "date")], key = "person", value = "timePlayed") %>%
            select(-date) %>%
@@ -64,16 +58,12 @@ p
 ```{r tables, echo = FALSE, message = FALSE}
 library("DT")
 
-playtime.people  <- plyr::ddply(playedPerPerson, "person", summarize, timePlayed = sum(timePlayed))
-
 datatable(playtime.people, options = list(pageLength = -1))
 ```
 
 ### Time Played per Year per Person
 
 ```{r perYear, echo = FALSE, message = FALSE}
-playedPerYear    <- getPlayedPerX(playerSessions, people = people, sumBy = "year")
-
 datatable(playedPerYear, options = list(pageLength = 20))
 ```
 
