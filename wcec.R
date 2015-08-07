@@ -20,7 +20,10 @@ if(!file.exists(plotdir)){
   dir.create(plotdir)
 }
 
-p <- ggplot(data = centers, aes(x = reorder(Name, Death_Count), y = Death_Count, fill = Center)) +
+bestlist <- centers %>% group_by(Name) %>% summarize(dc = sum(Death_Count)) %>% arrange(dc)
+
+p <- centers %>% mutate(Name = factor(Name, levels = as.character(bestlist$Name), ordered = TRUE)) %>%
+       ggplot(data = ., aes(x = Name, y = Death_Count, fill = Center)) +
        geom_bar(stat = "identity", colour = "black") +
        labs(title = "WCEC Deaths per Person", x = "Person", y = "Death Count")
 ggsave(plot = p, filename = paste0(plotdir, "/total_deaths_person.png"), width = 12, height = 6)
