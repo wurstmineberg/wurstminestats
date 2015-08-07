@@ -9,6 +9,7 @@ source("plots-sessions.R")
 source("plots-meta.R")
 source("plots-generalstats.R")
 source("plots-achievements.R")
+source("wcec.R")
 rmarkdown::render("misc-stats.Rmd", output_dir = "Plots/")
 
 if (hour(now()) < 4){

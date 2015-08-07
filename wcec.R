@@ -20,7 +20,6 @@ if(!file.exists(plotdir)){
   dir.create(plotdir)
 }
 
-
 p <- ggplot(data = centers, aes(x = reorder(Name, Death_Count), y = Death_Count, fill = Center)) +
        geom_bar(stat = "identity", colour = "black") +
        labs(title = "WCEC Deaths per Person", x = "Person", y = "Death Count")
@@ -31,10 +30,6 @@ p <- ggplot(data = centers, aes(x = Center, y = Death_Count)) +
        labs(title = "WCEC Deaths per Center", x = "Center", y = "Death Count")
 ggsave(plot = p, filename = paste0(plotdir, "/total_deaths_center.png"), width = 12, height = 6)
 
-
-
-
-
 p <- centers %>% group_by(Center) %>% 
       summarize(runs = n(), deaths = sum(Death_Count)) %>%
       mutate(deaths_per_run = deaths/runs) %>%
@@ -43,7 +38,6 @@ p <- centers %>% group_by(Center) %>%
       labs(title = "WCEC Deaths per Run per Center", x = "Center", y = "Deaths per Run")
 ggsave(plot = p, filename = paste0(plotdir, "/total_deaths_per_run_center.png"), width = 12, height = 6)
 
-
 p <- centers %>% group_by(Name) %>% 
       summarize(runs = n(), deaths = sum(Death_Count)) %>%
       mutate(deaths_per_run = deaths/runs) %>%
@@ -51,5 +45,3 @@ p <- centers %>% group_by(Name) %>%
       geom_bar(stat = "identity", colour = "black") +
       labs(title = "WCEC Deaths per Run per Person", x = "Person", y = "Deaths per Run", fill = "# Runs")
 ggsave(plot = p, filename = paste0(plotdir, "/total_deaths_per_run_person.png"), width = 12, height = 6)
-
-
