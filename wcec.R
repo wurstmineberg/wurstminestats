@@ -5,8 +5,8 @@ centers <- html_table(html("http://wiki.wurstmineberg.de/Portal_Game#Centers"))
 
 for (i in seq_along(centers)){
   centers[[i]]["Center"]        <- i
-  centers[[i]]                  <- centers[[i]][!(centers[[i]]["#"] == "?"), ]
-  centers[[i]][["Death_Count"]] <- as.numeric(centers[[i]][["Death Count"]])
+  centers[[i]][["Death_Count"]] <- suppressWarnings(as.numeric(centers[[i]][["Death Count"]]))
+  centers[[i]]                  <- centers[[i]][!is.na(centers[[i]][["Death_Count"]]), ]
 }
 
 centers        <- plyr::ldply(centers, identity)
@@ -14,7 +14,7 @@ centers$Name   <- as.factor(centers$Name)
 centers$Center <- as.factor(centers$Center)
 centers$num    <- as.numeric(centers[["#"]])
 
-##### Plots ####
+##### Plots #####
 plotdir <- "Plots/wcec"
 if(!file.exists(plotdir)){
   dir.create(plotdir)
