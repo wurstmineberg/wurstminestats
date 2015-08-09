@@ -1,18 +1,15 @@
 ##### Accumulating WCEC runs ####
 library(rvest)
+library(dplyr)
 
 centers <- html_table(html("http://wiki.wurstmineberg.de/Portal_Game#Centers"))
 
-for (i in seq_along(centers)){
-  centers[[i]]["Center"]        <- i
-  centers[[i]][["Death_Count"]] <- suppressWarnings(as.numeric(centers[[i]][["Death Count"]]))
-  centers[[i]]                  <- centers[[i]][!is.na(centers[[i]][["Death_Count"]]), ]
-}
-
-centers        <- plyr::ldply(centers, identity)
-centers$Name   <- as.factor(centers$Name)
-centers$Center <- as.factor(centers$Center)
-centers$num    <- as.numeric(centers[["#"]])
+names(centers) <- factor(seq_along(centers))
+centers <- plyr::ldply(centers, identity, .id = "Center")
+centers <- centers %>% rename(Death_Count = `Death Count`, num = `#`) %>%
+                       mutate(Death_Count = suppressWarnings(as.numeric(Death_Count)),
+                              Name = factor(Name)) %>%
+                       filter(!is.na(Death_Count)) 
 
 ##### Plots #####
 plotdir <- "Plots/wcec"
