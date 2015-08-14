@@ -77,7 +77,7 @@ library("lubridate")
 library("scales")
 library("dplyr")
 
-moneys       <- httr::GET("http://wurstmineberg.de/assets/serverstatus/moneys.json") %>%
+moneys       <- httr::GET("http://api.wurstmineberg.de/moneys/moneys.json") %>%
                   httr::content(as = "text") %>% jsonlite::fromJSON(.)
 moneys       <- moneys$history
 moneys$date  <- as.POSIXct(moneys$date)
