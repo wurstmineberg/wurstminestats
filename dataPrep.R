@@ -7,13 +7,14 @@ source("functions.R")
 
 # Checking if wurstmineR needs an update
 message("Checking for wurstmineR")
+# devtools::install_github("jemus42/wurstmineR", ref = "dev")
 library("wurstmineR")
 
-Sys.setenv(TZ = "UTC") # Don't ask
+#Sys.setenv(TZ = "UTC") # Don't ask
 
 # Get a close enough timestamp for the data age.
-dataTime <- format(now(tzone = "UTC"), "%s")
-message("Timestamped data at ", dataTime, " (", now(tzone = "UTC"), ")")
+dataTime <- now(tzone = "UTC")
+message("Timestamped data at ", now(tzone = "UTC"))
 
 #### Get player stats from wurstmineberg API ####
 message("Sucking data out of the API")
@@ -27,8 +28,6 @@ stats <- get_stats(urls = urls, strings = wurstmineR::strings, people = people)
 #---------------------------------------------------#
 #### Enhancing playerstats with some useful shit ####
 #---------------------------------------------------#
-# Convert play time to real time hours as separate column ##
-#generalstats$playOneHour      <- (generalstats$playOneMinute/20/60/60)
 
 # Get total distance column by summing up all *OneCm rows per player ##
 #generalstats$distanceTraveled <- rowSums(generalstats[, grep("OneCm", colnames(generalstats))])
@@ -70,13 +69,7 @@ playerSessions      <- get_player_sessions(sessions, splitByDay = T)
 #playerSessions$person <- factor(playerSessions$person, levels = people$id, ordered = T)
 
 #### Add lastseen data
-lastseen           <- jsonlite::fromJSON(txt = "http://api.wurstmineberg.de/server/sessions/lastseen.json")
-lastseen           <- plyr::ldply(lastseen, data.frame)
-lastseen$leaveTime <- as.POSIXct(lastseen$leaveTime)
-lastseen$daysSince <- as.numeric(difftime(lubridate::now(), lastseen$leaveTime, units = "days"))
-lastseen           <- plyr::arrange(lastseen, daysSince)
-lastseen$person    <- factor(lastseen$person, levels = people$id, labels = people$name, ordered = T)
-lastseen$daysSince <- nullifyNA(lastseen$daysSince)
+lastseen <- get_lastseen(urls, people)
 
 #### Cache some objects ####
 message("So far soo good, caching data…")
