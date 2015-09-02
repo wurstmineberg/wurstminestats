@@ -111,6 +111,8 @@ statsByKey$action[grep("killEntity",      statsByKey$stat)] <- "killed"
 statsByKey$action[grep("entityKilledBy.", statsByKey$stat)] <- "killed by"
 statsByKey$mob <- as.factor(extractMobNames(statsByKey$stat))
 
+## Mob Kills
+
 p <- ggplot(data = filter(statsByKey, action == "killed")) 
 p <- p + aes(x = sortLevels(person, value), y = value, fill = mob)
 p <- p + barChart + coord_flip() + scale_y_discrete(breaks = scales::pretty_breaks())
@@ -123,6 +125,22 @@ cat("\n")
 cat(paste0("![mobKills_perPerson](/wurstminestats/entities/mobKills_perPerson.png)"))
 cat("\n")
 
+## Mob Kills without Endermen
+
+p <- ggplot(data = filter(statsByKey, action == "killed", mob != "Enderman")) 
+p <- p + aes(x = sortLevels(person, value), y = value, fill = mob)
+p <- p + barChart + coord_flip() + scale_y_discrete(breaks = scales::pretty_breaks())
+p <- p + labs(x = "Person", y = "Kills", title = "Mob Kills (except Endermen)", fill = "Mob") +
+  theme(legend.key.size = unit(0.4, "cm"))
+ggsave(plot = p, file = "output/entities/mobKills_perPerson_noendermen.png", height = plotHeight, width = plotWidth * 1.5)
+
+cat(paste0("\n## <a href='#mobKills_perPerson_noendermen' id='mobKills_perPerson_noendermen'>4.1</a>. Mob Kills per Person (except Endermen)"))
+cat("\n")
+cat(paste0("![mobKills_perPerson_noendermen](/wurstminestats/entities/mobKills_perPerson_noendermen.png)"))
+cat("\n")
+
+
+## Deaths by Mob
 p <- ggplot(data = filter(statsByKey, action == "killed by")) 
 p <- p + aes(x = sortLevels(person, value), y = value, fill = mob)
 p <- p + barChart + coord_flip() + scale_y_discrete(breaks = scales::pretty_breaks())
