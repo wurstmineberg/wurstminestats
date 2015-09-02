@@ -14,3 +14,4 @@ packrat/lib*/
 packrat/src/
 .httr-oauth
 *.html
+output/
