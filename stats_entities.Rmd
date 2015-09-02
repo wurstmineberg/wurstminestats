@@ -99,5 +99,36 @@ cat(paste0("\n## <a href='#Deaths_byMob' id='Deaths_byMob'>3</a>. Deaths by Mob"
 cat("\n")
 cat(paste0("![Deaths_byMob](/wurstminestats/entities/Deaths_byMob.png)"))
 cat("\n")
+
+### 
+
+statsByKey        <- stats$entities %>% gather("stat", "value", -person)
+statsByKey$action <- 0
+statsByKey$action[grep("killEntity",      statsByKey$stat)] <- "killed"
+statsByKey$action[grep("entityKilledBy.", statsByKey$stat)] <- "killed by"
+statsByKey$mob <- as.factor(extractMobNames(statsByKey$stat))
+
+p <- ggplot(data = filter(statsByKey, action == "killed")) 
+p <- p + aes(x = sortLevels(person, value), y = value, fill = mob)
+p <- p + barChart + coord_flip() + scale_y_discrete(breaks = scales::pretty_breaks())
+p <- p + labs(x = "Person", y = "Kills", title = "Mob Kills", fill = "Mob")
+ggsave(plot = p, file = "output/entities/mobKills_perPerson.png", height = plotHeight, width = plotWidth)
+
+cat(paste0("\n## <a href='#mobKills_perPerson' id='mobKills_perPerson'>4</a>. Mob Kills per Person"))
+cat("\n")
+cat(paste0("![mobKills_perPerson](/wurstminestats/entities/mobKills_perPerson.png)"))
+cat("\n")
+
+p <- ggplot(data = filter(statsByKey, action == "killed by")) 
+p <- p + aes(x = sortLevels(person, value), y = value, fill = mob)
+p <- p + barChart + coord_flip() + scale_y_discrete(breaks = scales::pretty_breaks())
+p <- p + labs(x = "Person", y = "Times Killed by Mob", title = "Mob Kills", fill = "Mob")
+
+ggsave(plot = p, file = "output/entities/mobDeaths_perPerson.png", height = plotHeight, width = plotWidth)
+
+cat(paste0("\n## <a href='#mobDeaths_perPerson' id='mobDeaths_perPerson'>5</a>. Deaths by Mob per Person"))
+cat("\n")
+cat(paste0("![mobDeaths_perPerson](/wurstminestats/entities/mobDeaths_perPerson.png)"))
+cat("\n")
 ```
 
