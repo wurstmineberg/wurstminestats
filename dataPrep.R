@@ -2,12 +2,11 @@
 
 ## Startup
 message("Making preparations…")
-source("options.R")
+source("config/options.R")
 source("functions.R")
 
 # Checking if wurstmineR needs an update
 message("Checking for wurstmineR")
-checkCriticalPackage("jemus42/wurstmineR", "wurstmineR")
 library("wurstmineR")
 
 Sys.setenv(TZ = "UTC") # Don't ask
@@ -16,104 +15,59 @@ Sys.setenv(TZ = "UTC") # Don't ask
 dataTime <- format(now(tzone = "UTC"), "%s")
 message("Timestamped data at ", dataTime, " (", now(tzone = "UTC"), ")")
 
-#### Get strings for some… strings. (Mob IDs, display names, biomes, achievements…) ####
-# Note: strings.biomes is required for proper achievements dataset handling
-#strings.general         <- getStrings(category = "general")
-#strings.mobs            <- getStrings(category = "mobs")
-#strings.achievements    <- getStrings(category = "achievements")
-#strings.items           <- getStrings(category = "items")
-#strings.biomes          <- getStrings(category = "biomes")
-
 #### Get player stats from wurstmineberg API ####
 message("Sucking data out of the API")
-generalstats  <- jsonlite::fromJSON(getOption("url.stats.general"))
-achievements  <- jsonlite::fromJSON(getOption("url.stats.achievements"))
-entities      <- jsonlite::fromJSON(getOption("url.stats.entities"))
-items         <- jsonlite::fromJSON(getOption("url.stats.items"))
-
-#----------------------------------------------------------------------------------#
-#### This is where imported datasets get cleaned up so we can actually use them ####
-#----------------------------------------------------------------------------------#
 
 ## Getting a people dataset from people.json ## (Also, deaths)
-people        <- getActivePeople(size = "full")
-activePeople  <- people[!(people$joinStatus %in% c("former", "invited")), ]
-#birthdays     <- serverBirthday(activePeople)
-deaths        <- getLatestDeaths()
+people        <- get_people(urls = urls, size = "full")
+people_active <- get_people(urls = urls, size = "active")
 
-message("Trying to do things to the data")
-## Reformat stat datasets ##
-generalstats  <- stats2df(generalstats)
-achievements  <- stats2df(achievements, type = "achievements")
-entities      <- stats2df(entities)
-items         <- stats2df(items)
-## Merge old and new item stat IDs and whate have you ##
-# maybe there's hope
-items         <- mergeItemStats(items, strings.items)
+stats <- get_stats(urls = urls, strings = wurstmineR::strings, people = people)
 
 #---------------------------------------------------#
 #### Enhancing playerstats with some useful shit ####
 #---------------------------------------------------#
 # Convert play time to real time hours as separate column ##
-generalstats$playOneHour      <- (generalstats$playOneMinute/20/60/60)
+#generalstats$playOneHour      <- (generalstats$playOneMinute/20/60/60)
 
 # Get total distance column by summing up all *OneCm rows per player ##
-generalstats$distanceTraveled <- rowSums(generalstats[, grep("OneCm", colnames(generalstats))])
-
-# Resort columns to get interesting stuff first. ##
-playerstats             <- join(generalstats, achievements)
-playerstats             <- join(playerstats, entities)
-playerstats             <- join(playerstats, items, type="full")
-
-# Append other useful meta info 
-playerstats$joinStatus  <- activePeople$joinStatus
-playerstats$joinDate    <- activePeople$joinDate
-playerstats$player_id   <- activePeople$id
-playerstats$timestamp   <- dataTime
-
-# Reordering columns
-generalColumns <- c("timestamp", "player_id" , "player", "joinDate", "joinStatus", "leaveGame",
-                    "deaths", "timeSinceDeath", "playerKills", "damageDealt", "damageTaken", "playOneMinute", 
-                    "playOneHour", "jump", "animalsBred", "mobKills")
-playerstats    <- playerstats[c(generalColumns, setdiff(names(playerstats), generalColumns))]
-rm(generalColumns)
+#generalstats$distanceTraveled <- rowSums(generalstats[, grep("OneCm", colnames(generalstats))])
 
 #--------------------------------#
 #### Handle per stat datasets ####
 #--------------------------------#
 # Get a dataframe of item stat ID, item name and action ##
-itemStats   <- getItemStats(items)
-mobStats    <- getMobStats(entities)
+itemStats   <- getItemStats(stats$items)
+mobStats    <- getMobStats(stats$entities)
 
 #-----------------------------------------------------#
 #### Getting sessions from /sessions/overview.json ####
 #-----------------------------------------------------#
 message("Now the session data…")
-sessions            <- getSessions()
-playerSessions      <- getPlayerSessions(sessions, splitByDay = T)
-playerSessions$year <- lubridate::year(playerSessions$joinTime)
+sessions            <- get_sessions(urls = urls)
+playerSessions      <- get_player_sessions(sessions, splitByDay = T)
 
 # We want play time per day, sooooo… 
-playedPerDay     <- getPlayedPerX(playerSessions, people = people, sumBy = "day")
-
-# We also want play time per day per person, so, well… ##
-playedPerPerson  <- getPlayedPerX(playerSessions, people = people, sumBy = "person")
-# Getting per weekday stuff
-playedPerWeekday <- getPlayedPerX(playerSessions, people = people, sumBy = "weekday")
-avgPerWeekday    <- mean(ddply(playedPerWeekday, .(wday), summarize, timePlayed=sum(timePlayed))$timePlayed)
-# Let's do a monthly one
-playedPerMonth   <- getPlayedPerX(playerSessions, people = people, sumBy = "month")
-avgPerMonth      <- mean(ddply(playedPerMonth, .(month), summarize, timePlayed=sum(timePlayed))$timePlayed)
-# Actually per person
-playtime.people  <- ddply(playedPerPerson, "person", summarize, timePlayed = sum(timePlayed))
-# Now per year
-playedPerYear    <- getPlayedPerX(playerSessions, people = people, sumBy = "year")
-# Now per months
-playedPerMonthYear        <- ddply(playerSessions, .(year, month, person), summarize, playedMinutes = sum(playedMinutes))
-playedPerMonthYear$person <- factor(playedPerMonthYear$person, levels = people$id, labels = people$name, ordered = T)
+# playedPerDay     <- getPlayedPerX(playerSessions, people = people, sumBy = "day")
+# 
+# # We also want play time per day per person, so, well… ##
+# playedPerPerson  <- getPlayedPerX(playerSessions, people = people, sumBy = "person")
+# # Getting per weekday stuff
+# playedPerWeekday <- getPlayedPerX(playerSessions, people = people, sumBy = "weekday")
+# avgPerWeekday    <- mean(ddply(playedPerWeekday, .(wday), summarize, timePlayed=sum(timePlayed))$timePlayed)
+# # Let's do a monthly one
+# playedPerMonth   <- getPlayedPerX(playerSessions, people = people, sumBy = "month")
+# avgPerMonth      <- mean(ddply(playedPerMonth, .(month), summarize, timePlayed=sum(timePlayed))$timePlayed)
+# # Actually per person
+# playtime.people  <- ddply(playedPerPerson, "person", summarize, timePlayed = sum(timePlayed))
+# # Now per year
+# playedPerYear    <- getPlayedPerX(playerSessions, people = people, sumBy = "year")
+# # Now per months
+# playedPerMonthYear        <- ddply(playerSessions, .(year, month, person), summarize, playedMinutes = sum(playedMinutes))
+# playedPerMonthYear$person <- factor(playedPerMonthYear$person, levels = people$id, labels = people$name, ordered = T)
 
 # Fix playerSession person names
-playerSessions$person <- factor(playerSessions$person, levels = people$id, ordered = T)
+#playerSessions$person <- factor(playerSessions$person, levels = people$id, ordered = T)
 
 #### Add lastseen data
 lastseen           <- jsonlite::fromJSON(txt = "http://api.wurstmineberg.de/server/sessions/lastseen.json")
