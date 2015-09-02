@@ -124,24 +124,6 @@ deltaE <- function(col.p, col.v){
 #### For the lulz shit ####
 #-------------------------#
 
-serverBirthday <- function(activePeople){
-  require(lubridate)
-  now           <- as.POSIXlt(Sys.time(), "UTC")
-  now$year      <- now$year + 1900
-  ydays         <- as.POSIXlt(activePeople$joinDate)$yday - now$yday
-  daysToNext    <- ifelse(identical(ydays[ydays > 0], integer(0)), 0, ydays[ydays > 0])
-  daysSinceLast <- max(ydays[ydays < 0])
-  nextPerson    <- activePeople$name[ydays == daysToNext]
-  lastPerson    <- activePeople$name[ydays == daysSinceLast]
-  nextDate      <- format(activePeople$joinDate[activePeople$name == nextPerson], "%m-%d")
-  lastDate      <- format(activePeople$joinDate[activePeople$name == lastPerson], "%m-%d")
-  
-  birthdays <- data.frame(nextPerson = nextPerson, nextDate = nextDate,
-                          lastPerson = lastPerson, lastDate = lastDate,
-                          daysToNext = daysToNext, daysSinceLast = daysSinceLast)
-  return(birthdays)
-}
-
 statOfTheDay <- function(player = "random", category = "general"){
   if (player == "random"){
     rPlayer    <- activePeople$name[round(runif(1, 1, nrow(activePeople)))]
@@ -271,39 +253,10 @@ dailyActivity <- function(daysAgo = 1){
   return(msg)
 }
 
-getBirthdayNotification <- function(birthdays, forceoutput = FALSE){
-  if (birthdays$daysToNext == 1){
-    msg <- paste0("Tomorrow is going to be the server birthday of ", birthdays$nextPerson, ", yaay!")
-  } else if (birthdays$daysToNext > 1 && birthdays$daysToNext < 10 | forceoutput){
-    msg <- paste0("In ", birthdays$daysToNext, " days, it's going to be the server birthday of ", birthdays$nextPerson, ", yaay!")
-  } else {
-    msg <- NULL
-  }
-  return(msg)
-}
 #------------------------------#
 #### Generally useful stuff ####
 #------------------------------#
 
-# Via http://stackoverflow.com/a/18339562/409362
-moveCol <- function(data, tomove, where = "last", ba = NULL) {
-  temp <- setdiff(names(data), tomove)
-  x <- switch(
-    where,
-    first = data[c(tomove, temp)],
-    last = data[c(temp, tomove)],
-    before = {
-      if (is.null(ba)) stop("must specify ba column")
-      if (length(ba) > 1) stop("ba must be a single character string")
-      data[append(temp, values = tomove, after = (match(ba, temp)-1))]
-    },
-    after = {
-      if (is.null(ba)) stop("must specify ba column")
-      if (length(ba) > 1) stop("ba must be a single character string")
-      data[append(temp, values = tomove, after = (match(ba, temp)))]
-    })
-  return(x)
-}
 
 # Convencience function to get ordered factors
 sortLevels <- function(factors, reference, sortFunction = mean){
@@ -355,25 +308,5 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
       print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
                                       layout.pos.col = matchidx$col))
     }
-  }
-}
-
-checkCriticalPackage <- function(githubid = NULL, package = NULL){
-  ver_loc    <- packageVersion(package)
-  message("Local version is ", ver_loc)
-  url <- paste0("https://raw.githubusercontent.com/", githubid, "/master/VERSION")
-  ver_github <- package_version(jsonlite::fromJSON(url)$Version)
-  if (ver_loc == ver_github){
-    message(package, " is the current version, moving on.")
-  } else if (ver_loc < ver_github){
-    message("Remote version is ", ver_github, " — Installing…")
-    if (!("devtools" %in% installed.packages())){
-      warning("Package 'devtools' not found, trying to install…")
-      install.packages("devtools")
-    }
-    library(devtools)
-    install_github(githubid)
-  } else {
-    message("How did you do that?")
   }
 }
