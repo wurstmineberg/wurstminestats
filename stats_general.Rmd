@@ -1,16 +1,16 @@
 ---
 title: 'General Stats'
 author: '[jemus42](https://github.com/jemus42)'
-date: 'lubridate::now(tzone = "UTC")'
+date: `lubridate::now(tzone = "UTC")`
 output: 
   html_document:
     fig_width: 9
     self_contained: no
 ---
 
-```{r init, echo=F}
-library(wurstmineR)
-library(ggplot2)
+```{r init, echo=F, message=F}
+suppressPackageStartupMessages(library(wurstmineR))
+suppressPackageStartupMessages(library(ggplot2))
 
 load("cache/workspace.RData")
 ```
@@ -36,7 +36,8 @@ for(i in seq_len(nrow(strings$general))){
   ggsave(plot = p, file = filename, height = plotHeight, width = plotWidth)
 
   # Output
-  cat(paste0("\n## <a href='#", stat, "' id='", stat, "'>", i, "</a>. ", statName))
+  cat(paste0("\n## <a href='#", stat, "' id='", stat, "'>", i, "</a>. ", statName, " <small>",
+             stat, "</small>"))
   cat("\n")
   cat(paste0("![", statName, "](/wurstminestats/general/", stat, ".png)"))
   cat("\n")
