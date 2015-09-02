@@ -26,9 +26,9 @@ plotdirs <- c("output", "output/items", "output/items/mined", "output/items/craf
               "output/sessions", "output/entities")
 
 for (dir in plotdirs){
-  if (!file.exists(i)){
-    message("Seems directory ", i, " is missing, trying to create")
-    dir.create(i)
+  if (!file.exists(dir)){
+    message("Seems directory ", dir, " is missing, trying to create")
+    dir.create(dir)
   }
 }; rm(dir)
 
