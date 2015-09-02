@@ -6,6 +6,8 @@ output:
   html_document:
     fig_width: 9
     self_contained: no
+    toc: yes
+    toc_depth: 1
 ---
 
 ```{r init, echo=F, message=F}
@@ -14,6 +16,8 @@ suppressPackageStartupMessages(library(ggplot2))
 
 load("cache/workspace.RData")
 ```
+
+# Kills and Deaths by Entities
 
 ```{r plot_gen, cache=FALSE, results='asis', echo=FALSE}
 mobStats <- dplyr::arrange_(mobStats, "mob", "action")
@@ -50,3 +54,50 @@ for(i in seq_along(mobStats$stat)){
 }
 
 ```
+
+# Summary Statistics for Entity Related Deaths and Kills
+
+```{r summary, cache=FALSE, results='asis', echo=FALSE}
+# Kills per mob #
+mobsKilled <- mobStats[mobStats$action == "killed", ]
+
+p <- ggplot(data = mobsKilled)
+p <- p + aes(x = sortLevels(mob, total), y = total)
+p <- p + barChart + coord_flip() + scale_y_discrete(breaks = scales::pretty_breaks())
+p <- p + labs(x = "Mobs", y = "Kills", title = "Killed Mobs")
+ggsave(plot = p, file = "output/entities/Kills_byMob.png", height = plotHeight, width = plotWidth)
+
+cat(paste0("\n## <a href='#Kills_byMob' id='Kills_byMob'>1</a>. Killed Mobs"))
+cat("\n")
+cat(paste0("![Kills_byMob](/wurstminestats/entities/Kills_byMob.png)"))
+cat("\n")
+  
+# … Let's filter out Endermen #
+mobsKilledFiltered <- mobsKilled[mobsKilled$mob != "Enderman", ]
+
+p <- ggplot(data = mobsKilledFiltered) 
+p <- p + aes(x = reorder(mob, total), y = total)
+p <- p + barChart + coord_flip() + scale_y_discrete(breaks = scales::pretty_breaks())
+p <- p + labs(x = "Mobs", y = "Kills", title = "Killed Mobs (except Endermen)")
+ggsave(plot=p, file="output/entities/Kills_byMob_except_Endermen.png", height=plotHeight, width=plotWidth)
+
+cat(paste0("\n## <a href='#Kills_byMob_except_Endermen' id='Kills_byMob_except_Endermen'>2</a>. Killed Mobs (except Endermen)"))
+cat("\n")
+cat(paste0("![Kills_byMob_except_Endermen](/wurstminestats/entities/Kills_byMob_except_Endermen.png)"))
+cat("\n")
+
+#### Deaths by mob ####
+mobsKilledBy <- mobStats[mobStats$action == "killed by", ]
+
+p <- ggplot(data = mobsKilledBy) 
+p <- p + aes(x = sortLevels(mob, total), y = total)
+p <- p + barChart + coord_flip() + scale_y_discrete(breaks = scales::pretty_breaks())
+p <- p + labs(x = "Mobs", y = "Deaths", title = "Deaths by Mob")
+ggsave(plot = p, file = "output/entities/Deaths_byMob.png", height = plotHeight, width = plotWidth)
+
+cat(paste0("\n## <a href='#Deaths_byMob' id='Deaths_byMob'>3</a>. Deaths by Mob"))
+cat("\n")
+cat(paste0("![Deaths_byMob](/wurstminestats/entities/Deaths_byMob.png)"))
+cat("\n")
+```
+
