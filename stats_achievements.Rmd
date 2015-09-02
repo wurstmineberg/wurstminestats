@@ -30,11 +30,10 @@ for(i in 1:nrow(strings$achievements)){
   p <- p + aes(x    = sortLevels(person, stats$achievements[[ID]]), 
                y    = stats$achievements[[ID]]) 
   p <- p + barChart + coord_flip() + scale_y_discrete(breaks = scales::pretty_breaks())
-  p <- p + xLable   + ylab("Times Achieved")
+  p <- p + xLable   + labs(y = "Times Achieved", title = name)
   if(nchar(description, type  = "width") > 44){
     p <- p + theme(plot.title = element_text(size = 12))
   }
-  p <- p + ggtitle(paste(name, "\n", description))
   
   ggsave(plot = p, file = filename, height = plotHeight, width = plotWidth)
   
