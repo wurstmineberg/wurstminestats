@@ -1,3 +1,5 @@
+#! /usr/bin/env Rscript
+
 ##### Accumulating WCEC runs ####
 library(rvest)
 library(dplyr)
@@ -12,7 +14,7 @@ centers <- centers %>% rename(Death_Count = `Death Count`, num = `#`) %>%
                        filter(!is.na(Death_Count)) 
 
 ##### Plots #####
-plotdir <- "Plots/wcec"
+plotdir <- "output/wcec"
 if(!file.exists(plotdir)){
   dir.create(plotdir)
 }
