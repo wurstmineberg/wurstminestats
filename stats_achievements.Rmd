@@ -1,0 +1,48 @@
+---
+title: "Achievement Stats"
+author: '[jemus42](https://github.com/jemus42)'
+date: "Rendered at `r format(Sys.time(), '%F %H:%M:%S')`"
+output: 
+  html_document:
+    fig_width: 9
+    self_contained: no
+---
+
+```{r init, echo=F, message=F}
+suppressPackageStartupMessages(library(wurstmineR))
+suppressPackageStartupMessages(library(ggplot2))
+
+load("cache/workspace.RData")
+```
+
+```{r plot_gen, cache=FALSE, results='asis', echo=FALSE}
+for(i in 1:nrow(strings$achievements)){
+  
+  ID          <- strings$achievements$id[i]
+  name        <- strings$achievements$displayname[i]
+  description <- strings$achievements$description[i]
+  
+  if(grepl(pattern = "exploreAllBiomes", x = ID)){ next };
+  
+  filename <- paste0("output/achievements/", ID,".png")
+  
+  p <- ggplot(data  = stats$achievements)
+  p <- p + aes(x    = sortLevels(person, stats$achievements[[ID]]), 
+               y    = stats$achievements[[ID]]) 
+  p <- p + barChart + coord_flip() + scale_y_discrete(breaks = scales::pretty_breaks())
+  p <- p + xLable   + ylab("Times Achieved")
+  if(nchar(description, type  = "width") > 44){
+    p <- p + theme(plot.title = element_text(size = 12))
+  }
+  p <- p + ggtitle(paste(name, "\n", description))
+  
+  ggsave(plot = p, file = filename, height = plotHeight, width = plotWidth)
+  
+  # Output
+  cat(paste0("\n## <a href='#", ID, "' id='", ID, "'>", i, "</a>. ", name, " <small>",
+             description, "</small>"))
+  cat("\n")
+  cat(paste0("![", name, "](/wurstminestats/achievements/", ID, ".png)"))
+  cat("\n")
+}
+```
