@@ -13,6 +13,7 @@ output:
 ```{r init, echo=F, message=F}
 suppressPackageStartupMessages(library(wurstmineR))
 suppressPackageStartupMessages(library(ggplot2))
+suppressPackageStartupMessages(library(grid))
 suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(tidyr))
 
