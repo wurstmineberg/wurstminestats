@@ -13,6 +13,8 @@ output:
 ```{r init, echo=F, message=F}
 suppressPackageStartupMessages(library(wurstmineR))
 suppressPackageStartupMessages(library(ggplot2))
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(tidyr))
 
 load("cache/workspace.RData")
 ```
