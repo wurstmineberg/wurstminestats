@@ -4,7 +4,7 @@
 message("Setting global options")
 ## Strings & other descriptive JSON stuff ##
 
-urls <- jsonlite::fromJSON("urls.json")
+urls <- jsonlite::fromJSON("config/urls.json")
 
 #### Dependencies ####
 message("Loading required packages")
@@ -22,7 +22,7 @@ library("dplyr", quietly = TRUE)            # ^
 ##### Directories for plot locations ####
 message("Checking if plot directories are present")
 plotdirs <- c("output", "output/items", "output/items/mined", "output/items/crafted", "output/items/broken",
-              "output/items/used", "output/achievements", "output/statspage", "output/statspage/scaled",
+              "output/items/used", "output/achievements", "output/general", "output/general/scaled",
               "output/sessions")
 
 for (i in plotdirs){
@@ -51,11 +51,11 @@ statusColours       <- c("founding"    = statusColours[1],
                           "postfreeze" = statusColours[3], 
                           "invited"    = statusColours[4],
                           "former"     = statusColours[5])
-statusFillScale     <- scale_fill_manual(   name = "Join Status", values = statusColours)
-statusColourScale   <- scale_colour_manual( name = "Join Status", values = statusColours)
+statusFillScale     <- scale_fill_manual  (name = "Join Status", values = statusColours)
+statusColourScale   <- scale_colour_manual(name = "Join Status", values = statusColours)
 
 #activePeople       <- fixPeopleColors(activePeople, 0.95)
-legendPeople        <- scale_fill_manual(name = "People", values = activePeople$color)
+legendPeople        <- scale_fill_manual(name = "People", values = people_active$color)
 
 #### Defining a color scale for the colors used by Minecraft ####
 # Source: http://minecraft.gamepedia.com/Formatting_codes#Color_codes
