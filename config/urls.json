@@ -1,0 +1,27 @@
+{
+    "strings": {
+        "general": "http://assets.wurstmineberg.de/json/strings.json",
+        "mobs": "http://assets.wurstmineberg.de/json/mobs.json",
+        "achievements": "http://assets.wurstmineberg.de/json/achievements.json",
+        "items": "http://assets.wurstmineberg.de/json/items.json",
+        "biomes": "http://assets.wurstmineberg.de/json/biomes.json",
+        "people": "http://api.wurstmineberg.de/player/people.json"
+    },
+    "stats": {
+        "general": "http://api.wurstmineberg.de/server/playerstats/general.json",
+        "achievements": "http://api.wurstmineberg.de/server/playerstats/achievement.json",
+        "entities": "http://api.wurstmineberg.de/server/playerstats/entity.json",
+        "items": "http://api.wurstmineberg.de/server/playerstats/item.json"
+    },
+    "deaths": {
+        "overview": "http://api.wurstmineberg.de/server/deaths/overview.json",
+        "latest": "http://api.wurstmineberg.de/server/deaths/latest.json"
+    },
+    "sessions": {
+        "overview": "http://api.wurstmineberg.de/server/sessions/overview.json",
+        "latest": "http://api.wurstmineberg.de/server/sessions/lastseen.json"
+    },
+    "moneys": "http://api.wurstmineberg.de/moneys/moneys.json",
+    "whitelist": "http://api.wurstmineberg.de/server/whitelist.json",
+    "deathgames": "http://api.wurstmineberg.de/deathgames/log.json"
+}
