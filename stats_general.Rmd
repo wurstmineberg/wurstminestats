@@ -1,7 +1,7 @@
 ---
 title: 'General Stats'
 author: '[jemus42](https://github.com/jemus42)'
-date: `lubridate::now(tzone = "UTC")`
+date: "Rendered at `r format(Sys.time(), '%F %H:%M:%S')`"
 output: 
   html_document:
     fig_width: 9
