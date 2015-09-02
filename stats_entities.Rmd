@@ -1,0 +1,53 @@
+---
+title: "Entitiy Stats"
+author: '[jemus42](https://github.com/jemus42)'
+date: "Rendered at `r format(Sys.time(), '%F %H:%M:%S')`"
+output: 
+  html_document:
+    fig_width: 9
+    self_contained: no
+---
+
+```{r init, echo=F, message=F}
+suppressPackageStartupMessages(library(wurstmineR))
+suppressPackageStartupMessages(library(ggplot2))
+
+load("cache/workspace.RData")
+```
+
+```{r plot_gen, cache=FALSE, results='asis', echo=FALSE}
+mobStats <- dplyr::arrange_(mobStats, "mob", "action")
+
+for(i in seq_along(mobStats$stat)){
+  
+  stat       <- mobStats$stat[i]
+  action     <- mobStats$action[i]
+  mobName    <- mobStats$mob[i]
+  filename   <- paste0("output/entities/", stat, ".png")
+  
+  if (action == "killed"){
+    title    <- paste0("Times mob “", mobName, "” was killed")
+    ylab     <- "Kills"
+  } else if (action == "killed by"){
+    title    <- paste0("Deaths caused by mob “", mobName, "”")
+    ylab     <- "Caused Deaths"
+  }
+  
+  p <- ggplot(data  = stats$entities)
+  p <- p + aes(x    = sortLevels(person, stats$entities[[stat]]), 
+               y    = stats$entities[[stat]])
+  p <- p + barChart + coord_flip() + scale_y_discrete(breaks = pretty_breaks())
+  p <- p + labs(x = "Person", y = ylab, title = title)
+  
+  message("Saving ", filename)
+  ggsave(plot = p, file = filename, height = plotHeight, width = plotWidth)
+  
+  # Output
+  cat(paste0("\n## <a href='#", stat, "' id='", stat, "'>", i, "</a>. ", title, " <small>",
+             stat, "</small>"))
+  cat("\n")
+  cat(paste0("![", title, "](/wurstminestats/entities/", stat, ".png)"))
+  cat("\n")
+}
+
+```
