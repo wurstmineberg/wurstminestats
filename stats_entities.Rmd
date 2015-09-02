@@ -1,5 +1,5 @@
 ---
-title: "Entitiy Stats"
+title: "Entity Stats"
 author: '[jemus42](https://github.com/jemus42)'
 date: "Rendered at `r format(Sys.time(), '%F %H:%M:%S')`"
 output: 
