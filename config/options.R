@@ -23,14 +23,14 @@ library("dplyr", quietly = TRUE)            # ^
 message("Checking if plot directories are present")
 plotdirs <- c("output", "output/items", "output/items/mined", "output/items/crafted", "output/items/broken",
               "output/items/used", "output/achievements", "output/general", "output/general/scaled",
-              "output/sessions")
+              "output/sessions", "output/entities")
 
-for (i in plotdirs){
+for (dir in plotdirs){
   if (!file.exists(i)){
     message("Seems directory ", i, " is missing, trying to create")
     dir.create(i)
   }
-}
+}; rm(dir)
 
 #------------------------------------------------------------#
 ##### Define some variables for ggplot2 layout and labels ####

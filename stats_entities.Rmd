@@ -39,7 +39,6 @@ for(i in seq_along(mobStats$stat)){
   p <- p + barChart + coord_flip() + scale_y_discrete(breaks = scales::pretty_breaks())
   p <- p + labs(x = "Person", y = ylab, title = title)
   
-  message("Saving ", filename)
   ggsave(plot = p, file = filename, height = plotHeight, width = plotWidth)
   
   # Output
