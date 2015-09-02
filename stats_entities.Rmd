@@ -115,7 +115,7 @@ p <- ggplot(data = filter(statsByKey, action == "killed"))
 p <- p + aes(x = sortLevels(person, value), y = value, fill = mob)
 p <- p + barChart + coord_flip() + scale_y_discrete(breaks = scales::pretty_breaks())
 p <- p + labs(x = "Person", y = "Kills", title = "Mob Kills", fill = "Mob") +
-  theme(legend.key.size = unit(0.6, "cm"))
+  theme(legend.key.size = unit(0.4, "cm"))
 ggsave(plot = p, file = "output/entities/mobKills_perPerson.png", height = plotHeight, width = plotWidth * 1.5)
 
 cat(paste0("\n## <a href='#mobKills_perPerson' id='mobKills_perPerson'>4</a>. Mob Kills per Person"))
