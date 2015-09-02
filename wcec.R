@@ -3,6 +3,7 @@
 ##### Accumulating WCEC runs ####
 library(rvest)
 library(dplyr)
+library(ggplot2)
 
 centers <- html_table(html("http://wiki.wurstmineberg.de/Portal_Game#Centers"))
 
