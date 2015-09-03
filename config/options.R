@@ -41,7 +41,7 @@ playerTheme <- theme(legend.position = "right",
                      legend.key.size = unit(.4, "cm"),
                      legend.text     = element_text(size = rel(.8)))
 
-plotWidth <- 6; plotHeight <- 5.5;
+plotWidth <- 3.6; plotHeight <- 3.3;
 barChart  <- geom_bar(colour = "black", width = .7, stat = "identity")
 xLable    <- xlab("Person")
 
