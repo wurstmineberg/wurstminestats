@@ -257,6 +257,21 @@ dailyActivity <- function(daysAgo = 1){
 #### Generally useful stuff ####
 #------------------------------#
 
+verbatim_title_md <- function(anchor_name, anchor_id = NULL, number = NULL, title, title_small = NULL){
+  if (is.null(anchor_id)){
+    anchor_id <- anchor_name
+  }
+  if (!is.null(title_small)){
+    title_small <- paste0(" <small>", title_small, "</small>")
+  }
+  cat(paste0("\n## <a href='#", anchor_name, "' id='", anchor_id, "'>", number, 
+             "</a>. ", title, title_small), "\n")
+}
+
+verbatim_image_md <- function(img_title = NULL, base_path = "output/", 
+                              filename = "forgot_to_set_filename", file_ext = ".png"){
+  cat(paste0("![", img_title, "](", base_path, filename, file_ext, ")"), "\n")
+}
 
 # Convencience function to get ordered factors
 sortLevels <- function(factors, reference, sortFunction = mean){
