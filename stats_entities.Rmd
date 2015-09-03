@@ -18,6 +18,7 @@ suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(tidyr))
 
 load("cache/workspace.RData")
+source("functions.R")
 ```
 
 # Kills and Deaths by Entities
@@ -49,11 +50,8 @@ for(i in seq_along(mobStats$stat)){
   ggsave(plot = p, file = filename, height = plotHeight, width = plotWidth)
   
   # Output
-  cat(paste0("\n## <a href='#", stat, "' id='", stat, "'>", i, "</a>. ", title, " <small>",
-             stat, "</small>"))
-  cat("\n")
-  cat(paste0("![", title, "](/wurstminestats/entities/", stat, ".png)"))
-  cat("\n")
+  verbatim_title_md(stat, stat, i, title, stat)
+  verbatim_image_md(title, "/wurstminestats/entities/", stat)
 }
 
 ```
@@ -70,11 +68,9 @@ p <- p + barChart + coord_flip() + scale_y_discrete(breaks = scales::pretty_brea
 p <- p + labs(x = "Mobs", y = "Kills", title = "Killed Mobs")
 ggsave(plot = p, file = "output/entities/Kills_byMob.png", height = plotHeight, width = plotWidth)
 
-cat(paste0("\n## <a href='#Kills_byMob' id='Kills_byMob'>1</a>. Killed Mobs"))
-cat("\n")
-cat(paste0("![Kills_byMob](/wurstminestats/entities/Kills_byMob.png)"))
-cat("\n")
-  
+verbatim_title_md("Kills_byMob", number = 1, title = "Killed Mobs")
+verbatim_image_md("Kills_byMob", base_path = "/wurstminestats/entities/", filename = "Kills_byMob")
+
 # … Let's filter out Endermen #
 mobsKilledFiltered <- mobsKilled[mobsKilled$mob != "Enderman", ]
 
@@ -84,10 +80,8 @@ p <- p + barChart + coord_flip() + scale_y_discrete(breaks = scales::pretty_brea
 p <- p + labs(x = "Mobs", y = "Kills", title = "Killed Mobs (except Endermen)")
 ggsave(plot=p, file="output/entities/Kills_byMob_except_Endermen.png", height=plotHeight, width=plotWidth)
 
-cat(paste0("\n## <a href='#Kills_byMob_except_Endermen' id='Kills_byMob_except_Endermen'>2</a>. Killed Mobs (except Endermen)"))
-cat("\n")
-cat(paste0("![Kills_byMob_except_Endermen](/wurstminestats/entities/Kills_byMob_except_Endermen.png)"))
-cat("\n")
+verbatim_title_md("Kills_byMob_except_Endermen", number = 2, title = "Killed Mobs (except Endermen)")
+verbatim_image_md("Kills_byMob_except_Endermen", base_path = "/wurstminestats/entities/", filename = "Kills_byMob_except_Endermen")
 
 #### Deaths by mob ####
 mobsKilledBy <- mobStats[mobStats$action == "killed by", ]
@@ -98,10 +92,8 @@ p <- p + barChart + coord_flip() + scale_y_discrete(breaks = scales::pretty_brea
 p <- p + labs(x = "Mobs", y = "Deaths", title = "Deaths by Mob")
 ggsave(plot = p, file = "output/entities/Deaths_byMob.png", height = plotHeight, width = plotWidth)
 
-cat(paste0("\n## <a href='#Deaths_byMob' id='Deaths_byMob'>3</a>. Deaths by Mob"))
-cat("\n")
-cat(paste0("![Deaths_byMob](/wurstminestats/entities/Deaths_byMob.png)"))
-cat("\n")
+verbatim_title_md("Deaths_byMob", number = 3, title = "Deaths by Mob")
+verbatim_image_md("Deaths_byMob", base_path = "/wurstminestats/entities/", filename = "Deaths_byMob")
 
 ### 
 
@@ -120,10 +112,8 @@ p <- p + labs(x = "Person", y = "Kills", title = "Mob Kills", fill = "Mob") +
   theme(legend.key.size = unit(0.4, "cm"))
 ggsave(plot = p, file = "output/entities/mobKills_perPerson.png", height = plotHeight, width = plotWidth * 1.5)
 
-cat(paste0("\n## <a href='#mobKills_perPerson' id='mobKills_perPerson'>4</a>. Mob Kills per Person"))
-cat("\n")
-cat(paste0("![mobKills_perPerson](/wurstminestats/entities/mobKills_perPerson.png)"))
-cat("\n")
+verbatim_title_md("mobKills_perPerson", number = 4, title = "Mob Kills")
+verbatim_image_md("mobKills_perPerson", base_path = "/wurstminestats/entities/", filename = "mobKills_perPerson")
 
 ## Mob Kills without Endermen
 
@@ -134,10 +124,8 @@ p <- p + labs(x = "Person", y = "Kills", title = "Mob Kills (except Endermen)", 
   theme(legend.key.size = unit(0.4, "cm"))
 ggsave(plot = p, file = "output/entities/mobKills_perPerson_noendermen.png", height = plotHeight, width = plotWidth * 1.5)
 
-cat(paste0("\n## <a href='#mobKills_perPerson_noendermen' id='mobKills_perPerson_noendermen'>4.1</a>. Mob Kills per Person (except Endermen)"))
-cat("\n")
-cat(paste0("![mobKills_perPerson_noendermen](/wurstminestats/entities/mobKills_perPerson_noendermen.png)"))
-cat("\n")
+verbatim_title_md("mobKills_perPerson_noendermen", number = 4, title = "Mob Kills (except Endermen)")
+verbatim_image_md("mobKills_perPerson_noendermen", base_path = "/wurstminestats/entities/", filename = "mobKills_perPerson_noendermen")
 
 
 ## Deaths by Mob
@@ -149,9 +137,7 @@ p <- p + labs(x = "Person", y = "Times Killed by Mob", title = "Mob Kills", fill
 
 ggsave(plot = p, file = "output/entities/mobDeaths_perPerson.png", height = plotHeight, width = plotWidth * 1.5)
 
-cat(paste0("\n## <a href='#mobDeaths_perPerson' id='mobDeaths_perPerson'>5</a>. Deaths by Mob per Person"))
-cat("\n")
-cat(paste0("![mobDeaths_perPerson](/wurstminestats/entities/mobDeaths_perPerson.png)"))
-cat("\n")
+verbatim_title_md("mobDeaths_perPerson", number = 4, title = "Times Killed by Mob")
+verbatim_image_md("mobDeaths_perPerson", base_path = "/wurstminestats/entities/", filename = "mobDeaths_perPerson")
 ```
 
