@@ -1,9 +1,20 @@
-#! /usr/bin/env Rscript
+---
+title: "Wurstcreature Science Enrichment Centers"
+author: '[jemus42](https://github.com/jemus42)'
+date: "Rendered at `r format(Sys.time(), '%F %H:%M:%S')`"
+output: 
+  html_document:
+    fig_width: 9
+    self_contained: no
+    toc: yes
+    toc_depth: 1
+---
 
-##### Accumulating WCEC runs ####
-library(rvest)
-library(dplyr)
-library(ggplot2)
+
+```{r init, echo=F, message=F}
+suppressPackageStartupMessages(library(rvest))
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(ggplot2))
 
 centers <- html_table(html("http://wiki.wurstmineberg.de/Portal_Game#Centers"))
 
@@ -14,12 +25,10 @@ centers <- centers %>% rename(Death_Count = `Death Count`, num = `#`) %>%
                               Name = factor(Name)) %>%
                        filter(!is.na(Death_Count)) 
 
-##### Plots #####
-plotdir <- "output/wcec"
-if(!file.exists(plotdir)){
-  dir.create(plotdir)
-}
+```
 
+```{r plot_gen, cache=FALSE, results='asis', echo=FALSE}
+plotdir  <- "output/wcec"
 bestlist <- centers %>% group_by(Name) %>% summarize(dc = sum(Death_Count)) %>% arrange(dc)
 
 p <- centers %>% mutate(Name = factor(Name, levels = as.character(bestlist$Name), ordered = TRUE)) %>%
@@ -28,10 +37,23 @@ p <- centers %>% mutate(Name = factor(Name, levels = as.character(bestlist$Name)
        labs(title = "WCEC Deaths per Person", x = "Person", y = "Death Count")
 ggsave(plot = p, filename = paste0(plotdir, "/total_deaths_person.png"), width = 12, height = 6)
 
+# Output
+cat(paste0("\n## <a href='#total_deaths_person' id='total_deaths_person'>1</a>. Deaths per Person"))
+cat("\n")
+cat(paste0("![Deaths per Person](/wurstminestats/wcec/total_deaths_person.png)"))
+cat("\n")
+
+
 p <- ggplot(data = centers, aes(x = Center, y = Death_Count)) +
        geom_bar(stat = "identity", position = "stack") +
        labs(title = "WCEC Deaths per Center", x = "Center", y = "Death Count")
 ggsave(plot = p, filename = paste0(plotdir, "/total_deaths_center.png"), width = 12, height = 6)
+
+# Output
+cat(paste0("\n## <a href='#total_deaths_center' id='total_deaths_center'>2</a>. Deaths per Center"))
+cat("\n")
+cat(paste0("![Deaths per Center](/wurstminestats/wcec/total_deaths_center.png)"))
+cat("\n")
 
 p <- centers %>% group_by(Center) %>% 
       summarize(runs = n(), deaths = sum(Death_Count)) %>%
@@ -41,6 +63,12 @@ p <- centers %>% group_by(Center) %>%
       labs(title = "WCEC Deaths per Run per Center", x = "Center", y = "Deaths per Run")
 ggsave(plot = p, filename = paste0(plotdir, "/total_deaths_per_run_center.png"), width = 12, height = 6)
 
+# Output
+cat(paste0("\n## <a href='#total_deaths_per_run_center' id='total_deaths_per_run_center'>3</a>. Deaths per Run per Center"))
+cat("\n")
+cat(paste0("![Deaths per Run per Center](/wurstminestats/wcec/total_deaths_per_run_center.png)"))
+cat("\n")
+
 p <- centers %>% group_by(Name) %>% 
       summarize(runs = n(), deaths = sum(Death_Count)) %>%
       mutate(deaths_per_run = deaths/runs) %>%
@@ -48,3 +76,11 @@ p <- centers %>% group_by(Name) %>%
       geom_bar(stat = "identity", colour = "black") +
       labs(title = "WCEC Deaths per Run per Person", x = "Person", y = "Deaths per Run", fill = "# Runs")
 ggsave(plot = p, filename = paste0(plotdir, "/total_deaths_per_run_person.png"), width = 12, height = 6)
+
+# Output
+cat(paste0("\n## <a href='#total_deaths_per_run_person' id='total_deaths_per_run_person'>4</a>. Deaths per Run per Person"))
+cat("\n")
+cat(paste0("![Deaths per Run per Person](/wurstminestats/wcec/total_deaths_per_run_person.png)"))
+cat("\n")
+
+```

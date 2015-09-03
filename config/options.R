@@ -23,7 +23,8 @@ library("dplyr", quietly = TRUE)            # ^
 message("Checking if plot directories are present")
 plotdirs <- c("output", "output/items", "output/items/mined", "output/items/crafted", "output/items/broken",
               "output/items/used", "output/achievements", "output/general", "output/general/scaled",
-              "output/sessions", "output/entities")
+              "output/sessions", "output/entities", "output/items/picked_up", "output/items/dropped",
+              "output/wcec")
 
 for (dir in plotdirs){
   if (!file.exists(dir)){
