@@ -42,7 +42,7 @@ for(i in seq_along(itemStats$stat)){
   ggsave(plot = p, file = filename, height = plotHeight, width = plotWidth)
   
   verbatim_title_md(stat, number = i, title = title, title_small = stat)
-  verbatim_image_md(title, base_path = paste0("wurstminestats/items/", sub(" ", "_", action), "/"), filename = stat)
+  verbatim_image_md(title, base_path = paste0("/wurstminestats/items/", sub(" ", "_", action), "/"), filename = stat)
 }
 ```
 
@@ -64,6 +64,6 @@ for(action in unique(itemStats$action)){
   ggsave(plot = p, file = filename, height = plotHeight, width = plotWidth)
   
   verbatim_title_md(stat, number = i, title = title, title_small = stat)
-  verbatim_image_md(title, base_path = paste0("wurstminestats/items/", sub(" ", "_", action), "/"), filename = stat)
+  verbatim_image_md(title, base_path = paste0("/wurstminestats/items/", sub(" ", "_", action), "/"), filename = stat)
 }
 ```
