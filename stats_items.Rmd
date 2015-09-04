@@ -26,7 +26,6 @@ source("functions.R")
 itemStats <- dplyr::arrange_(itemStats, "item", "action")
 
 for(i in seq_along(itemStats$stat)){
-  
   stat        <- itemStats$stat[i]
   if (stat == "drop"){next}
   action      <- itemStats$action[i]
@@ -43,7 +42,7 @@ for(i in seq_along(itemStats$stat)){
   ggsave(plot = p, file = filename, height = plotHeight, width = plotWidth)
   
   verbatim_title_md(stat, number = i, title = title, title_small = stat)
-  verbatim_image_md(title, base_path = paste0("wurstminestats/items", sub(" ", "_", action)), filename = stat)
+  verbatim_image_md(title, base_path = paste0("wurstminestats/items/", sub(" ", "_", action)), filename = stat)
 }
 ```
 
@@ -65,6 +64,6 @@ for(action in unique(itemStats$action)){
   ggsave(plot = p, file = filename, height = plotHeight, width = plotWidth)
   
   verbatim_title_md(stat, number = i, title = title, title_small = stat)
-  verbatim_image_md(title, base_path = paste0("wurstminestats/items", sub(" ", "_", action)), filename = stat)
+  verbatim_image_md(title, base_path = paste0("wurstminestats/items/", sub(" ", "_", action)), filename = stat)
 }
 ```
