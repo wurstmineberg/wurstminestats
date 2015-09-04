@@ -127,7 +127,6 @@ ggsave(plot = p, file = "output/entities/mobKills_perPerson_noendermen.png", hei
 verbatim_title_md("mobKills_perPerson_noendermen", number = 4, title = "Mob Kills (except Endermen)")
 verbatim_image_md("mobKills_perPerson_noendermen", base_path = "/wurstminestats/entities/", filename = "mobKills_perPerson_noendermen")
 
-
 ## Deaths by Mob
 p <- ggplot(data = filter(statsByKey, action == "killed by")) 
 p <- p + aes(x = sortLevels(person, value), y = value, fill = mob)
