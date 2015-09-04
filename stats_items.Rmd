@@ -1,0 +1,70 @@
+---
+title: "Item Stats"
+author: '[jemus42](https://github.com/jemus42)'
+date: "Rendered at `r format(Sys.time(), '%F %H:%M:%S')`"
+output: 
+  html_document:
+    fig_width: 9
+    self_contained: no
+    toc: yes
+    toc_depth: 1
+---
+
+```{r init, echo=F, message=F}
+suppressPackageStartupMessages(library(wurstmineR))
+suppressPackageStartupMessages(library(ggplot2))
+suppressPackageStartupMessages(library(grid))
+suppressPackageStartupMessages(library(dplyr))
+
+load("cache/workspace.RData")
+source("functions.R")
+```
+
+# Item Stats as provided by Minecraft
+
+```{r plot_gen, cache=FALSE, results='asis', echo=FALSE}
+itemStats <- dplyr::arrange_(itemStats, "item", "action")
+
+for(i in seq_along(itemStats$stat)){
+  
+  stat        <- itemStats$stat[i]
+  if (stat == "drop"){next}
+  action      <- itemStats$action[i]
+  itemName    <- itemStats$item[i]
+  filename    <- paste0("output/items/", sub(" ", "_", action), "/",  stat, ".png")
+  title       <- paste0("Times item was ", action, ": ", itemName)
+  
+  p <- ggplot(data  = stats$items)
+  p <- p + aes(x    = sortLevels(person, stats$items[[stat]]), 
+               y    = stats$items[[stat]])
+  p <- p + barChart + coord_flip() + scale_y_discrete(breaks = scales::pretty_breaks())
+  p <- p + labs(x = "Person", y = paste("Times", action), title = title)
+  
+  ggsave(plot = p, file = filename, height = plotHeight, width = plotWidth)
+  
+  verbatim_title_md(stat, number = i, title = title, title_small = stat)
+  verbatim_image_md(title, base_path = paste0("wurstminestats/items", sub(" ", "_", action)), filename = stat)
+}
+```
+
+# Item Stats per Action
+
+```{r plot_gen_action, cache=FALSE, results='asis', echo=FALSE}
+for(action in unique(itemStats$action)){
+  if (action == ""){next}
+  itemStatsPerAction <- itemStats[itemStats$action == action, ]
+  itemStatsPerAction <- head(arrange(itemStatsPerAction, desc(total)), 20)
+  filename           <- paste0("output/items/top_", sub(" ", "_", action), ".png")
+  
+  p <- ggplot(data  = itemStatsPerAction)
+  p <- p + aes(x = sortLevels(item, total), y = total/1000)
+  p <- p + barChart + coord_flip()
+  p <- p + labs(x = "Item", y = paste("Times", action, "(in thousands)"))
+  p <- p + ggtitle(paste("Top", action, "items"))
+  
+  ggsave(plot = p, file = filename, height = plotHeight, width = plotWidth)
+  
+  verbatim_title_md(stat, number = i, title = title, title_small = stat)
+  verbatim_image_md(title, base_path = paste0("wurstminestats/items", sub(" ", "_", action)), filename = stat)
+}
+```
